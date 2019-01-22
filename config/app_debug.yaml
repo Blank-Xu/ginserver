@@ -1,0 +1,52 @@
+# config file for ginserver
+
+Server:
+  RunMode: debug   # gin.ginMode [debug, test, release]
+  AppName: ginserver
+  HttpPort: 8080
+  ReadTimeout: 10
+  WriteTimeout: 10
+  TimeZone: 8
+
+Fix:
+  TimeZone:
+    Name: CST
+    Offset: 8 # hour
+
+Log:  # logrus
+  Path: logs/
+  FileName: ginserver.log
+  Level: 5 # [0:panic, 1:fatal, 2:error, 3:warn, 4:info, 5:debug, 6:trace]
+
+DataBase:
+  - DriverName: mysql
+    DataBase: ginserver
+    Host: 127.0.0.1
+    Port: 3306
+    Username: ginserver
+    Password: 123456
+    Charset: utf8mb4
+    LogLevel: 0 # [0:LOG_DEBUG, 1:LOG_INFO, 2:LOG_WARNING, 3:LOG_ERR, 4:LOG_OFF, 5:LOG_UNKNOWN]
+    ConnMaxLifetime: 60 # minute
+    MaxIdleConns: 100
+    MaxOpenConns: 100
+    ShowSql: true
+    ShowExecTime: true
+    Connect: true # true is need to connect when server start
+  - DriverName: mysql2
+    Connect: false # false is not need to connect when server start
+
+Session:
+  Name: ginserver
+  Expired: 3600
+  Provider: memory
+  Sign: ginserver
+
+Redis:
+  Host: 127.0.0.1
+  Port: 6379
+  Password:
+
+Lang:
+  Default: zh-CN
+  Lang: [zh-CN, en-US]
