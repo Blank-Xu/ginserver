@@ -16,15 +16,13 @@ import (
 	"ginserver/router"
 )
 
-const version = "0.1.0"
-
 var configFile = flag.String("config", "config/app_debug.yaml", "config file")
 
 func init() {
 	flag.Parse()
-	fmt.Printf("server starting ... \n\tversion: [%s]  \n\targs: %s\n", version, os.Args)
-	fmt.Printf("read config file ... \n\tfile_name: [%s]\n", *configFile)
-	fmt.Println("\tyou can use [-config file] command to set config file when server start.")
+	fmt.Printf("server starting ... \n - version: [%s]  \n - args: %s\n", config.Version, os.Args)
+	fmt.Printf("read config file ... \n - file_name: [%s]\n", *configFile)
+	fmt.Println(" - you can use [-config file] command to set config file when server start.")
 
 	config.Init(*configFile)
 	fmt.Println("read config success")

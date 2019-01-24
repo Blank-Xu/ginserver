@@ -24,7 +24,7 @@ func newEngine(cfg *config.DataBase) *xorm.Engine {
 		cfg.Username, cfg.Password, cfg.Host, cfg.Port, cfg.DataBase, cfg.Charset)
 	engine, err := xorm.NewEngine(cfg.DriverName, dataSourceName)
 	if err != nil {
-		panic(fmt.Sprintf("database [%s] engine create error \n\tdns: [%s] \n\terr: [%v]", cfg.DataBase, dataSourceName, err))
+		panic(fmt.Sprintf("database [%s] engine create error \n - dns: [%s] \n - err: [%v]", cfg.DataBase, dataSourceName, err))
 	}
 
 	engine.SetLogger(newSimpleLogger(cfg.DataBase, core.LogLevel(cfg.LogLevel)))
@@ -32,7 +32,7 @@ func newEngine(cfg *config.DataBase) *xorm.Engine {
 	// check connection
 	if cfg.Connect {
 		if err = engine.Ping(); err != nil {
-			panic(fmt.Sprintf("database [%s] connect error \n\tdns: [%s] \n\terr: [%v]", cfg.DataBase, dataSourceName, err))
+			panic(fmt.Sprintf("database [%s] connect error \n - dns: [%s] \n - err: [%v]", cfg.DataBase, dataSourceName, err))
 		}
 		log.Infof("database %s connected.", cfg.DataBase)
 	}

@@ -9,6 +9,6 @@ import (
 
 func index() {
 	router.Any("/", func(c *gin.Context) {
-		c.String(http.StatusOK, config.GetConfig().Server.AppName)
+		c.String(http.StatusOK, config.GetConfig().AppName)
 	})
 }

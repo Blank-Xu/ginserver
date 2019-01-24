@@ -6,6 +6,8 @@ import (
 	"github.com/spf13/viper"
 )
 
+const Version = "0.0.1"
+
 var cfg = new(config)
 
 func Init(file string) {

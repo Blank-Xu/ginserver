@@ -1,31 +1,31 @@
 package config
 
 type config struct {
-	Server   *Server     `yaml:"Server"`
-	Fix      *Fix        `yaml:"Fix"`
-	Log      *Log        `yaml:"Log"`
+	RunMode  string      `yaml:"RunMode"`
+	AppName  string      `yaml:"AppName"`
+	Server   *server     `yaml:"Server"`
+	Fix      *fix        `yaml:"Fix"`
+	Log      *log        `yaml:"Log"`
 	DataBase []*DataBase `yaml:"DataBase"`
-	Session  *Session    `yaml:"Session"`
-	Redis    *Redis      `yaml:"Redis"`
-	Lang     *Lang       `yaml:"Lang"`
+	Session  *session    `yaml:"Session"`
+	Redis    *redis      `yaml:"Redis"`
+	Lang     *lang       `yaml:"Lang"`
 }
 
-type Server struct {
-	RunMode      string `yaml:"RunMode"`
-	AppName      string `yaml:"AppName"`
+type server struct {
 	HttpPort     string `yaml:"HttpPort"`
 	ReadTimeout  int    `yaml:"ReadTimeout"`
 	WriteTimeout int    `yaml:"WriteTimeout"`
 }
 
-type Fix struct {
+type fix struct {
 	TimeZone *struct {
 		Name   string `yaml:"Name"`
 		Offset int    `yaml:"Offset"`
 	} `yaml:"TimeZone"`
 }
 
-type Log struct {
+type log struct {
 	Path     string `yaml:"Path"`
 	FileName string `yaml:"FileName"`
 	Level    uint32 `yaml:"Level"`
@@ -48,20 +48,22 @@ type DataBase struct {
 	Connect         bool   `yaml:"Connect"`
 }
 
-type Session struct {
-	Name     string `yaml:"Name"`
-	Expired  int    `yaml:"Expired"`
+type session struct {
 	Provider string `yaml:"Provider"`
-	Sign     string `yaml:"Sign"`
+	Path     string `yaml:"Path"`
+	Domain   string `yaml:"Domain"`
+	Secure   string `yaml:"Secure"`
+	MaxAge   int    `yaml:"MaxAge"`
+	HttpOnly bool   `yaml:"HttpOnly"`
 }
 
-type Redis struct {
+type redis struct {
 	Host     string `yaml:"Host"`
 	Port     string `yaml:"Port"`
 	Password string `yaml:"Password"`
 }
 
-type Lang struct {
+type lang struct {
 	Default string   `yaml:"Default"`
 	Lang    []string `yaml:"Lang"`
 }

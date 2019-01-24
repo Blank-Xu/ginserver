@@ -1,24 +1,24 @@
 # config file for ginserver
 
+RunMode: debug # gin.ginMode [debug, test, release]
+AppName: ginserver
+
 Server:
-  RunMode: debug   # gin.ginMode [debug, test, release]
-  AppName: ginserver
   HttpPort: 8080
-  ReadTimeout: 10
-  WriteTimeout: 10
-  TimeZone: 8
+  ReadTimeout: 10 # second
+  WriteTimeout: 10 # second
 
 Fix:
   TimeZone:
     Name: CST
     Offset: 8 # hour
 
-Log:  # logrus
+Log: # logrus
   Path: logs/
   FileName: ginserver.log
   Level: 5 # [0:panic, 1:fatal, 2:error, 3:warn, 4:info, 5:debug, 6:trace]
 
-DataBase:
+DataBase: # xorm
   - DriverName: mysql
     DataBase: ginserver
     Host: 127.0.0.1
@@ -32,15 +32,17 @@ DataBase:
     MaxOpenConns: 100
     ShowSql: true
     ShowExecTime: true
-    Connect: true # true is need to connect when server start
+    Connect: true # need to connect database when server start?
   - DriverName: mysql2
-    Connect: false # false is not need to connect when server start
+    Connect: false
 
-Session:
-  Name: ginserver
-  Expired: 3600
-  Provider: memory
-  Sign: ginserver
+Session: # Provider support [memstore, redis], you can use other types by site support [https://github.com/gin-contrib/sessions]
+  Provider: memstore # if you chose [redis], you must set Redis connect information
+  Path: ginserver
+  Domain: 127.0.0.1
+  Secure: ginserver
+  MaxAge: 7200 # second
+  HttpOnly: true
 
 Redis:
   Host: 127.0.0.1

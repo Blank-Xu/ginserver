@@ -2,6 +2,8 @@ package router
 
 import (
 	"ginserver/module/config"
+	"ginserver/module/log"
+	"ginserver/module/middleware"
 
 	"github.com/gin-gonic/gin"
 )
@@ -9,7 +11,7 @@ import (
 var router = gin.New()
 
 func Init() {
-	var cfg = config.GetConfig().Server
+	var cfg = config.GetConfig()
 
 	// set gin's global setting
 	if cfg.RunMode != gin.DebugMode {
@@ -18,7 +20,7 @@ func Init() {
 	gin.SetMode(cfg.RunMode)
 
 	// set gin's middleware
-	router.Use(gin.Recovery())
+	router.Use(middleware.Logger(log.GetLog()), gin.Recovery())
 
 	// register routers
 	registerRouter()

@@ -1,48 +1,37 @@
 package log
 
-import (
-	"fmt"
-	"io"
-	"os"
-
-	"ginserver/module/config"
-	"ginserver/module/util"
-
-	"github.com/sirupsen/logrus"
-)
-
-var log = logrus.New()
-
-func Init() {
-	var (
-		cfgLog  = config.GetConfig().Log
-		logFile *os.File
-		err     error
-	)
-
-	// check log dir
-	if !util.IsFileExit(cfgLog.Path) {
-		if err = os.Mkdir(cfgLog.Path, 0777); err != nil {
-			panic(fmt.Sprintf("create log path [%s] err: [%v]", cfgLog.Path, err))
-		}
-	}
-
-	// check log file
-	logName := cfgLog.Path + cfgLog.FileName
-	logFile, err = os.OpenFile(logName, os.O_WRONLY|os.O_APPEND, 0666)
-	if err != nil {
-		panic(fmt.Sprintf("open or create log name [%s] err: [%v]", logName, err))
-	}
-
-	if config.GetConfig().Server.RunMode == "debug" {
-		log.SetOutput(io.MultiWriter(logFile, os.Stdout))
-	} else {
-		log.SetOutput(logFile)
-	}
-	log.SetFormatter(&logrus.JSONFormatter{})
-	log.SetLevel(logrus.Level(cfgLog.Level))
+func Trace(args ...interface{}) {
+	log.Trace(args)
 }
 
-func GetLog() *logrus.Logger {
-	return log
+func Debug(args ...interface{}) {
+	log.Debug(args)
+}
+
+func Info(args ...interface{}) {
+	log.Info(args)
+}
+
+func Infof(format string, args ...interface{}) {
+	log.Infof(format, args)
+}
+
+func Warn(args ...interface{}) {
+	log.Warn(args)
+}
+
+func Errorf(format string, args ...interface{}) {
+	log.Errorf(format, args)
+}
+
+func Error(args ...interface{}) {
+	log.Error(args)
+}
+
+func Fatal(args ...interface{}) {
+	log.Fatal(args)
+}
+
+func Panic(args ...interface{}) {
+	log.Panic(args)
 }
