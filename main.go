@@ -10,6 +10,7 @@ import (
 	"os/signal"
 	"time"
 
+	"ginserver/model"
 	"ginserver/module/config"
 	"ginserver/module/db"
 	glog "ginserver/module/log"
@@ -34,6 +35,8 @@ func init() {
 	glog.Info("server starting ...")
 
 	db.Init()
+
+	model.Init()
 
 	router.Init()
 }

@@ -36,7 +36,7 @@ func Panic(args ...interface{}) {
 	log.Panic(args...)
 }
 
-func LogIfErr(err error) {
+func LogErr(err error) {
 	if err != nil {
 		log.Error(err)
 	}

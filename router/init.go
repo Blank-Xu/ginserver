@@ -3,10 +3,12 @@ package router
 import (
 	"fmt"
 
+	"ginserver/model"
 	"ginserver/module/config"
 	"ginserver/module/log"
 	"ginserver/module/middleware"
 
+	"github.com/casbin/casbin"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-contrib/sessions/memstore"
 	"github.com/gin-contrib/sessions/redis"
@@ -33,6 +35,8 @@ func Init() {
 
 	router.Static(cfg.AssetsFile, assetsFile)
 	router.LoadHTMLGlob(cfg.ViewFile + "/*")
+
+	e := casbin.NewEnforcer("config/rbac_model.ini", &model.Casbin{})
 
 	// register routers
 	registerRouter()
