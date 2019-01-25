@@ -1,37 +1,43 @@
 package log
 
 func Trace(args ...interface{}) {
-	log.Trace(args)
+	log.Trace(args...)
 }
 
 func Debug(args ...interface{}) {
-	log.Debug(args)
+	log.Debug(args...)
 }
 
 func Info(args ...interface{}) {
-	log.Info(args)
+	log.Info(args...)
 }
 
 func Infof(format string, args ...interface{}) {
-	log.Infof(format, args)
+	log.Infof(format, args...)
 }
 
 func Warn(args ...interface{}) {
-	log.Warn(args)
+	log.Warn(args...)
 }
 
 func Errorf(format string, args ...interface{}) {
-	log.Errorf(format, args)
+	log.Errorf(format, args...)
 }
 
 func Error(args ...interface{}) {
-	log.Error(args)
+	log.Error(args...)
 }
 
 func Fatal(args ...interface{}) {
-	log.Fatal(args)
+	log.Fatal(args...)
 }
 
 func Panic(args ...interface{}) {
-	log.Panic(args)
+	log.Panic(args...)
+}
+
+func LogIfErr(err error) {
+	if err != nil {
+		log.Error(err)
+	}
 }

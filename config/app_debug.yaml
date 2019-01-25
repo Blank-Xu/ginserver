@@ -2,6 +2,8 @@
 
 RunMode: debug # gin.ginMode [debug, test, release]
 AppName: ginserver
+AssetsFile: assets
+ViewFile: view
 
 Server:
   HttpPort: 8080
@@ -14,7 +16,7 @@ Fix:
     Offset: 8 # hour
 
 Log: # logrus
-  Path: logs/
+  Path: logs
   FileName: ginserver.log
   Level: 5 # [0:panic, 1:fatal, 2:error, 3:warn, 4:info, 5:debug, 6:trace]
 
@@ -40,7 +42,7 @@ Session: # Provider support [memstore, redis], you can use other types by site s
   Provider: memstore # if you chose [redis], you must set Redis connect information
   Path: ginserver
   Domain: 127.0.0.1
-  Secure: ginserver
+  Secret: ginserver
   MaxAge: 7200 # second
   HttpOnly: true
 

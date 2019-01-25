@@ -6,7 +6,7 @@ require (
 	github.com/boj/redistore v0.0.0-20180917114910-cd5dcc76aeff // indirect
 	github.com/casbin/casbin v1.8.0 // indirect
 	github.com/casbin/xorm-adapter v0.0.0-20181207150928-e40cbd17d53f // indirect
-	github.com/gin-contrib/sessions v0.0.0-20181124110724-7687b645ca6b // indirect
+	github.com/gin-contrib/sessions v0.0.0-20181124110724-7687b645ca6b
 	github.com/gin-contrib/sse v0.0.0-20170109093832-22d885f9ecc7 // indirect
 	github.com/gin-gonic/gin v1.3.0
 	github.com/go-sql-driver/mysql v1.4.1

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"strings"
 
 	"ginserver/module/config"
 	"ginserver/module/util"
@@ -16,6 +17,7 @@ var log = logrus.New()
 func Init() {
 	var (
 		cfgLog  = config.GetConfig().Log
+		logName string
 		logFile *os.File
 		err     error
 	)
@@ -28,8 +30,12 @@ func Init() {
 	}
 
 	// open or create log file
-	logName := cfgLog.Path + cfgLog.FileName
-	logFile, err = os.OpenFile(logName, os.O_WRONLY|os.O_APPEND, 0666)
+	if strings.HasSuffix(cfgLog.Path, "/") {
+		logName = cfgLog.Path + cfgLog.FileName
+	} else {
+		logName = cfgLog.Path + "/" + cfgLog.FileName
+	}
+	logFile, err = os.OpenFile(logName, os.O_WRONLY|os.O_APPEND|os.O_CREATE, 0666)
 	if err != nil {
 		panic(fmt.Sprintf("open or create log name [%s] err: [%v]", logName, err))
 	}

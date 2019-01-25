@@ -1,1 +1,0 @@
-.PHONY: getpkg install reload start stop migrate

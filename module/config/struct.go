@@ -1,15 +1,17 @@
 package config
 
 type config struct {
-	RunMode  string      `yaml:"RunMode"`
-	AppName  string      `yaml:"AppName"`
-	Server   *server     `yaml:"Server"`
-	Fix      *fix        `yaml:"Fix"`
-	Log      *log        `yaml:"Log"`
-	DataBase []*DataBase `yaml:"DataBase"`
-	Session  *session    `yaml:"Session"`
-	Redis    *redis      `yaml:"Redis"`
-	Lang     *lang       `yaml:"Lang"`
+	RunMode    string      `yaml:"RunMode"`
+	AppName    string      `yaml:"AppName"`
+	AssetsFile string      `yaml:"AssetsFile"`
+	ViewFile   string      `yaml:"ViewFile"`
+	Server     *server     `yaml:"Server"`
+	Fix        *fix        `yaml:"Fix"`
+	Log        *log        `yaml:"Log"`
+	DataBase   []*DataBase `yaml:"DataBase"`
+	Session    *session    `yaml:"Session"`
+	Redis      *redis      `yaml:"Redis"`
+	Lang       *lang       `yaml:"Lang"`
 }
 
 type server struct {
@@ -52,7 +54,7 @@ type session struct {
 	Provider string `yaml:"Provider"`
 	Path     string `yaml:"Path"`
 	Domain   string `yaml:"Domain"`
-	Secure   string `yaml:"Secure"`
+	Secret   string `yaml:"Secret"`
 	MaxAge   int    `yaml:"MaxAge"`
 	HttpOnly bool   `yaml:"HttpOnly"`
 }

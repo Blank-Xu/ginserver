@@ -34,7 +34,7 @@ func newEngine(cfg *config.DataBase) *xorm.Engine {
 		if err = engine.Ping(); err != nil {
 			panic(fmt.Sprintf("database [%s] connect error \n - dns: [%s] \n - err: [%v]", cfg.DataBase, dataSourceName, err))
 		}
-		log.Infof("database %s connected.", cfg.DataBase)
+		log.Infof("database [%s] connected.", cfg.DataBase)
 	}
 
 	engine.SetConnMaxLifetime(time.Duration(cfg.ConnMaxLifetime) * time.Minute)
