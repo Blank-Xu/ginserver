@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"time"
 
-	"ginserver/module/config"
-	"ginserver/module/log"
+	"ginserver/modules/config"
+	"ginserver/modules/log"
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/go-xorm/core"

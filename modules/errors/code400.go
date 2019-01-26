@@ -1,4 +1,4 @@
-package error
+package errors
 
 // code 455-499
 const (

@@ -1,7 +1,7 @@
-package model
+package models
 
 import (
-	"ginserver/module/db"
+	"ginserver/modules/db"
 
 	"github.com/casbin/casbin/model"
 	"github.com/casbin/casbin/persist"
@@ -9,13 +9,14 @@ import (
 
 type SCasbin struct {
 	*db.Model `xorm:"-"`
-	PType     string `xorm:"varchar(20) not null default '''' index"`
-	V0        string `xorm:"varchar(50) not null default '''' index"`
-	V1        string `xorm:"varchar(100) not null default '''' index"`
-	V2        string `xorm:"varchar(100) not null default '''' index"`
-	V3        string `xorm:"varchar(100) not null default '''' index"`
-	V4        string `xorm:"varchar(100) not null default '''' index"`
-	V5        string `xorm:"varchar(100) not null default '''' index"`
+	Id        int    `xorm:"int(11) pk autoincr"`
+	Ptype     string `xorm:"varchar(255) index not null default ''"`
+	V0        string `xorm:"varchar(255) index not null default ''"`
+	V1        string `xorm:"varchar(255) index not null default ''"`
+	V2        string `xorm:"varchar(255) index not null default ''"`
+	V3        string `xorm:"varchar(255) index not null default ''"`
+	V4        string `xorm:"varchar(255) index not null default ''"`
+	V5        string `xorm:"varchar(255) index not null default ''"`
 }
 
 func (p *SCasbin) TableName() string {
@@ -68,7 +69,7 @@ func (p *SCasbin) RemovePolicy(sec string, ptype string, rule []string) error {
 
 // RemoveFilteredPolicy removes policy rules that match the filter from the storage.
 func (p *SCasbin) RemoveFilteredPolicy(sec string, ptype string, fieldIndex int, fieldValues ...string) error {
-	rule := &SCasbin{PType: ptype}
+	rule := &SCasbin{Ptype: ptype}
 
 	idx := fieldIndex + len(fieldValues)
 	switch {
@@ -97,7 +98,7 @@ func (p *SCasbin) RemoveFilteredPolicy(sec string, ptype string, fieldIndex int,
 const prefixLine = ", "
 
 func loadPolicyLine(rule *SCasbin, model model.Model) {
-	line := rule.PType
+	line := rule.Ptype
 	switch {
 	case len(rule.V0) > 0:
 		line += prefixLine + rule.V0
@@ -121,7 +122,7 @@ func loadPolicyLine(rule *SCasbin, model model.Model) {
 }
 
 func savePolicyLine(ptype string, rule []string) *SCasbin {
-	line := &SCasbin{PType: ptype}
+	line := &SCasbin{Ptype: ptype}
 
 	l := len(rule)
 	switch {

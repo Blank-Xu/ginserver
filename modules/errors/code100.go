@@ -1,4 +1,4 @@
-package error
+package errors
 
 // code 104-199 for status
 const (

@@ -1,7 +1,7 @@
 package db
 
 import (
-	"ginserver/module/log"
+	"ginserver/modules/log"
 
 	"github.com/go-xorm/core"
 	"github.com/sirupsen/logrus"

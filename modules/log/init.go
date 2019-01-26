@@ -6,8 +6,8 @@ import (
 	"os"
 	"strings"
 
-	"ginserver/module/config"
-	"ginserver/module/util"
+	"ginserver/modules/config"
+	"ginserver/modules/util"
 
 	"github.com/sirupsen/logrus"
 )

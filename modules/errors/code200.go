@@ -1,4 +1,4 @@
-package error
+package errors
 
 // code 230-299
 const (

@@ -10,11 +10,11 @@ import (
 	"os/signal"
 	"time"
 
-	"ginserver/model"
-	"ginserver/module/config"
-	"ginserver/module/db"
-	glog "ginserver/module/log"
-	"ginserver/router"
+	"ginserver/models"
+	"ginserver/modules/config"
+	"ginserver/modules/db"
+	glog "ginserver/modules/log"
+	"ginserver/routers"
 )
 
 var configFile = flag.String("config", "config/app_debug.yaml", "config file")
@@ -36,9 +36,9 @@ func init() {
 
 	db.Init()
 
-	model.Init()
+	models.Init()
 
-	router.Init()
+	routers.Init()
 }
 
 func main() {
@@ -55,7 +55,7 @@ func main() {
 
 	srv := &http.Server{
 		Addr:           ":" + cfg.HttpPort,
-		Handler:        router.GetRouter(),
+		Handler:        routers.GetRouter(),
 		ReadTimeout:    time.Duration(cfg.ReadTimeout) * time.Second,
 		WriteTimeout:   time.Duration(cfg.WriteTimeout) * time.Second,
 		MaxHeaderBytes: 1 << 20,

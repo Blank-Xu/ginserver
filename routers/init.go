@@ -1,13 +1,14 @@
-package router
+package routers
 
 import (
 	"fmt"
 	"net/http"
 
-	"ginserver/model"
-	"ginserver/module/config"
-	"ginserver/module/log"
-	"ginserver/module/middleware"
+	"ginserver/models"
+	"ginserver/modules/config"
+	"ginserver/modules/errors"
+	"ginserver/modules/log"
+	"ginserver/modules/middleware"
 
 	"github.com/casbin/casbin"
 	"github.com/gin-contrib/sessions"
@@ -40,24 +41,16 @@ func Init() {
 	router.LoadHTMLGlob(cfg.ViewFile + "/*")
 
 	router.NoRoute(func(c *gin.Context) {
-		c.AbortWithStatusJSON(http.StatusNotFound,
-			gin.H{
-				"code": http.StatusNotFound,
-				"msg":  http.StatusText(http.StatusNotFound),
-			})
+		c.AbortWithStatusJSON(errors.ErrorHttpCodeJson(http.StatusNotFound))
 	})
 	router.NoMethod(func(c *gin.Context) {
-		c.AbortWithStatusJSON(http.StatusMethodNotAllowed,
-			gin.H{
-				"code": http.StatusMethodNotAllowed,
-				"msg":  http.StatusText(http.StatusMethodNotAllowed),
-			})
+		c.AbortWithStatusJSON(errors.ErrorHttpCodeJson(http.StatusMethodNotAllowed))
 	})
 
 	router.Use(sessions.Sessions(cfg.AppName, newSessionStore()))
 
 	// load casbin
-	casbinEnforcer = casbin.NewEnforcer(cfg.RbacFile, &model.SCasbin{})
+	casbinEnforcer = casbin.NewEnforcer(cfg.RbacFile, &models.SCasbin{})
 
 	// register routers
 	registerRouter(router)

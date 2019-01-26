@@ -1,4 +1,4 @@
-package error
+package errors
 
 // code 515-599
 const (

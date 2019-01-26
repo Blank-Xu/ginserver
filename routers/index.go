@@ -1,9 +1,9 @@
-package router
+package routers
 
 import (
 	"net/http"
 
-	"ginserver/module/config"
+	"ginserver/modules/config"
 
 	"github.com/gin-gonic/gin"
 )
