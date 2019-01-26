@@ -2,14 +2,15 @@ package routers
 
 import (
 	"github.com/gin-gonic/gin"
+
+	"ginserver/routers/api"
+	"ginserver/routers/web"
 )
 
 func registerRouter(r *gin.Engine) {
 	registerIndex(r)
 
-	// admin := r.Group("admin")
-	// web.Init(r)
-	//
-	// api := r.Group("api")
-	// v1.Init(api.Group("v1"))
+	web.Init(r)
+
+	api.Init(r)
 }

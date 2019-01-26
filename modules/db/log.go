@@ -13,10 +13,10 @@ type SimpleLogger struct {
 	showSQL bool
 }
 
-func newSimpleLogger(database string, l core.LogLevel) *SimpleLogger {
+func newSimpleLogger(database string, logLevel core.LogLevel) *SimpleLogger {
 	return &SimpleLogger{
 		entry: log.GetLog().WithField("database", database),
-		level: l,
+		level: logLevel,
 	}
 }
 

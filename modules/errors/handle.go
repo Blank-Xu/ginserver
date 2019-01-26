@@ -2,21 +2,18 @@ package errors
 
 import (
 	"net/http"
+
+	"ginserver/modules/resp"
 )
 
-type respErrorCodeJson struct {
-	Code int    `json:"code"`
-	Msg  string `json:"msg"`
-}
-
-// ErrorCodeJson return code and respErrorCodeJson pointer struct
+// ErrorCodeJson return http code, server code and msg
 // include http status code
-func ErrorCodeJson(httpCode, code int, err ...interface{}) (int, *respErrorCodeJson) {
+func ErrorCodeJson(httpCode, code int, err ...interface{}) (int, *resp.Response) {
 	code, msg := errorMsg(code, err...)
-	return httpCode, &respErrorCodeJson{code, msg}
+	return httpCode, &resp.Response{Code: code, Msg: msg}
 }
 
-//  ErrorHttpCodeJson return http code and respErrorCodeJson pointer struct
-func ErrorHttpCodeJson(httpCode int) (int, *respErrorCodeJson) {
-	return httpCode, &respErrorCodeJson{httpCode, http.StatusText(httpCode)}
+//  ErrorHttpCodeJson return http code and msg
+func ErrorHttpCodeJson(httpCode int) (int, *resp.Response) {
+	return httpCode, &resp.Response{Code: httpCode, Msg: http.StatusText(httpCode)}
 }
