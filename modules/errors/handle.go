@@ -6,14 +6,28 @@ import (
 	"ginserver/modules/resp"
 )
 
-// ErrorCodeJson return http code, server code and msg
-// include http status code
-func ErrorCodeJson(httpCode, code int, err ...interface{}) (int, *resp.Response) {
-	code, msg := errorMsg(code, err...)
-	return httpCode, &resp.Response{Code: code, Msg: msg}
+type codeMsg struct {
+	Code errCode `json:"code"`
+	Msg  string  `json:"msg"`
 }
 
-//  ErrorHttpCodeJson return http code and msg
-func ErrorHttpCodeJson(httpCode int) (int, *resp.Response) {
-	return httpCode, &resp.Response{Code: httpCode, Msg: http.StatusText(httpCode)}
+// RespError return http code, server code and msg struct
+func RespError(httpCode int, code errCode, err ...interface{}) (int, interface{}) {
+	code, msg := errorMsg(code, err...)
+	return httpCode,
+		&resp.ResponseErr{
+			Error: &codeMsg{
+				Code: code,
+				Msg:  msg,
+			}}
+}
+
+//  RespHttpError return http code and msg struct
+func RespHttpError(httpCode int) (int, interface{}) {
+	return httpCode,
+		&resp.ResponseErr{
+			Error: &codeMsg{
+				Code: errCode(httpCode),
+				Msg:  http.StatusText(httpCode),
+			}}
 }

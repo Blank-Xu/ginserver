@@ -1,11 +1,10 @@
 package errors
 
-// code 455-499
+// code 4000-4999
 const (
-	Code455    = 455
-	Code455Msg = "455"
+	CodeParamInvalid = 4001
 )
 
 func init() {
-	registerErrMsg(Code455, Code455Msg)
+	registerErrMsg(CodeParamInvalid, "param invalid")
 }

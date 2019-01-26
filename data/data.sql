@@ -17,43 +17,43 @@ FLUSH PRIVILEGES;
 -- system params
 CREATE TABLE IF NOT EXISTS s_params
 (
-  id          int AUTO_INCREMENT PRIMARY KEY,
-  name        varchar(32)  NOT NULL,
-  param       text         NOT NULL,
-  remark      varchar(255) NOT NULL DEFAULT '',
-  update_time timestamp             DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  id      int AUTO_INCREMENT PRIMARY KEY,
+  name    varchar(32)  NOT NULL,
+  param   text         NOT NULL,
+  remark  varchar(255) NOT NULL DEFAULT '',
+  updated timestamp    NOT NULL,
   UNIQUE uq_s_params_name (name)
 ) DEFAULT CHARACTER SET = utf8mb4;
 
 -- admin log
 CREATE TABLE IF NOT EXISTS s_log
 (
-  id          bigint AUTO_INCREMENT PRIMARY KEY,
-  uid         int          NOT NULL COMMENT 'user id',
-  role        varchar(32)  NOT NULL COMMENT 'user role',
-  method      varchar(10)  NOT NULL COMMENT 'http method',
-  router      varchar(50)  NOT NULL COMMENT 'http router',
-  params      text         NOT NULL COMMENT 'request params',
-  create_time timestamp             DEFAULT CURRENT_TIMESTAMP,
-  ip          varchar(32)  NOT NULL DEFAULT '' COMMENT 'request ip address',
-  remark      varchar(255) NOT NULL DEFAULT '',
+  id      bigint AUTO_INCREMENT PRIMARY KEY,
+  uid     int          NOT NULL COMMENT 'user id',
+  role    varchar(32)  NOT NULL COMMENT 'user role',
+  method  varchar(10)  NOT NULL COMMENT 'http method',
+  router  varchar(50)  NOT NULL COMMENT 'http router',
+  params  text         NOT NULL COMMENT 'request params',
+  created timestamp    NOT NULL,
+  ip      varchar(32)  NOT NULL DEFAULT '' COMMENT 'request ip address',
+  remark  varchar(255) NOT NULL DEFAULT '',
   INDEX idx_s_log_uid (uid)
 ) DEFAULT CHARACTER SET = utf8mb4;
 
 -- admin users
 CREATE TABLE IF NOT EXISTS s_admin
 (
-  id          int AUTO_INCREMENT PRIMARY KEY COMMENT 'user id',
-  username    varchar(32)  NOT NULL,
-  password    varchar(32)  NOT NULL,
-  salt        varchar(32)  NOT NULL COMMENT 'salt for encrypt password',
-  nickname    varchar(32)  NOT NULL DEFAULT '',
-  email       varchar(40)  NOT NULL DEFAULT '',
-  phone       varchar(20)  NOT NULL DEFAULT '',
-  remark      varchar(255) NOT NULL DEFAULT '',
-  creat_time  timestamp             DEFAULT CURRENT_TIMESTAMP,
-  update_time timestamp             DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  login_time  timestamp,
-  login_ip    varchar(60)  NOT NULL DEFAULT '',
+  id         int AUTO_INCREMENT PRIMARY KEY COMMENT 'user id',
+  username   varchar(32)  NOT NULL,
+  password   varchar(32)  NOT NULL,
+  salt       varchar(32)  NOT NULL COMMENT 'salt for encrypt password',
+  nickname   varchar(32)  NOT NULL DEFAULT '',
+  email      varchar(40)  NOT NULL DEFAULT '',
+  phone      varchar(20)  NOT NULL DEFAULT '',
+  remark     varchar(255) NOT NULL DEFAULT '',
+  created    timestamp    NOT NULL,
+  updated    timestamp    NOT NULL,
+  login_time timestamp,
+  login_ip   varchar(60)  NOT NULL DEFAULT '',
   UNIQUE uq_s_admin_username (username)
 ) DEFAULT CHARACTER SET = utf8mb4;

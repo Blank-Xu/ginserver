@@ -7,12 +7,12 @@ import (
 )
 
 type SParams struct {
-	*db.Model  `xorm:"-"`
-	Id         int    `xorm:"pk autoincr"`
-	Name       string `xorm:"unique"`
-	Param      string
-	Remark     string
-	UpdateTime time.Time
+	*db.Model `xorm:"-" json:"-"`
+	Id        int       `xorm:"pk autoincr" json:"id"`
+	Name      string    `xorm:"unique"`
+	Param     string    `json:"param"`
+	Remark    string    `json:"remark"`
+	Updated   time.Time `json:"updated"`
 }
 
 func (p *SParams) TableName() string {

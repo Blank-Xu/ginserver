@@ -21,8 +21,5 @@ func Init(r *gin.Engine) {
 
 func info(c *gin.Context) {
 	c.JSON(http.StatusOK,
-		&resp.Response{
-			Code: http.StatusOK,
-			Msg:  "api version: " + config.Version,
-		})
+		&resp.ResponseData{Data: "api version: " + config.Version})
 }

@@ -3,14 +3,15 @@ package routers
 import (
 	"github.com/gin-gonic/gin"
 
+	"ginserver/controllers"
+	"ginserver/routers/admin"
 	"ginserver/routers/api"
-	"ginserver/routers/web"
 )
 
 func registerRouter(r *gin.Engine) {
-	registerIndex(r)
+	controllers.GetIndex(r)
 
-	web.Init(r)
+	admin.Init(r)
 
 	api.Init(r)
 }

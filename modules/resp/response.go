@@ -1,6 +1,13 @@
 package resp
 
-type Response struct {
-	Code int    `json:"code"`
-	Msg  string `json:"msg"`
+type ResponseData struct {
+	Data interface{} `json:"data"`
+}
+
+type ResponseErr struct {
+	Error interface{} `json:"error"`
+}
+
+type ResponseCallback struct {
+	CallBack string `json:"callback"`
 }

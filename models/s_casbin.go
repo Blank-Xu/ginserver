@@ -52,19 +52,22 @@ func (p *SCasbin) SavePolicy(model model.Model) error {
 		}
 	}
 
-	return p.Insert(&rules)
+	_, err := p.Insert(&rules)
+	return err
 }
 
 // AddPolicy adds a policy rule to the storage.
 func (p *SCasbin) AddPolicy(sec string, ptype string, rule []string) error {
 	line := savePolicyLine(ptype, rule)
-	return p.InsertOne(line)
+	_, err := p.InsertOne(line)
+	return err
 }
 
 // RemovePolicy removes a policy rule from the storage.
 func (p *SCasbin) RemovePolicy(sec string, ptype string, rule []string) error {
 	line := savePolicyLine(ptype, rule)
-	return p.Delete(line)
+	_, err := p.Delete(line)
+	return err
 }
 
 // RemoveFilteredPolicy removes policy rules that match the filter from the storage.
@@ -92,7 +95,8 @@ func (p *SCasbin) RemoveFilteredPolicy(sec string, ptype string, fieldIndex int,
 		rule.V5 = fieldValues[5-fieldIndex]
 	}
 
-	return p.Delete(rule)
+	_, err := p.Delete(rule)
+	return err
 }
 
 const prefixLine = ", "

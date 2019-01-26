@@ -1,4 +1,4 @@
-package web
+package admin
 
 import (
 	"net/http"

@@ -6,11 +6,13 @@ import (
 	"strconv"
 )
 
+type errCode int
+
 const errPerfix = ", "
 
-var errMap = make(map[int]string)
+var errMap = make(map[errCode]string)
 
-func registerErrMsg(code int, err string) {
+func registerErrMsg(code errCode, err string) {
 	// http code 100 ~ 102
 	if (code <= http.StatusProcessing && code >= http.StatusContinue) ||
 		// http code 200 ~ 226
@@ -21,7 +23,7 @@ func registerErrMsg(code int, err string) {
 		(code <= http.StatusBadRequest && code >= http.StatusUnavailableForLegalReasons) ||
 		// http code 500 ~ 511
 		(code <= http.StatusInternalServerError && code >= http.StatusNetworkAuthenticationRequired) {
-		panic(fmt.Sprintf("code [%d] is the stand http code \n - msg: [%s]", code, http.StatusText(code)))
+		panic(fmt.Sprintf("code [%d] is the stand http code \n - msg: [%s]", code, http.StatusText(int(code))))
 	}
 	if msg, ok := errMap[code]; ok {
 		panic(fmt.Sprintf("error code has been registered \n - code: [%d] msg: [%s] \n - new msg: [%s]", code, msg, err))
@@ -29,16 +31,14 @@ func registerErrMsg(code int, err string) {
 	errMap[code] = err
 }
 
-func errorMsg(code int, err ...interface{}) (int, string) {
+func errorMsg(code errCode, err ...interface{}) (errCode, string) {
 	var (
 		msg string
 		ok  bool
 	)
-	if msg = http.StatusText(code); len(msg) > 0 {
-		return code, msg
-	}
 	if msg, ok = errMap[code]; !ok {
-		msg = http.StatusText(http.StatusInternalServerError) + errPerfix + "code: [" + strconv.Itoa(code) + "]"
+		msg = http.StatusText(http.StatusInternalServerError) + errPerfix +
+			"code: [" + strconv.Itoa(int(code)) + "]"
 		code = http.StatusInternalServerError
 	}
 	if len(err) > 0 {

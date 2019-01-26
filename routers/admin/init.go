@@ -1,4 +1,4 @@
-package web
+package admin
 
 import (
 	"fmt"
@@ -9,21 +9,24 @@ import (
 	"github.com/gin-contrib/sessions/redis"
 	"github.com/gin-gonic/gin"
 
-	"ginserver/controllers/web"
+	"ginserver/controllers/admin"
 	"ginserver/modules/config"
 )
 
 func Init(r *gin.Engine) {
 	var cfg = config.GetConfig()
-	webRouter := r.Group("web")
-	webRouter.GET("/", redirect)
-	webRouter.GET("login", web.GetLogin)
-	webRouter.Use(sessions.Sessions(cfg.AppName, newSessionStore()))
-}
+	adminRouter := r.Group("admin")
+	adminRouter.GET("/", func(c *gin.Context) {
+		c.Redirect(http.StatusPermanentRedirect, "/admin/login")
+	})
 
-func redirect(c *gin.Context) {
-	c.Redirect(http.StatusPermanentRedirect, "/web/login")
-	c.Abort()
+	adminRouter.GET("login", admin.GetLogin)
+	adminRouter.POST("login", admin.PostLogin)
+
+	// use session middleware
+	adminRouter.Use(sessions.Sessions(cfg.AppName, newSessionStore()))
+
+	registerAdmin(adminRouter)
 }
 
 func newSessionStore() (store sessions.Store) {
