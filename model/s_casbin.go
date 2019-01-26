@@ -7,7 +7,7 @@ import (
 	"github.com/casbin/casbin/persist"
 )
 
-type Casbin struct {
+type SCasbin struct {
 	*db.Model `xorm:"-"`
 	PType     string `xorm:"varchar(20) not null default '''' index"`
 	V0        string `xorm:"varchar(50) not null default '''' index"`
@@ -18,24 +18,24 @@ type Casbin struct {
 	V5        string `xorm:"varchar(100) not null default '''' index"`
 }
 
-func (c *Casbin) TableName() string {
+func (p *SCasbin) TableName() string {
 	return "s_casbin"
 }
 
-func (c *Casbin) LoadPolicy(model model.Model) error {
-	var rules []*Casbin
-	if err := c.Select(c, &rules); err != nil {
+func (p *SCasbin) LoadPolicy(model model.Model) error {
+	var rules []*SCasbin
+	if err := p.Select(p, &rules); err != nil {
 		return err
 	}
-	for _, rule := range rules {
-		loadPolicyLine(rule, model)
+	for _, line := range rules {
+		loadPolicyLine(line, model)
 	}
 	return nil
 }
 
 // SavePolicy saves policy to database.
-func (c *Casbin) SavePolicy(model model.Model) error {
-	var rules []*Casbin
+func (p *SCasbin) SavePolicy(model model.Model) error {
+	var rules []*SCasbin
 
 	for ptype, ast := range model["p"] {
 		for _, rule := range ast.Policy {
@@ -51,24 +51,24 @@ func (c *Casbin) SavePolicy(model model.Model) error {
 		}
 	}
 
-	return c.Insert(&rules)
+	return p.Insert(&rules)
 }
 
 // AddPolicy adds a policy rule to the storage.
-func (c *Casbin) AddPolicy(sec string, ptype string, rule []string) error {
+func (p *SCasbin) AddPolicy(sec string, ptype string, rule []string) error {
 	line := savePolicyLine(ptype, rule)
-	return c.InsertOne(line)
+	return p.InsertOne(line)
 }
 
 // RemovePolicy removes a policy rule from the storage.
-func (c *Casbin) RemovePolicy(sec string, ptype string, rule []string) error {
+func (p *SCasbin) RemovePolicy(sec string, ptype string, rule []string) error {
 	line := savePolicyLine(ptype, rule)
-	return c.Delete(line)
+	return p.Delete(line)
 }
 
 // RemoveFilteredPolicy removes policy rules that match the filter from the storage.
-func (c *Casbin) RemoveFilteredPolicy(sec string, ptype string, fieldIndex int, fieldValues ...string) error {
-	rule := &Casbin{PType: ptype}
+func (p *SCasbin) RemoveFilteredPolicy(sec string, ptype string, fieldIndex int, fieldValues ...string) error {
+	rule := &SCasbin{PType: ptype}
 
 	idx := fieldIndex + len(fieldValues)
 	switch {
@@ -91,12 +91,12 @@ func (c *Casbin) RemoveFilteredPolicy(sec string, ptype string, fieldIndex int, 
 		rule.V5 = fieldValues[5-fieldIndex]
 	}
 
-	return c.Delete(rule)
+	return p.Delete(rule)
 }
 
 const prefixLine = ", "
 
-func loadPolicyLine(rule *Casbin, model model.Model) {
+func loadPolicyLine(rule *SCasbin, model model.Model) {
 	line := rule.PType
 	switch {
 	case len(rule.V0) > 0:
@@ -120,8 +120,8 @@ func loadPolicyLine(rule *Casbin, model model.Model) {
 	persist.LoadPolicyLine(line, model)
 }
 
-func savePolicyLine(ptype string, rule []string) *Casbin {
-	line := &Casbin{PType: ptype}
+func savePolicyLine(ptype string, rule []string) *SCasbin {
+	line := &SCasbin{PType: ptype}
 
 	l := len(rule)
 	switch {

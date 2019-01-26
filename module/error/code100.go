@@ -1,10 +1,11 @@
 package error
 
-// code 1000-1999 for status
+// code 104-199 for status
 const (
-	CodeSuccess = 1000
+	Code104    = 104
+	Code104Msg = "104"
 )
 
 func init() {
-	regErrCode(CodeSuccess, "succ")
+	registerErrMsg(Code104, Code104Msg)
 }

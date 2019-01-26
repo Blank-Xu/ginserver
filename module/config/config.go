@@ -1,26 +1,55 @@
 package config
 
-import (
-	"fmt"
-
-	"github.com/spf13/viper"
-)
-
-const Version = "0.0.1"
-
-var cfg = new(config)
-
-func Init(file string) {
-	viper.SetConfigFile(file)
-	if err := viper.ReadInConfig(); err != nil {
-		panic(fmt.Sprintf("load config error, file: [%s], err: [%v]", file, err))
-	}
-
-	if err := viper.Unmarshal(cfg); err != nil {
-		panic(fmt.Sprintf("read config error, file: [%s], err: [%v]", file, err))
-	}
+type config struct {
+	RunMode    string      `yaml:"RunMode"`
+	AppName    string      `yaml:"AppName"`
+	AssetsFile string      `yaml:"AssetsFile"`
+	ViewFile   string      `yaml:"ViewFile"`
+	RbacFile   string      `yaml:"RbacFile"`
+	Server     *server     `yaml:"Server"`
+	Fix        *fix        `yaml:"Fix"`
+	Log        *log        `yaml:"Log"`
+	DataBase   []*DataBase `yaml:"DataBase"`
+	Session    *session    `yaml:"Session"`
+	Redis      *redis      `yaml:"Redis"`
+	Lang       *lang       `yaml:"Lang"`
 }
 
-func GetConfig() *config {
-	return cfg
+type server struct {
+	HttpPort     string `yaml:"HttpPort"`
+	ReadTimeout  int    `yaml:"ReadTimeout"`
+	WriteTimeout int    `yaml:"WriteTimeout"`
+}
+
+type fix struct {
+	TimeZone *struct {
+		Name   string `yaml:"Name"`
+		Offset int    `yaml:"Offset"`
+	} `yaml:"TimeZone"`
+}
+
+type log struct {
+	Path     string `yaml:"Path"`
+	FileName string `yaml:"FileName"`
+	Level    uint32 `yaml:"Level"`
+}
+
+type session struct {
+	Provider string `yaml:"Provider"`
+	Path     string `yaml:"Path"`
+	Domain   string `yaml:"Domain"`
+	Secret   string `yaml:"Secret"`
+	MaxAge   int    `yaml:"MaxAge"`
+	HttpOnly bool   `yaml:"HttpOnly"`
+}
+
+type redis struct {
+	Host     string `yaml:"Host"`
+	Port     string `yaml:"Port"`
+	Password string `yaml:"Password"`
+}
+
+type lang struct {
+	Default string   `yaml:"Default"`
+	Lang    []string `yaml:"Lang"`
 }

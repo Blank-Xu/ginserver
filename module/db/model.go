@@ -2,47 +2,69 @@ package db
 
 type Model struct{}
 
-func (m *Model) InsertOne(model interface{}) error {
-	_, err := defaultEngine.InsertOne(model)
+// InsertOne insert table one record
+// param: modelPtr is a pointer struct like *Model
+func (p *Model) InsertOne(modelPtr interface{}) error {
+	_, err := defaultEngine.InsertOne(modelPtr)
 	return err
 }
 
-func (m *Model) Insert(records interface{}) error {
-	_, err := defaultEngine.Insert(records)
+// Insert insert table one or more records
+// param: modelsPtr is a pointer slice struct like *[]*Model
+func (p *Model) Insert(modelsPtr interface{}) error {
+	_, err := defaultEngine.Insert(modelsPtr)
 	return err
 }
 
-func (m *Model) Update(model interface{}) error {
-	_, err := defaultEngine.Update(model)
+// Update is update table records
+// param: modelPtr is a pointer struct like *Model
+func (p *Model) Update(modelPtr interface{}) error {
+	_, err := defaultEngine.Update(modelPtr)
 	return err
 }
 
-func (m *Model) Delete(model interface{}) error {
-	_, err := defaultEngine.Delete(model)
+// Delete delete table records
+// param: modelPtr is a pointer struct like *Model
+func (p *Model) Delete(modelPtr interface{}) error {
+	_, err := defaultEngine.Delete(modelPtr)
 	return err
 }
 
-func (m *Model) SelectOne(model interface{}) error {
-	_, err := defaultEngine.Get(model)
+// SelectOne select one table record and reflect to struct
+// param: modelPtr is a pointer struct like *Model
+func (p *Model) SelectOne(modelPtr interface{}) error {
+	_, err := defaultEngine.Get(modelPtr)
 	return err
 }
 
-func (m *Model) Select(model interface{}, records interface{}) error {
-	return defaultEngine.Find(records, model)
+// Select select table records
+// param: modelPtr is a pointer struct like *Model
+// param: modelsPtr is a pointer slice struct like *[]*Model
+func (p *Model) Select(modelPtr interface{}, modelsPtr interface{}) error {
+	return defaultEngine.Find(modelsPtr, modelPtr)
 }
 
-func (m *Model) SelectCond(model interface{}, cond interface{}, records interface{}) error {
-	return defaultEngine.Where(cond).Find(records, model)
+// SelectCond select table records with condition
+// param: modelPtr is a pointer struct like *Model
+// param: modelsPtr is a pointer slice struct like *[]*Model
+func (p *Model) SelectCond(modelPtr interface{}, cond interface{}, modelsPtr interface{}) error {
+	return defaultEngine.Where(cond).Find(modelsPtr, modelPtr)
 }
 
-func (m *Model) Count(model interface{}) (int64, error) {
-	return defaultEngine.Count(model)
+// Count select table count
+// param: modelPtr is a pointer struct like *Model
+func (p *Model) Count(modelPtr interface{}) (int64, error) {
+	return defaultEngine.Count(modelPtr)
 }
 
-func (m *Model) CountCond(model interface{}, cond interface{}) (int64, error) {
-	return defaultEngine.Where(cond).Count(model)
+// CountCond select table count with condition
+// param: modelPtr is a pointer struct like *Model
+func (p *Model) CountCond(modelPtr interface{}, cond interface{}) (int64, error) {
+	return defaultEngine.Where(cond).Count(modelPtr)
 }
 
-func (m *Model) IsRecordExist(model interface{}, cond interface{}) (bool, error) {
-	return defaultEngine.Where(cond).Exist(model)
+// IsRecordExist select table record with exists condition
+// param: modelPtr is a pointer struct like *Model
+func (p *Model) IsRecordExists(modelPtr interface{}, cond interface{}) (bool, error) {
+	return defaultEngine.Where(cond).Exist(modelPtr)
 }

@@ -1,10 +1,11 @@
 package error
 
+// code 515-599
 const (
-	Code500    = 500
-	Code500Err = "Internal Server Error"
+	Code515    = 515
+	Code515Msg = "515"
 )
 
 func init() {
-	regErrCode(Code500, Code500Err)
+	registerErrMsg(Code515, Code515Msg)
 }

@@ -2,6 +2,7 @@ package error
 
 import (
 	"fmt"
+	"net/http"
 	"strconv"
 )
 
@@ -9,21 +10,21 @@ const errPerfix = ", "
 
 var errMap = make(map[int]string)
 
-func regErrCode(code int, err string) {
+func registerErrMsg(code int, err string) {
 	if msg, ok := errMap[code]; ok {
-		panic(fmt.Sprintf("code: [%d], msg: [%s], has registered, error: [%s]", code, msg, err))
+		panic(fmt.Sprintf("error code has been registered \n - code: [%d] msg: [%s] \n - new msg: [%s]", code, msg, err))
 	}
 	errMap[code] = err
 }
 
-func Error(code int, err ...interface{}) (int, string) {
+func ErrorMsg(code int, err ...interface{}) (int, string) {
 	var (
 		msg string
 		ok  bool
 	)
 	if msg, ok = errMap[code]; !ok {
-		msg = Code500Err + errPerfix + "code: " + strconv.Itoa(code)
-		code = Code500
+		msg = http.StatusText(http.StatusInternalServerError) + errPerfix + "code: " + strconv.Itoa(code)
+		code = http.StatusInternalServerError
 	}
 	if len(err) > 0 {
 		switch str := err[0].(type) {
@@ -36,4 +37,9 @@ func Error(code int, err ...interface{}) (int, string) {
 		}
 	}
 	return code, msg
+}
+
+func ErrorMap(code int, err ...interface{}) map[int]string {
+	code, msg := ErrorMsg(code, err...)
+	return map[int]string{code: msg}
 }

@@ -1,10 +1,11 @@
 package error
 
-// code 2000-2999 for database
+// code 230-299
 const (
-	CodeDB = 2000
+	Code230    = 230
+	Code230Msg = "230"
 )
 
 func init() {
-	regErrCode(CodeDB, "succ")
+	registerErrMsg(Code230, Code230Msg)
 }

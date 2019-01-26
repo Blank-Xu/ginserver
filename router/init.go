@@ -2,6 +2,7 @@ package router
 
 import (
 	"fmt"
+	"net/http"
 
 	"ginserver/model"
 	"ginserver/module/config"
@@ -17,29 +18,57 @@ import (
 
 const assetsFile = "./assets"
 
-var router = gin.New()
+var (
+	router         = gin.New()
+	casbinEnforcer *casbin.Enforcer
+)
 
 func Init() {
 	var cfg = config.GetConfig()
 
-	// set gin's global setting
+	// set global setting
 	if cfg.RunMode != gin.DebugMode {
 		gin.DisableConsoleColor()
 	}
 	gin.SetMode(cfg.RunMode)
 
-	// set gin's global middleware
-	router.Use(middleware.Logger(log.GetLog(), assetsFile))
+	// set global middleware
+	router.Use(middleware.Logger(log.GetLog()))
 	router.Use(gin.Recovery())
-	router.Use(sessions.Sessions(cfg.AppName, newSessionStore()))
 
 	router.Static(cfg.AssetsFile, assetsFile)
 	router.LoadHTMLGlob(cfg.ViewFile + "/*")
 
-	e := casbin.NewEnforcer("config/rbac_model.ini", &model.Casbin{})
+	router.NoRoute(func(c *gin.Context) {
+		c.AbortWithStatusJSON(http.StatusNotFound,
+			gin.H{
+				"code": http.StatusNotFound,
+				"msg":  http.StatusText(http.StatusNotFound),
+			})
+	})
+	router.NoMethod(func(c *gin.Context) {
+		c.AbortWithStatusJSON(http.StatusMethodNotAllowed,
+			gin.H{
+				"code": http.StatusMethodNotAllowed,
+				"msg":  http.StatusText(http.StatusMethodNotAllowed),
+			})
+	})
+
+	router.Use(sessions.Sessions(cfg.AppName, newSessionStore()))
+
+	// load casbin
+	casbinEnforcer = casbin.NewEnforcer(cfg.RbacFile, &model.SCasbin{})
 
 	// register routers
-	registerRouter()
+	registerRouter(router)
+}
+
+func GetRouter() *gin.Engine {
+	return router
+}
+
+func GetCasbin() *casbin.Enforcer {
+	return casbinEnforcer
 }
 
 func newSessionStore() (store sessions.Store) {
@@ -61,12 +90,4 @@ func newSessionStore() (store sessions.Store) {
 		panic("load session config error")
 	}
 	return
-}
-
-func GetRouter() *gin.Engine {
-	return router
-}
-
-func registerRouter() {
-	index()
 }

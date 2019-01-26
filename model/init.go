@@ -1,10 +1,16 @@
 package model
 
-import "ginserver/module/db"
+import (
+	"fmt"
+
+	"ginserver/module/db"
+)
 
 func Init() {
-	var xorm = db.GetDefaultEngine()
-	if err := xorm.Sync2(new(Casbin)); err != nil {
-		panic("xorm sync err: " + err.Error())
+	var orm = db.GetDefaultEngine()
+	if err := orm.Sync2(
+		new(SCasbin),
+	); err != nil {
+		panic(fmt.Sprintf("database [%s] synchronize err: [%v]", orm.DataSourceName(), err))
 	}
 }
