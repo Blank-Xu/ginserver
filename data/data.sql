@@ -51,8 +51,8 @@ CREATE TABLE IF NOT EXISTS s_admin
   email      varchar(40)  NOT NULL DEFAULT '',
   phone      varchar(20)  NOT NULL DEFAULT '',
   remark     varchar(255) NOT NULL DEFAULT '',
-  created    timestamp    NOT NULL,
-  updated    timestamp    NOT NULL,
+  created    timestamp    NOT NULL DEFAULT current_timestamp,
+  updated    timestamp    NOT NULL DEFAULT current_timestamp ON UPDATE current_timestamp,
   login_time timestamp,
   login_ip   varchar(60)  NOT NULL DEFAULT '',
   UNIQUE uq_s_admin_username (username)
