@@ -16,6 +16,7 @@ import (
 func Init(r *gin.Engine) {
 	var cfg = config.GetConfig()
 	adminRouter := r.Group("admin")
+	// need login
 	adminRouter.GET("/", func(c *gin.Context) {
 		c.Redirect(http.StatusPermanentRedirect, "/admin/login")
 	})
