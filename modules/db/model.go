@@ -16,8 +16,8 @@ func (p *Model) Insert(modelsPtr interface{}) (int64, error) {
 
 // Update is update table records
 // param: modelPtr is a pointer struct like *Model
-func (p *Model) Update(modelPtr interface{}) (int64, error) {
-	return defaultEngine.Update(modelPtr)
+func (p *Model) Update(modelPtr, cond interface{}) (int64, error) {
+	return defaultEngine.Where(cond).Update(modelPtr)
 }
 
 // Delete delete table records
@@ -35,14 +35,14 @@ func (p *Model) SelectOne(modelPtr interface{}) (bool, error) {
 // Select select table records
 // param: modelPtr is a pointer struct like *Model
 // param: modelsPtr is a pointer slice struct like *[]*Model
-func (p *Model) Select(modelPtr interface{}, modelsPtr interface{}) error {
+func (p *Model) Select(modelPtr, modelsPtr interface{}) error {
 	return defaultEngine.Find(modelsPtr, modelPtr)
 }
 
 // SelectCond select table records with condition
 // param: modelPtr is a pointer struct like *Model
 // param: modelsPtr is a pointer slice struct like *[]*Model
-func (p *Model) SelectCond(modelPtr interface{}, cond interface{}, modelsPtr interface{}) error {
+func (p *Model) SelectCond(modelPtr, cond, modelsPtr interface{}) error {
 	return defaultEngine.Where(cond).Find(modelsPtr, modelPtr)
 }
 
@@ -54,12 +54,12 @@ func (p *Model) Count(modelPtr interface{}) (int64, error) {
 
 // CountCond select table count with condition
 // param: modelPtr is a pointer struct like *Model
-func (p *Model) CountCond(modelPtr interface{}, cond interface{}) (int64, error) {
+func (p *Model) CountCond(modelPtr, cond interface{}) (int64, error) {
 	return defaultEngine.Where(cond).Count(modelPtr)
 }
 
 // IsRecordExist select table record with exists condition
 // param: modelPtr is a pointer struct like *Model
-func (p *Model) IsRecordExists(modelPtr interface{}, cond interface{}) (bool, error) {
-	return defaultEngine.Where(cond).Exist(modelPtr)
+func (p *Model) IsRecordExists(col string, modelPtr, cond interface{}) (bool, error) {
+	return defaultEngine.Cols(col).Where(cond).Exist(modelPtr)
 }

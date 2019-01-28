@@ -43,17 +43,18 @@ CREATE TABLE IF NOT EXISTS s_log
 -- admin users
 CREATE TABLE IF NOT EXISTS s_admin
 (
-  id         int AUTO_INCREMENT PRIMARY KEY COMMENT 'user id',
-  username   varchar(32)  NOT NULL,
-  password   varchar(32)  NOT NULL,
-  salt       varchar(32)  NOT NULL COMMENT 'salt for encrypt password',
-  nickname   varchar(32)  NOT NULL DEFAULT '',
-  email      varchar(40)  NOT NULL DEFAULT '',
-  phone      varchar(20)  NOT NULL DEFAULT '',
-  remark     varchar(255) NOT NULL DEFAULT '',
-  created    timestamp    NOT NULL DEFAULT current_timestamp,
-  updated    timestamp    NOT NULL DEFAULT current_timestamp ON UPDATE current_timestamp,
-  login_time timestamp,
-  login_ip   varchar(60)  NOT NULL DEFAULT '',
+  id          int AUTO_INCREMENT PRIMARY KEY COMMENT 'user id',
+  username    varchar(32)  NOT NULL,
+  password    varchar(32)  NOT NULL,
+  salt        varchar(32)  NOT NULL COMMENT 'salt for encrypt password',
+  nickname    varchar(32)  NOT NULL DEFAULT '',
+  email       varchar(40)  NOT NULL DEFAULT '',
+  phone       varchar(20)  NOT NULL DEFAULT '',
+  remark      varchar(255) NOT NULL DEFAULT '',
+  created     timestamp    NOT NULL DEFAULT current_timestamp,
+  updated     timestamp    NOT NULL DEFAULT current_timestamp ON UPDATE current_timestamp,
+  register_ip varchar(60)  NOT NULL DEFAULT '',
+  login_time  timestamp,
+  login_ip    varchar(60)  NOT NULL DEFAULT '',
   UNIQUE uq_s_admin_username (username)
 ) DEFAULT CHARACTER SET = utf8mb4;

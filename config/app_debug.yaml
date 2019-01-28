@@ -13,7 +13,7 @@ Server:
 
 Fix:
   TimeZone:
-    Name: CST
+    Name: UTC
     Offset: 8 # hour
 
 Log: # logrus

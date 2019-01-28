@@ -12,18 +12,17 @@ type codeMsg struct {
 }
 
 // RespError return http code, server code and msg struct
-func RespError(httpCode int, code errCode, err ...interface{}) (int, interface{}) {
+func RespError(code errCode, err ...interface{}) *resp.ResponseErr {
 	code, msg := errorMsg(code, err...)
-	return httpCode,
-		&resp.ResponseErr{
-			Error: &codeMsg{
-				Code: code,
-				Msg:  msg,
-			}}
+	return &resp.ResponseErr{
+		Error: &codeMsg{
+			Code: code,
+			Msg:  msg,
+		}}
 }
 
 //  RespHttpError return http code and msg struct
-func RespHttpError(httpCode int) (int, interface{}) {
+func RespHttpError(httpCode int) (int, *resp.ResponseErr) {
 	return httpCode,
 		&resp.ResponseErr{
 			Error: &codeMsg{

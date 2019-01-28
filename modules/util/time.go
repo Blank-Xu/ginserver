@@ -6,6 +6,7 @@ import (
 
 const (
 	TimeLayoutDefault = "2006-01-02 15:04:05"
+	TimeLayoutUTC     = "2006-01-02 15:04:05 (UTC-07:00)"
 )
 
 func TimeNowFormat(layout ...string) string {
