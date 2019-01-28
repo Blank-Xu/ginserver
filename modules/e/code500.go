@@ -1,4 +1,4 @@
-package errors
+package e
 
 // code 5000-5999
 const (

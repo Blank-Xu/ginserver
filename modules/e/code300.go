@@ -1,4 +1,4 @@
-package errors
+package e
 
 // code 310-399
 const (

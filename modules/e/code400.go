@@ -1,4 +1,4 @@
-package errors
+package e
 
 // code 4000-4999
 const (

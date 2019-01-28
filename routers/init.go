@@ -5,7 +5,7 @@ import (
 
 	"ginserver/models"
 	"ginserver/modules/config"
-	"ginserver/modules/errors"
+	"ginserver/modules/e"
 	"ginserver/modules/log"
 	"ginserver/modules/middleware"
 
@@ -37,10 +37,10 @@ func Init() {
 	router.LoadHTMLGlob(cfg.ViewFile + "/*")
 
 	router.NoRoute(func(c *gin.Context) {
-		c.AbortWithStatusJSON(errors.RespHttpError(http.StatusNotFound))
+		c.AbortWithStatusJSON(e.RespHttpError(http.StatusNotFound))
 	})
 	router.NoMethod(func(c *gin.Context) {
-		c.AbortWithStatusJSON(errors.RespHttpError(http.StatusMethodNotAllowed))
+		c.AbortWithStatusJSON(e.RespHttpError(http.StatusMethodNotAllowed))
 	})
 
 	// load casbin
