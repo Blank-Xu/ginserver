@@ -28,8 +28,8 @@ func (p *Model) Delete(modelPtr interface{}) (int64, error) {
 
 // SelectOne select one table record and reflect to struct
 // param: modelPtr is a pointer struct like *Model
-func (p *Model) SelectOne(modelPtr interface{}) (bool, error) {
-	return defaultEngine.Get(modelPtr)
+func (p *Model) SelectOne(modelPtr interface{}, cols ...string) (bool, error) {
+	return defaultEngine.Cols(cols...).Get(modelPtr)
 }
 
 // Select select table records

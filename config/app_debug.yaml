@@ -20,6 +20,7 @@ Log: # logrus
   Path: logs
   FileName: ginserver.log
   Level: 5 # [0:panic, 1:fatal, 2:error, 3:warn, 4:info, 5:debug, 6:trace]
+  ReportCaller: true # write log with runtime file and func
 
 DataBase: # xorm
   - DriverName: mysql

@@ -3,7 +3,6 @@ package e
 import (
 	"fmt"
 	"net/http"
-	"strconv"
 )
 
 type errCode int
@@ -29,27 +28,4 @@ func registerErrMsg(code errCode, err string) {
 		panic(fmt.Sprintf("error code has been registered \n - code: [%d] msg: [%s] \n - new msg: [%s]", code, msg, err))
 	}
 	errMap[code] = err
-}
-
-func errorMsg(code errCode, err ...interface{}) (errCode, string) {
-	var (
-		msg string
-		ok  bool
-	)
-	if msg, ok = errMap[code]; !ok {
-		msg = http.StatusText(http.StatusInternalServerError) + errPerfix +
-			"code: [" + strconv.Itoa(int(code)) + "]"
-		code = http.StatusInternalServerError
-	}
-	if len(err) > 0 {
-		switch str := err[0].(type) {
-		case string:
-			msg += errPerfix + str
-		case error:
-			msg += errPerfix + str.Error()
-		default:
-			msg += errPerfix + fmt.Sprintf("%v", str)
-		}
-	}
-	return code, msg
 }

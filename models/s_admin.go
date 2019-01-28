@@ -7,7 +7,7 @@ import (
 
 type SAdmin struct {
 	*db.Model  `xorm:"-" json:"-"`
-	Id         int           `xorm:"pk autoincr" json:"id"`
+	Id         int64         `xorm:"pk autoincr" json:"id"`
 	Username   string        `xorm:"unique" json:"username"`
 	Password   string        `json:"-"`
 	Salt       string        `json:"-"`
@@ -22,7 +22,7 @@ type SAdmin struct {
 	LoginIp    string        `json:"login_ip"`
 }
 
-func NewSAdmin(id int) *SAdmin {
+func NewSAdmin(id int64) *SAdmin {
 	return &SAdmin{Id: id}
 }
 

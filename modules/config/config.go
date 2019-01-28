@@ -29,9 +29,10 @@ type fix struct {
 }
 
 type log struct {
-	Path     string `yaml:"Path"`
-	FileName string `yaml:"FileName"`
-	Level    uint32 `yaml:"Level"`
+	Path         string `yaml:"Path"`
+	FileName     string `yaml:"FileName"`
+	Level        uint32 `yaml:"Level"`
+	ReportCaller bool   `yaml:"ReportCaller"`
 }
 
 type session struct {

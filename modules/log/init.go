@@ -51,6 +51,7 @@ func Init() {
 	}
 	log.SetFormatter(format)
 	log.SetLevel(logrus.Level(cfgLog.Level))
+	log.SetReportCaller(true)
 }
 
 func GetLog() *logrus.Logger {

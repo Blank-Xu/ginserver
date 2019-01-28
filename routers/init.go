@@ -37,10 +37,10 @@ func Init() {
 	router.LoadHTMLGlob(cfg.ViewFile + "/*")
 
 	router.NoRoute(func(c *gin.Context) {
-		c.AbortWithStatusJSON(e.RespHttpError(http.StatusNotFound))
+		c.AbortWithStatusJSON(e.RespErrHttp(http.StatusNotFound))
 	})
 	router.NoMethod(func(c *gin.Context) {
-		c.AbortWithStatusJSON(e.RespHttpError(http.StatusMethodNotAllowed))
+		c.AbortWithStatusJSON(e.RespErrHttp(http.StatusMethodNotAllowed))
 	})
 
 	// load casbin
