@@ -2,38 +2,40 @@ package log
 
 import (
 	"fmt"
+	"ginserver/modules/utils"
 	"io"
 	"os"
 	"strings"
 
 	"ginserver/modules/config"
-	"ginserver/modules/util"
 
 	"github.com/sirupsen/logrus"
 )
 
-var log = logrus.New()
+var log *logrus.Logger
 
 func Init() {
+	log = logrus.StandardLogger()
+
 	var (
-		cfgLog  = config.GetConfig().Log
+		cfg     = config.GetConfig().Log
 		logName string
 		logFile *os.File
 		err     error
 	)
 
 	// check log dir
-	if !util.IsFileExit(cfgLog.Path) {
-		if err = os.Mkdir(cfgLog.Path, 0777); err != nil {
-			panic(fmt.Sprintf("create log path [%s] err: [%v]", cfgLog.Path, err))
+	if !utils.IsFileExit(cfg.Path) {
+		if err = os.Mkdir(cfg.Path, 0777); err != nil {
+			panic(fmt.Sprintf("create log path [%s] err: [%v]", cfg.Path, err))
 		}
 	}
 
 	// open or create log file
-	if strings.HasSuffix(cfgLog.Path, "/") {
-		logName = cfgLog.Path + cfgLog.FileName
+	if strings.HasSuffix(cfg.Path, "/") {
+		logName = cfg.Path + cfg.FileName
 	} else {
-		logName = cfgLog.Path + "/" + cfgLog.FileName
+		logName = cfg.Path + "/" + cfg.FileName
 	}
 	logFile, err = os.OpenFile(logName, os.O_WRONLY|os.O_APPEND|os.O_CREATE, 0666)
 	if err != nil {
@@ -41,7 +43,7 @@ func Init() {
 	}
 
 	format := &logrus.JSONFormatter{
-		TimestampFormat: util.TimeLayoutDefault,
+		TimestampFormat: utils.TimeLayoutDefault,
 	}
 	if config.GetConfig().RunMode == "debug" {
 		log.SetOutput(io.MultiWriter(logFile, os.Stdout))
@@ -50,10 +52,6 @@ func Init() {
 		log.SetOutput(logFile)
 	}
 	log.SetFormatter(format)
-	log.SetLevel(logrus.Level(cfgLog.Level))
-	log.SetReportCaller(true)
-}
-
-func GetLog() *logrus.Logger {
-	return log
+	log.SetLevel(logrus.Level(cfg.Level))
+	log.SetReportCaller(cfg.ReportCaller)
 }

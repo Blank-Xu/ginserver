@@ -1,15 +1,20 @@
 package admin
 
 import (
-	"net/http"
-
 	"github.com/gin-gonic/gin"
 )
 
-func GetLogin(c *gin.Context) {
-	c.HTML(http.StatusOK, "login.html", nil)
+type Login struct{}
+
+func (p *Login) RegisterRouter(r *gin.RouterGroup) {
+	r.GET("login", p.Get)
+	r.POST("login", p.Post)
 }
 
-func PostLogin(c *gin.Context) {
+func (p *Login) Get(c *gin.Context) {
+
+}
+
+func (p *Login) Post(c *gin.Context) {
 
 }

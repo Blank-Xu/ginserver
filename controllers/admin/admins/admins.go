@@ -9,15 +9,30 @@ import (
 	"ginserver/modules/e"
 )
 
-func GetAdminById(c *gin.Context) {
+type Admins struct{}
+
+func (p *Admins) RegisterRouter(r *gin.RouterGroup) {
+	r.GET("admins/:id", p.GetAdminById)
+}
+
+func (p *Admins) GetAdminById(c *gin.Context) {
 	id, _ := strconv.ParseInt(c.Param("id"), 10, 64)
-	e.RespErrParamsInvalid(c, (id < 1))
+	if id < 1 {
+		e.RespErrParamsInvalid(c)
+		return
+	}
 	cols, _ := c.GetQueryArray("cols")
 
 	record := models.NewSAdmin(id)
 	has, err := record.SelectOne(record, cols...)
-	e.RespErrDBError(c, err)
-	e.RespErrNotFound(c, !has)
+	if err != nil {
+		e.RespErrDBError(c, err)
+		return
+	}
+	if !has {
+		e.RespErrNotFound(c)
+		return
+	}
 
 	e.RespSuccData(c, record)
 }

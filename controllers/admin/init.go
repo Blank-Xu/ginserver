@@ -2,6 +2,7 @@ package admin
 
 import (
 	"fmt"
+	"ginserver/controllers/admin/admins"
 	"net/http"
 
 	"github.com/gin-contrib/sessions"
@@ -9,7 +10,6 @@ import (
 	"github.com/gin-contrib/sessions/redis"
 	"github.com/gin-gonic/gin"
 
-	"ginserver/controllers/admin"
 	"ginserver/modules/config"
 )
 
@@ -21,13 +21,12 @@ func Init(r *gin.Engine) {
 		c.Redirect(http.StatusPermanentRedirect, "/admin/login")
 	})
 
-	adminRouter.GET("login", admin.GetLogin)
-	adminRouter.POST("login", admin.PostLogin)
+	new(Login).RegisterRouter(adminRouter)
 
 	// use session middleware
 	adminRouter.Use(sessions.Sessions(cfg.AppName, newSessionStore()))
 
-	registerAdmin(adminRouter)
+	new(admins.Admins).RegisterRouter(adminRouter)
 }
 
 func newSessionStore() (store sessions.Store) {

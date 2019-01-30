@@ -4,16 +4,27 @@ import (
 	"net/http"
 	"strconv"
 
+	"github.com/sirupsen/logrus"
+
 	"github.com/gin-gonic/gin"
 	"github.com/go-xorm/builder"
 
 	"ginserver/models"
 	"ginserver/modules/e"
-	"ginserver/modules/log"
 	"ginserver/modules/resp"
 )
 
-func GetAdminById(c *gin.Context) {
+type Admins struct{}
+
+func (p *Admins) RegisterRouter(r *gin.RouterGroup) {
+	r.GET("admins/:id", p.GetAdminById)
+	r.GET("admins", p.GetAdmin)
+	r.POST("admins", p.PostAdmin)
+	r.PUT("admins/:id", p.PutAdmin)
+	r.DELETE("admins/:id", p.DeleteAdmin)
+}
+
+func (p *Admins) GetAdminById(c *gin.Context) {
 	id, _ := strconv.ParseInt(c.Param("id"), 10, 64)
 	if id < 1 {
 		e.RespErrParamsInvalid(c)
@@ -24,7 +35,7 @@ func GetAdminById(c *gin.Context) {
 	has, err := record.SelectOne(record, cols...)
 	if err != nil {
 		e.RespErrDBError(c, err)
-		log.Error(err)
+		logrus.Error(err)
 		return
 	}
 	if !has {
@@ -34,7 +45,7 @@ func GetAdminById(c *gin.Context) {
 	e.RespSuccData(c, record)
 }
 
-func GetAdmin(c *gin.Context) {
+func (p *Admins) GetAdmin(c *gin.Context) {
 	var (
 		record  = new(models.SAdmin)
 		records []*models.SAdmin
@@ -42,14 +53,14 @@ func GetAdmin(c *gin.Context) {
 	err := record.Select(record, &records)
 	if err != nil {
 		e.RespErrDBError(c, err)
-		log.Error(err)
+		logrus.Error(err)
 		return
 	}
 
 	e.RespSuccData(c, &records)
 }
 
-func PostAdmin(c *gin.Context) {
+func (p *Admins) PostAdmin(c *gin.Context) {
 	record := new(models.SAdmin)
 	if err := c.ShouldBind(record); err != nil {
 		c.JSON(http.StatusBadRequest, e.RespErrCode(e.CodeParamInvalid, err))
@@ -65,7 +76,7 @@ func PostAdmin(c *gin.Context) {
 	c.JSON(http.StatusOK, &resp.ResponseData{Data: count})
 }
 
-func PutAdmin(c *gin.Context) {
+func (p *Admins) PutAdmin(c *gin.Context) {
 	id, _ := strconv.ParseInt(c.Param("id"), 10, 64)
 	if id < 1 {
 		e.RespErrParamsInvalid(c)
@@ -96,7 +107,7 @@ func PutAdmin(c *gin.Context) {
 	c.JSON(http.StatusOK, &resp.ResponseData{Data: count})
 }
 
-func DeleteAdmin(c *gin.Context) {
+func (p *Admins) DeleteAdmin(c *gin.Context) {
 	id, _ := strconv.ParseInt(c.Param("id"), 10, 64)
 	if id < 1 {
 		e.RespErrParamsInvalid(c)
@@ -107,7 +118,7 @@ func DeleteAdmin(c *gin.Context) {
 	count, err := record.Delete(record)
 	if err != nil {
 		e.RespErrDBError(c, err)
-		log.Error(err)
+		logrus.Error(err)
 		return
 	}
 

@@ -5,9 +5,9 @@ import (
 
 	"github.com/gin-gonic/gin"
 
+	v1 "ginserver/controllers/api/v1"
 	"ginserver/modules/config"
 	"ginserver/modules/resp"
-	v1 "ginserver/routers/api/v1"
 )
 
 func Init(r *gin.Engine) {
