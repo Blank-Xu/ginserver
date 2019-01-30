@@ -20,8 +20,8 @@ func RespErrHttp(httpCode int) (int, *resp.ResponseErr) {
 	return httpCode, resp.NewResponseErr(NewCodeMsg(errCode(httpCode), msg))
 }
 
-func RespErrParamsInvalid(c *gin.Context) {
-	c.AbortWithStatusJSON(http.StatusBadRequest, RespErrCode(CodeParamInvalid))
+func RespErrParamsInvalid(c *gin.Context, err ...interface{}) {
+	c.AbortWithStatusJSON(http.StatusBadRequest, RespErrCode(CodeParamInvalid, err...))
 }
 
 func RespErrNotFound(c *gin.Context) {
@@ -32,6 +32,14 @@ func RespErrDBError(c *gin.Context, err error) {
 	c.AbortWithStatusJSON(http.StatusNotImplemented, RespErrCode(CodeDBErr, err))
 }
 
-func RespSuccData(c *gin.Context, data interface{}) {
+func RespSuccOK(c *gin.Context, data interface{}) {
 	c.JSON(http.StatusOK, resp.NewResponseData(data))
+}
+
+func RespSuccCreated(c *gin.Context, data interface{}) {
+	c.JSON(http.StatusCreated, resp.NewResponseData(data))
+}
+
+func RespSuccAccepted(c *gin.Context, data interface{}) {
+	c.JSON(http.StatusAccepted, resp.NewResponseData(data))
 }

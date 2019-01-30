@@ -1,7 +1,6 @@
 package admins
 
 import (
-	"net/http"
 	"strconv"
 
 	"github.com/sirupsen/logrus"
@@ -10,22 +9,22 @@ import (
 	"github.com/go-xorm/builder"
 
 	"ginserver/models"
+	"ginserver/modules/db"
 	"ginserver/modules/e"
-	"ginserver/modules/resp"
 )
 
 type Admins struct{}
 
 func (p *Admins) RegisterRouter(r *gin.RouterGroup) {
-	r.GET("admins/:id", p.GetAdminById)
-	r.GET("admins", p.GetAdmin)
-	r.POST("admins", p.PostAdmin)
-	r.PUT("admins/:id", p.PutAdmin)
-	r.DELETE("admins/:id", p.DeleteAdmin)
+	r.GET("admins/:id", p.GetOne)
+	r.GET("admins", p.Get)
+	r.POST("admins", p.Post)
+	r.PUT("admins/:id", p.Put)
+	r.DELETE("admins/:id", p.Delete)
 }
 
-func (p *Admins) GetAdminById(c *gin.Context) {
-	id, _ := strconv.ParseInt(c.Param("id"), 10, 64)
+func (p *Admins) GetOne(c *gin.Context) {
+	id, _ := strconv.Atoi(c.Param("id"))
 	if id < 1 {
 		e.RespErrParamsInvalid(c)
 		return
@@ -42,73 +41,81 @@ func (p *Admins) GetAdminById(c *gin.Context) {
 		e.RespErrNotFound(c)
 		return
 	}
-	e.RespSuccData(c, record)
+	e.RespSuccOK(c, record)
 }
 
-func (p *Admins) GetAdmin(c *gin.Context) {
-	var (
-		record  = new(models.SAdmin)
-		records []*models.SAdmin
-	)
-	err := record.Select(record, &records)
+func (p *Admins) Get(c *gin.Context) {
+	var err error
+	orderBy := db.NewOrderBy(c)
+	if err = orderBy.Parse(); err != nil {
+		e.RespErrParamsInvalid(c, err)
+		return
+	}
+	record := new(models.SAdmin)
+	cols := c.GetStringSlice("cols")
+	records, err := record.Select(orderBy.String(), db.NewPaging(c), cols...)
 	if err != nil {
 		e.RespErrDBError(c, err)
 		logrus.Error(err)
 		return
 	}
-
-	e.RespSuccData(c, &records)
+	e.RespSuccOK(c, &records)
 }
 
-func (p *Admins) PostAdmin(c *gin.Context) {
+func (p *Admins) Post(c *gin.Context) {
 	record := new(models.SAdmin)
 	if err := c.ShouldBind(record); err != nil {
-		c.JSON(http.StatusBadRequest, e.RespErrCode(e.CodeParamInvalid, err))
+		e.RespErrParamsInvalid(c, err)
+		logrus.Error(err)
 		return
 	}
 
 	record.RegisterIp = c.ClientIP()
-	count, err := record.InsertOne(record)
+
+	count, err := record.InsertOne(record, "")
 	if err != nil {
-		c.JSON(http.StatusNotImplemented, e.RespErrCode(e.CodeDBErr, err))
+		e.RespErrDBError(c, err)
+		logrus.Error(err)
 		return
 	}
-	c.JSON(http.StatusOK, &resp.ResponseData{Data: count})
+	e.RespSuccCreated(c, count)
 }
 
-func (p *Admins) PutAdmin(c *gin.Context) {
-	id, _ := strconv.ParseInt(c.Param("id"), 10, 64)
+func (p *Admins) Put(c *gin.Context) {
+	id, _ := strconv.Atoi(c.Param("id"))
 	if id < 1 {
 		e.RespErrParamsInvalid(c)
 		return
 	}
 	record := new(models.SAdmin)
-	cond := builder.Gt{"id": id}
+	cond := builder.Eq{"id": id}
 	has, err := record.IsRecordExists("id", record, cond)
 	if err != nil {
-		c.JSON(http.StatusNotImplemented, e.RespErrCode(e.CodeDBErr, err))
+		e.RespErrDBError(c, err)
+		logrus.Error(err)
 		return
 	}
 	if !has {
-		c.JSON(e.RespErrHttp(http.StatusNotFound))
+		e.RespErrNotFound(c)
 		return
 	}
 
 	if err := c.ShouldBind(record); err != nil {
-		c.JSON(http.StatusBadRequest, e.RespErrCode(e.CodeParamInvalid, err))
+		e.RespErrParamsInvalid(c, err)
 		return
 	}
-
+	record.Id = id
 	count, err := record.Update(record, cond)
 	if err != nil {
-		c.JSON(http.StatusNotImplemented, e.RespErrCode(e.CodeDBErr, err))
+		e.RespErrDBError(c, err)
+		logrus.Error(err)
 		return
 	}
-	c.JSON(http.StatusOK, &resp.ResponseData{Data: count})
+	e.RespSuccOK(c, count)
 }
 
-func (p *Admins) DeleteAdmin(c *gin.Context) {
-	id, _ := strconv.ParseInt(c.Param("id"), 10, 64)
+func (p *Admins) Delete(c *gin.Context) {
+	id, _ := strconv.Atoi(c.Param("id"))
 	if id < 1 {
 		e.RespErrParamsInvalid(c)
 		return
@@ -121,6 +128,5 @@ func (p *Admins) DeleteAdmin(c *gin.Context) {
 		logrus.Error(err)
 		return
 	}
-
-	e.RespSuccData(c, count)
+	e.RespSuccOK(c, count)
 }

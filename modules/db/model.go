@@ -4,8 +4,8 @@ type Model struct{}
 
 // InsertOne insert table one record
 // param: modelPtr is a pointer struct like *Model
-func (p *Model) InsertOne(modelPtr interface{}) (int64, error) {
-	return defaultEngine.InsertOne(modelPtr)
+func (p *Model) InsertOne(modelPtr interface{}, cols ...string) (int64, error) {
+	return defaultEngine.Cols(cols...).InsertOne(modelPtr)
 }
 
 // Insert insert table one or more records
@@ -16,8 +16,9 @@ func (p *Model) Insert(modelsPtr interface{}) (int64, error) {
 
 // Update is update table records
 // param: modelPtr is a pointer struct like *Model
-func (p *Model) Update(modelPtr, cond interface{}) (int64, error) {
-	return defaultEngine.Where(cond).Update(modelPtr)
+// param: cond is xorm builder condition
+func (p *Model) Update(modelPtr, cond interface{}, cols ...string) (int64, error) {
+	return defaultEngine.Cols(cols...).Where(cond).Update(modelPtr)
 }
 
 // Delete delete table records
@@ -35,8 +36,9 @@ func (p *Model) SelectOne(modelPtr interface{}, cols ...string) (bool, error) {
 // Select select table records
 // param: modelPtr is a pointer struct like *Model
 // param: modelsPtr is a pointer slice struct like *[]*Model
-func (p *Model) Select(modelPtr, modelsPtr interface{}) error {
-	return defaultEngine.Find(modelsPtr, modelPtr)
+// param: cols is table's column
+func (p *Model) SelectAll(modelPtr, modelsPtr interface{}, cols ...string) error {
+	return defaultEngine.Cols(cols...).Find(modelsPtr, modelPtr)
 }
 
 // SelectCond select table records with condition

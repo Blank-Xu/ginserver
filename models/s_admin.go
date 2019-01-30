@@ -7,7 +7,7 @@ import (
 
 type SAdmin struct {
 	*db.Model  `xorm:"-" json:"-"`
-	Id         int64          `xorm:"pk autoincr" json:"id"`
+	Id         int            `xorm:"pk autoincr" json:"id"`
 	Username   string         `xorm:"unique" json:"username"`
 	Password   string         `json:"-"`
 	Salt       string         `json:"-"`
@@ -16,21 +16,25 @@ type SAdmin struct {
 	Phone      string         `json:"phone"`
 	Remark     string         `json:"remark"`
 	RegisterIp string         `json:"-"`
-	Created    utils.JSONTime `xorm:"created" json:"created"`
-	Updated    utils.JSONTime `xorm:"updated" json:"updated"`
+	Created    utils.JSONTime `json:"created"`
+	Updated    utils.JSONTime `json:"updated"`
 	LoginTime  utils.JSONTime `json:"login_time"`
 	LoginIp    string         `json:"login_ip"`
 }
 
-func NewSAdmin(id int64) *SAdmin {
+const (
+	SAdminInsertCols = "username,password,salt,nickname,email,phone,remark,register_ip"
+)
+
+func NewSAdmin(id int) *SAdmin {
 	return &SAdmin{Id: id}
 }
 
-const (
-	s_admin_update_cols = ""
-	s_admin_update_omit = "id,"
-)
-
 func (p *SAdmin) TableName() string {
 	return "s_admin"
+}
+
+func (p *SAdmin) Select(orderBy string, paging *db.Paging, cols ...string) (records []*SAdmin, err error) {
+	err = db.GetDefaultEngine().Cols(cols...).OrderBy(orderBy).Limit(paging.LimitOffset()).Find(&records)
+	return
 }

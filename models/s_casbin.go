@@ -25,7 +25,7 @@ func (p *SCasbin) TableName() string {
 
 func (p *SCasbin) LoadPolicy(model model.Model) error {
 	var rules []*SCasbin
-	if err := p.Select(p, &rules); err != nil {
+	if err := p.SelectAll(p, &rules); err != nil {
 		return err
 	}
 	for _, line := range rules {
