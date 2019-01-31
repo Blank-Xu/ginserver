@@ -2,7 +2,6 @@ package models
 
 import (
 	"ginserver/modules/db"
-	"ginserver/modules/utils"
 )
 
 type SLog struct {
@@ -13,7 +12,7 @@ type SLog struct {
 	Method    string
 	Router    string
 	Params    string
-	Created   utils.JSONTime
+	Created   db.JSONTime
 	Ip        string
 	Remark    string
 }

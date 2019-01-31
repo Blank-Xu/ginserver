@@ -29,7 +29,12 @@ func RespErrNotFound(c *gin.Context) {
 }
 
 func RespErrDBError(c *gin.Context, err error) {
-	c.AbortWithStatusJSON(http.StatusNotImplemented, RespErrCode(CodeDBErr, err))
+	c.Error(err)
+	if gin.Mode() != gin.ReleaseMode {
+		c.AbortWithStatusJSON(http.StatusNotImplemented, RespErrCode(CodeDBErr, err))
+	} else {
+		c.AbortWithStatusJSON(http.StatusNotImplemented, RespErrCode(CodeDBErr))
+	}
 }
 
 func RespSuccOK(c *gin.Context, data interface{}) {

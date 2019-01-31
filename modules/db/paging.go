@@ -7,10 +7,9 @@ import (
 type Paging struct {
 	*gin.Context
 
-	Page  int
-	Limit int
+	Page  int // param page
+	Limit int // param size
 
-	Id     int
 	Offset int
 }
 
@@ -36,8 +35,4 @@ func (p *Paging) Parse() {
 
 func (p *Paging) LimitOffset() (int, int) {
 	return p.Limit, p.Offset
-}
-
-func (p *Paging) IdLimit() (int, int) {
-	return p.Page, p.Limit
 }

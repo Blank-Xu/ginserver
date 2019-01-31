@@ -3,14 +3,13 @@ package admins
 import (
 	"strconv"
 
-	"github.com/sirupsen/logrus"
-
-	"github.com/gin-gonic/gin"
-	"github.com/go-xorm/builder"
-
 	"ginserver/models"
 	"ginserver/modules/db"
 	"ginserver/modules/e"
+	"ginserver/modules/utils"
+
+	"github.com/gin-gonic/gin"
+	"github.com/sirupsen/logrus"
 )
 
 type Admins struct{}
@@ -53,8 +52,8 @@ func (p *Admins) Get(c *gin.Context) {
 	}
 	record := new(models.SAdmin)
 	cols := c.GetStringSlice("cols")
-	records, err := record.Select(orderBy.String(), db.NewPaging(c), cols...)
-	if err != nil {
+	var records []*models.SAdmin
+	if err = record.SelectCond(record, &records, nil, orderBy.String(), db.NewPaging(c), cols...); err != nil {
 		e.RespErrDBError(c, err)
 		logrus.Error(err)
 		return
@@ -63,16 +62,18 @@ func (p *Admins) Get(c *gin.Context) {
 }
 
 func (p *Admins) Post(c *gin.Context) {
-	record := new(models.SAdmin)
-	if err := c.ShouldBind(record); err != nil {
+	record := new(models.SAdminInsert)
+	if err := c.BindJSON(record); err != nil {
 		e.RespErrParamsInvalid(c, err)
 		logrus.Error(err)
 		return
 	}
 
+	record.Salt = utils.GenSalt()
+	record.Password = utils.GenPassword(record.Password, record.Salt)
 	record.RegisterIp = c.ClientIP()
 
-	count, err := record.InsertOne(record, "")
+	count, err := record.InsertOne(record)
 	if err != nil {
 		e.RespErrDBError(c, err)
 		logrus.Error(err)
@@ -87,9 +88,8 @@ func (p *Admins) Put(c *gin.Context) {
 		e.RespErrParamsInvalid(c)
 		return
 	}
-	record := new(models.SAdmin)
-	cond := builder.Eq{"id": id}
-	has, err := record.IsRecordExists("id", record, cond)
+	record := &models.SAdminUpdate{Id: id}
+	has, err := record.IsExists(record)
 	if err != nil {
 		e.RespErrDBError(c, err)
 		logrus.Error(err)
@@ -100,12 +100,13 @@ func (p *Admins) Put(c *gin.Context) {
 		return
 	}
 
-	if err := c.ShouldBind(record); err != nil {
+	if err := c.BindJSON(record); err != nil {
 		e.RespErrParamsInvalid(c, err)
 		return
 	}
-	record.Id = id
-	count, err := record.Update(record, cond)
+	record.Salt = utils.GenSalt()
+	record.Password = utils.GenPassword(record.Password, record.Salt)
+	count, err := record.Update(record)
 	if err != nil {
 		e.RespErrDBError(c, err)
 		logrus.Error(err)

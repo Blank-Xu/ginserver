@@ -47,6 +47,7 @@ CREATE TABLE IF NOT EXISTS s_admin
   username    varchar(32)  NOT NULL,
   password    varchar(32)  NOT NULL,
   salt        varchar(32)  NOT NULL COMMENT 'salt for encrypt password',
+  enable      tinyint(1)   NOT NULL DEFAULT 1 COMMENT 'user state',
   nickname    varchar(32)  NOT NULL DEFAULT '',
   email       varchar(40)  NOT NULL DEFAULT '',
   phone       varchar(20)  NOT NULL DEFAULT '',

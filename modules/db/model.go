@@ -10,14 +10,20 @@ func (p *Model) InsertOne(modelPtr interface{}, cols ...string) (int64, error) {
 
 // Insert insert table one or more records
 // param: modelsPtr is a pointer slice struct like *[]*Model
-func (p *Model) Insert(modelsPtr interface{}) (int64, error) {
-	return defaultEngine.Insert(modelsPtr)
+func (p *Model) Insert(modelsPtr interface{}, cols ...string) (int64, error) {
+	return defaultEngine.Cols(cols...).Insert(modelsPtr)
 }
 
 // Update is update table records
 // param: modelPtr is a pointer struct like *Model
+func (p *Model) Update(modelPtr interface{}, cols ...string) (int64, error) {
+	return defaultEngine.Cols(cols...).Update(modelPtr)
+}
+
+// UpdateCond is update table records with conditions
+// param: modelPtr is a pointer struct like *Model
 // param: cond is xorm builder condition
-func (p *Model) Update(modelPtr, cond interface{}, cols ...string) (int64, error) {
+func (p *Model) UpdateCond(modelPtr, cond interface{}, cols ...string) (int64, error) {
 	return defaultEngine.Cols(cols...).Where(cond).Update(modelPtr)
 }
 
@@ -27,13 +33,20 @@ func (p *Model) Delete(modelPtr interface{}) (int64, error) {
 	return defaultEngine.Delete(modelPtr)
 }
 
-// SelectOne select one table record and reflect to struct
+// DeleteCond delete table records
+// param: modelPtr is a pointer struct like *Model
+// param: cond is xorm builder condition
+func (p *Model) DeleteCond(modelPtr, cond interface{}) (int64, error) {
+	return defaultEngine.Where(cond).Delete(modelPtr)
+}
+
+// SelectOne select one record and reflect to struct
 // param: modelPtr is a pointer struct like *Model
 func (p *Model) SelectOne(modelPtr interface{}, cols ...string) (bool, error) {
 	return defaultEngine.Cols(cols...).Get(modelPtr)
 }
 
-// Select select table records
+// SelectAll select table records
 // param: modelPtr is a pointer struct like *Model
 // param: modelsPtr is a pointer slice struct like *[]*Model
 // param: cols is table's column
@@ -44,8 +57,9 @@ func (p *Model) SelectAll(modelPtr, modelsPtr interface{}, cols ...string) error
 // SelectCond select table records with condition
 // param: modelPtr is a pointer struct like *Model
 // param: modelsPtr is a pointer slice struct like *[]*Model
-func (p *Model) SelectCond(modelPtr, cond, modelsPtr interface{}) error {
-	return defaultEngine.Where(cond).Find(modelsPtr, modelPtr)
+// param: cond is xorm builder condition
+func (p *Model) SelectCond(modelPtr, modelsPtr, cond interface{}, orderBy string, paging *Paging, cols ...string) error {
+	return defaultEngine.Cols(cols...).Where(cond).OrderBy(orderBy).Limit(paging.LimitOffset()).Find(modelsPtr, modelPtr)
 }
 
 // Count select table count
@@ -56,12 +70,20 @@ func (p *Model) Count(modelPtr interface{}) (int64, error) {
 
 // CountCond select table count with condition
 // param: modelPtr is a pointer struct like *Model
+// param: cond is xorm builder condition
 func (p *Model) CountCond(modelPtr, cond interface{}) (int64, error) {
 	return defaultEngine.Where(cond).Count(modelPtr)
 }
 
-// IsRecordExist select table record with exists condition
+// IsExists select table record with exists condition
 // param: modelPtr is a pointer struct like *Model
-func (p *Model) IsRecordExists(col string, modelPtr, cond interface{}) (bool, error) {
-	return defaultEngine.Cols(col).Where(cond).Exist(modelPtr)
+func (p *Model) IsExists(modelPtr interface{}) (bool, error) {
+	return defaultEngine.Exist(modelPtr)
+}
+
+// IsExistsCond select table record with exists condition
+// param: modelPtr is a pointer struct like *Model
+// param: cond is xorm builder condition
+func (p *Model) IsExistsCond(modelPtr, cond interface{}, col ...string) (bool, error) {
+	return defaultEngine.Cols(col...).Where(cond).Exist(modelPtr)
 }

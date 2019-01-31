@@ -3,14 +3,14 @@ package controllers
 import (
 	"net/http"
 
-	"github.com/casbin/casbin"
-	"github.com/gin-gonic/gin"
-	"github.com/sirupsen/logrus"
-
 	"ginserver/models"
 	"ginserver/modules/config"
 	"ginserver/modules/e"
 	"ginserver/modules/middleware"
+
+	"github.com/casbin/casbin"
+	"github.com/gin-gonic/gin"
+	"github.com/sirupsen/logrus"
 )
 
 const assetsFile = "./assets"
@@ -37,18 +37,11 @@ func Init() {
 	router.LoadHTMLGlob(cfg.ViewFile + "/*")
 
 	router.NoRoute(func(c *gin.Context) {
-		// if utils.IsAjax(c.Request.Header) {
 		c.AbortWithStatusJSON(e.RespErrHttp(http.StatusNotFound))
-		// 	return
-		// }
-		// c.HTML(http.StatusNotFound, "404.html", nil)
 	})
+
 	router.NoMethod(func(c *gin.Context) {
-		// if utils.IsAjax(c.Request.Header) {
 		c.AbortWithStatusJSON(e.RespErrHttp(http.StatusMethodNotAllowed))
-		// 	return
-		// }
-		// c.HTML(http.StatusMethodNotAllowed, "405.html", nil)
 	})
 
 	// load casbin

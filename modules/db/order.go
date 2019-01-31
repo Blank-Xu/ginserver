@@ -1,10 +1,10 @@
 package db
 
 import (
+	"errors"
 	"strings"
 
 	"github.com/gin-gonic/gin"
-	"github.com/pkg/errors"
 )
 
 const (

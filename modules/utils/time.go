@@ -23,26 +23,20 @@ func TimeFormat(time time.Time, layout ...string) string {
 	return time.Format(layout[0])
 }
 
-type JSONTime time.Time
-
-func (p JSONTime) String() string {
-	return time.Time(p).Format(TimeLayoutDefault)
+func GetDaysBetween(t1, t2 time.Time) int {
+	t1 = time.Date(t1.Year(), t1.Month(), t1.Day(), 0, 0, 0, 0, time.Local)
+	t2 = time.Date(t2.Year(), t2.Month(), t2.Day(), 0, 0, 0, 0, time.Local)
+	return int(t2.Sub(t1).Hours() / 24)
 }
 
-func (p JSONTime) MarshalJSON() ([]byte, error) {
-	return []byte(`"` + time.Time(p).Format(TimeLayoutDefault) + `"`), nil
-}
-
-func (p *JSONTime) UnmarshalJSON(data []byte) error {
-	// Ignore null, like in the main JSON package.
-	if string(data) == "null" {
-		return nil
+func GetAge(birth time.Time) int {
+	today := time.Now()
+	age := today.Year() - birth.Year()
+	if time.Now().Month() < birth.Month() {
+		age--
 	}
-
-	t, err := time.ParseInLocation(`"`+TimeLayoutDefault+`"`, string(data), time.Local)
-	if err != nil {
-		return err
+	if today.Month() == birth.Month() && today.Day() > birth.Day() {
+		age--
 	}
-	*p = JSONTime(t)
-	return nil
+	return age
 }
