@@ -1,51 +1,41 @@
 package admin
 
 import (
-	"fmt"
-	"ginserver/controllers/admin/admins"
 	"net/http"
 
-	"github.com/gin-contrib/sessions"
-	"github.com/gin-contrib/sessions/memstore"
-	"github.com/gin-contrib/sessions/redis"
-	"github.com/gin-gonic/gin"
+	"github.com/casbin/casbin"
 
+	"ginserver/controllers/admin/admins"
 	"ginserver/modules/config"
+
+	"github.com/gin-contrib/sessions"
+	"github.com/gin-gonic/gin"
 )
 
-func Init(r *gin.Engine) {
+var (
+	cookieName = "ginserver"
+)
+
+func Init(r *gin.Engine, enforcer *casbin.Enforcer) {
 	var cfg = config.GetConfig()
+	if len(cfg.AppName) == 0 {
+		cookieName = cfg.AppName
+	}
+
 	adminRouter := r.Group("admin")
+
 	// need login
 	adminRouter.GET("/", func(c *gin.Context) {
 		c.Redirect(http.StatusPermanentRedirect, "/admin/login")
 	})
 
+	// use session middleware
+	adminRouter.Use(sessions.Sessions(cookieName, newSessionStore()))
+	// register login router
 	new(Login).RegisterRouter(adminRouter)
 
-	// use session middleware
-	adminRouter.Use(sessions.Sessions(cfg.AppName, newSessionStore()))
+	// casbin role check
+	adminRouter.Use(authSession(enforcer))
 
 	new(admins.Admins).RegisterRouter(adminRouter)
-}
-
-func newSessionStore() (store sessions.Store) {
-	var (
-		cfgSession = config.GetConfig().Session
-		cfgRedis   = config.GetConfig().Redis
-		err        error
-	)
-
-	switch cfgSession.Provider {
-	case "redis":
-		store, err = redis.NewStore(30, "tcp", cfgRedis.Host+":"+cfgRedis.Port, cfgRedis.Password, []byte(cfgSession.Secret))
-		if err != nil {
-			panic(fmt.Sprintf("create redis session err: [%v]", err))
-		}
-	case "memstore":
-		store = memstore.NewStore([]byte(cfgSession.Secret))
-	default:
-		panic("load session config error")
-	}
-	return
 }

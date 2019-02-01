@@ -15,9 +15,9 @@ type SAdmin struct {
 	Phone      string      `json:"phone"`
 	Remark     string      `json:"remark"`
 	RegisterIp string      `json:"-"`
-	Created    db.JSONTime `json:"created"`
-	Updated    db.JSONTime `json:"updated"`
-	LoginTime  db.JSONTime `json:"login_time"`
+	Created    db.JSONTime `json:"created" swaggertype:"primitive,integer"`
+	Updated    db.JSONTime `json:"updated" swaggertype:"primitive,string"`
+	LoginTime  db.JSONTime `json:"login_time" swaggertype:"primitive,string"`
 	LoginIp    string      `json:"login_ip"`
 }
 

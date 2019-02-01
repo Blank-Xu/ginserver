@@ -34,5 +34,5 @@ func (p *Admins) GetAdminById(c *gin.Context) {
 		e.RespErrNotFound(c)
 		return
 	}
-	e.RespSuccOK(c, record)
+	e.RespDataOk(c, record)
 }

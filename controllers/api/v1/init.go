@@ -8,5 +8,7 @@ import (
 
 func Init(r *gin.RouterGroup) {
 	v1Group := r.Group("v1")
-	new(admins.Admins).RegisterRouter(v1Group)
+
+	adminsGroup := v1Group.Group("admins")
+	new(admins.Admins).RegisterRouter(adminsGroup)
 }

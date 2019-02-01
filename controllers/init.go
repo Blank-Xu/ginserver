@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"net/http"
+	"time"
 
 	"ginserver/models"
 	"ginserver/modules/config"
@@ -9,6 +10,7 @@ import (
 	"ginserver/modules/middleware"
 
 	"github.com/casbin/casbin"
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
 )
@@ -16,13 +18,11 @@ import (
 const assetsFile = "./assets"
 
 var (
-	router         = gin.New()
-	casbinEnforcer *casbin.Enforcer
+	router = gin.New()
 )
 
 func Init() {
 	var cfg = config.GetConfig()
-
 	// set global setting
 	if cfg.RunMode != gin.DebugMode {
 		gin.DisableConsoleColor()
@@ -35,26 +35,29 @@ func Init() {
 
 	router.Static(cfg.AssetsFile, assetsFile)
 	router.LoadHTMLGlob(cfg.ViewFile + "/*")
+	// cors middleware
+	router.Use(cors.New(cors.Config{
+		AllowOrigins:     []string{"*"},
+		AllowMethods:     []string{"*"},
+		AllowHeaders:     []string{"*"},
+		ExposeHeaders:    []string{"Content-Length"},
+		AllowCredentials: true,
+		MaxAge:           12 * time.Hour,
+	}))
 
 	router.NoRoute(func(c *gin.Context) {
 		c.AbortWithStatusJSON(e.RespErrHttp(http.StatusNotFound))
 	})
-
 	router.NoMethod(func(c *gin.Context) {
 		c.AbortWithStatusJSON(e.RespErrHttp(http.StatusMethodNotAllowed))
 	})
 
 	// load casbin
-	casbinEnforcer = casbin.NewEnforcer(cfg.RbacFile, &models.SCasbin{})
-
+	casbinEnforcer := casbin.NewEnforcer(cfg.RbacFile, &models.SCasbin{})
 	// register routers
-	registerRouter(router)
+	registerRouter(router, casbinEnforcer)
 }
 
 func GetRouter() *gin.Engine {
 	return router
-}
-
-func GetCasbin() *casbin.Enforcer {
-	return casbinEnforcer
 }

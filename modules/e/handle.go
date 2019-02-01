@@ -6,7 +6,7 @@ import (
 	"strconv"
 )
 
-func errorMsg(code errCode, err ...interface{}) (errCode, string) {
+func errorMsg(code int, err ...interface{}) (int, string) {
 	var (
 		msg string
 		ok  bool
@@ -27,13 +27,4 @@ func errorMsg(code errCode, err ...interface{}) (errCode, string) {
 		}
 	}
 	return code, msg
-}
-
-type codeMsg struct {
-	Code errCode `json:"code"`
-	Msg  string  `json:"msg"`
-}
-
-func NewCodeMsg(code errCode, msg string) *codeMsg {
-	return &codeMsg{Code: code, Msg: msg}
 }

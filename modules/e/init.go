@@ -5,13 +5,11 @@ import (
 	"net/http"
 )
 
-type errCode int
-
 const errPerfix = ", "
 
-var errMap = make(map[errCode]string)
+var errMap = make(map[int]string)
 
-func registerErrMsg(code errCode, err string) {
+func registerErrMsg(code int, err string) {
 	// http code 100 ~ 102
 	if (code <= http.StatusProcessing && code >= http.StatusContinue) ||
 		// http code 200 ~ 226

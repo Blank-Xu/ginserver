@@ -1,11 +1,11 @@
-package middleware
+package api
 
 import (
 	"github.com/casbin/casbin"
 	"github.com/gin-gonic/gin"
 )
 
-func Casbin(e *casbin.Enforcer) gin.HandlerFunc {
+func authJwt(enforcer *casbin.Enforcer) gin.HandlerFunc {
 	return func(c *gin.Context) {
 
 	}

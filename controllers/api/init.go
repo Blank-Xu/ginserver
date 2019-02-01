@@ -3,23 +3,22 @@ package api
 import (
 	"net/http"
 
+	"github.com/casbin/casbin"
 	"github.com/gin-gonic/gin"
 
 	v1 "ginserver/controllers/api/v1"
 	"ginserver/modules/config"
-	"ginserver/modules/resp"
 )
 
-func Init(r *gin.Engine) {
+func Init(r *gin.Engine, enforcer *casbin.Enforcer) {
 	apiRouter := r.Group("api")
 	apiRouter.GET("/", info)
-	// auth
-	apiRouter.Use()
+	// jwt and casbin auth
+	apiRouter.Use(authJwt(enforcer))
 
 	v1.Init(apiRouter)
 }
 
 func info(c *gin.Context) {
-	c.JSON(http.StatusOK,
-		&resp.ResponseData{Data: "api version: " + config.Version})
+	c.JSON(http.StatusOK, map[string]string{"version": config.Version})
 }
