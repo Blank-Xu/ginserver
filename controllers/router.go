@@ -14,7 +14,7 @@ func registerRouter(r *gin.Engine, enforcer *casbin.Enforcer) {
 	// register swagger doc router
 	r.GET("swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	// home page
-	new(Index).RegisterRouter(r)
+	new(index).registerRouter(r)
 
 	admin.Init(r, enforcer)
 

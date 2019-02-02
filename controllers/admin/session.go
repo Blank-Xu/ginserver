@@ -10,7 +10,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
 
-	"ginserver/controllers/base"
 	"ginserver/modules/config"
 	"ginserver/modules/e"
 )
@@ -44,19 +43,22 @@ func newSessionStore() (store sessions.Store) {
 	return
 }
 
-func authSession(enforcer *casbin.Enforcer) gin.HandlerFunc {
+func authSession(enforcer *casbin.Enforcer, location string) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		newCtx := base.NewContext(ctx)
+		newCtx := NewContext(ctx)
 		var err error
-		if err = newCtx.Parse(); err == nil {
-			var ok bool
-			if ok, err = enforcer.EnforceSafe(newCtx.GetRole(), ctx.Request.URL.Path, ctx.Request.Method); ok {
-				ctx.Next()
-				return
+		if err = newCtx.ParseSession(); err == nil {
+			if newCtx.IsLogin() {
+				var ok bool
+				if ok, err = enforcer.EnforceSafe(newCtx.GetRole(), ctx.Request.URL.Path, ctx.Request.Method); ok {
+					ctx.Next()
+					return
+				}
 			}
+			e.RespRedirect308(ctx, location)
+			return
 		}
 		logrus.Error(err)
 		e.RespErrForbidden(ctx)
-		return
 	}
 }

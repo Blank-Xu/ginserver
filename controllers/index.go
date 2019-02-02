@@ -8,13 +8,13 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type Index struct{}
+type index struct{}
 
-func (p *Index) RegisterRouter(r *gin.Engine) {
-	r.GET("/", p.Get)
+func (p *index) registerRouter(r *gin.Engine) {
+	r.GET("/", p.get)
 }
 
-func (p *Index) Get(c *gin.Context) {
+func (p *index) get(c *gin.Context) {
 	c.HTML(http.StatusOK, "index.html",
 		map[string]string{
 			"AppName": config.GetConfig().AppName,

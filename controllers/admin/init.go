@@ -1,20 +1,16 @@
 package admin
 
 import (
-	"net/http"
-
-	"github.com/casbin/casbin"
-
-	"ginserver/controllers/admin/admins"
 	"ginserver/modules/config"
 
+	"github.com/casbin/casbin"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 )
 
-var (
-	cookieName = "ginserver"
-)
+const redirectLocation = "admin/login"
+
+var cookieName = "ginserver"
 
 func Init(r *gin.Engine, enforcer *casbin.Enforcer) {
 	var cfg = config.GetConfig()
@@ -24,18 +20,15 @@ func Init(r *gin.Engine, enforcer *casbin.Enforcer) {
 
 	adminRouter := r.Group("admin")
 
-	// need login
-	adminRouter.GET("/", func(c *gin.Context) {
-		c.Redirect(http.StatusPermanentRedirect, "/admin/login")
-	})
-
 	// use session middleware
 	adminRouter.Use(sessions.Sessions(cookieName, newSessionStore()))
 	// register login router
-	new(Login).RegisterRouter(adminRouter)
+	new(login).registerRouter(adminRouter)
 
 	// casbin role check
-	adminRouter.Use(authSession(enforcer))
-
-	new(admins.Admins).RegisterRouter(adminRouter)
+	// adminRouter.Use(authSession(enforcer, redirectLocation))
+	new(logout).registerRouter(adminRouter)
+	// admin root router
+	new(index).registerRouter(adminRouter)
+	new(admin).registerRouter(adminRouter)
 }

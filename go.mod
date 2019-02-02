@@ -6,6 +6,7 @@ require (
 	github.com/casbin/casbin v1.8.0
 	github.com/ghodss/yaml v1.0.0 // indirect
 	github.com/gin-contrib/cors v0.0.0-20190101123304-5e7acb10687f
+	github.com/gin-contrib/multitemplate v0.0.0-20190118042248-542ef922db4b
 	github.com/gin-contrib/sessions v0.0.0-20181124110724-7687b645ca6b
 	github.com/gin-gonic/gin v1.3.0
 	github.com/go-openapi/jsonreference v0.18.0 // indirect
