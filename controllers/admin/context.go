@@ -1,8 +1,6 @@
 package admin
 
 import (
-	"errors"
-
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 )
@@ -17,21 +15,31 @@ func NewContext(context *gin.Context) *Context {
 	return &Context{Context: context}
 }
 
-func (p *Context) ParseSession() error {
+func NewContextLogin(context *gin.Context, uid int, role string) *Context {
+	return &Context{Context: context, uid: uid, role: role}
+}
+
+func (p *Context) CreateSession() error {
+	session := sessions.Default(p.Context)
+	session.Set("uid", p.uid)
+	session.Set("role", p.role)
+	return session.Save()
+}
+
+func (p *Context) ParseSession() (ok bool) {
 	session := sessions.Default(p.Context)
 	if session != nil {
 		vUid := session.Get("uid")
 		vRole := session.Get("role")
 		if vUid != nil && vRole != nil {
-			var ok bool
 			if p.uid, ok = vUid.(int); ok {
 				if p.role, ok = vRole.(string); ok {
-					return nil
+					return
 				}
 			}
 		}
 	}
-	return errors.New("session is nil")
+	return
 }
 
 func (p *Context) GetRole() string {

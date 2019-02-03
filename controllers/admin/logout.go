@@ -7,15 +7,18 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type logout struct{}
-
-func (p *logout) registerRouter(r *gin.RouterGroup) {
-	r.POST("logout", p.post)
+type logout struct {
+	loginLocation string
 }
 
-func (p *logout) post(ctx *gin.Context) {
+func (p *logout) registerRouter(r *gin.RouterGroup, location string) {
+	p.loginLocation = location
+	r.GET("logout", p.get)
+}
+
+func (p *logout) get(ctx *gin.Context) {
 	if session := sessions.Default(ctx); session != nil {
 		session.Clear()
 	}
-	e.RespRedirect308(ctx, redirectLocation)
+	e.RespRedirect302(ctx, p.loginLocation)
 }

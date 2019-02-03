@@ -1,18 +1,18 @@
 package config
 
 type config struct {
-	RunMode      string      `yaml:"RunMode"`
-	AppName      string      `yaml:"AppName"`
-	StaticFile   string      `yaml:"StaticFile"`
-	TemplateFile string      `yaml:"TemplateFile"`
-	RbacFile     string      `yaml:"RbacFile"`
-	Server       *server     `yaml:"Server"`
-	Fix          *fix        `yaml:"Fix"`
-	Log          *log        `yaml:"Log"`
-	DataBase     []*DataBase `yaml:"DataBase"`
-	Session      *session    `yaml:"Session"`
-	Redis        *redis      `yaml:"Redis"`
-	Lang         *lang       `yaml:"Lang"`
+	RunMode     string      `yaml:"RunMode"`
+	AppName     string      `yaml:"AppName"`
+	StaticDir   string      `yaml:"StaticDir"`
+	TemplateDir string      `yaml:"TemplateDir"`
+	RbacFile    string      `yaml:"RbacFile"`
+	Server      *server     `yaml:"Server"`
+	Fix         *fix        `yaml:"Fix"`
+	Log         *log        `yaml:"Log"`
+	DataBase    []*DataBase `yaml:"DataBase"`
+	Session     *session    `yaml:"Session"`
+	Redis       *redis      `yaml:"Redis"`
+	Lang        *lang       `yaml:"Lang"`
 }
 
 type server struct {

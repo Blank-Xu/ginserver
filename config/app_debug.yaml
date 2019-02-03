@@ -2,8 +2,8 @@
 
 RunMode: debug # gin.ginMode [debug, test, release]
 AppName: ginserver
-StaticFile: statics
-TemplateFile: templates
+StaticDir: statics
+TemplateDir: templates
 RbacFile: config/rbac_model.conf # casbin policy config
 
 Server:

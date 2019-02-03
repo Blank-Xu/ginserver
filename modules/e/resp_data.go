@@ -19,17 +19,10 @@ func RespDataAccepted(ctx *gin.Context, data interface{}) {
 	ctx.JSON(http.StatusAccepted, data)
 }
 
-func RespTemporaryRedirect(ctx *gin.Context, location string) {
-	ctx.Redirect(http.StatusTemporaryRedirect, location)
-}
-func RespRedirect307(ctx *gin.Context, location string) {
-	ctx.Redirect(http.StatusTemporaryRedirect, location)
+func RespRedirect301(ctx *gin.Context, location string) {
+	ctx.Redirect(http.StatusMovedPermanently, location)
 }
 
-func RespPermanentRedirect(ctx *gin.Context, location string) {
-	ctx.Redirect(http.StatusPermanentRedirect, location)
-}
-
-func RespRedirect308(ctx *gin.Context, location string) {
-	ctx.Redirect(http.StatusPermanentRedirect, location)
+func RespRedirect302(ctx *gin.Context, location string) {
+	ctx.Redirect(http.StatusFound, location)
 }

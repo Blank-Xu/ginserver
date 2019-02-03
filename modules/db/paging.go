@@ -1,6 +1,8 @@
 package db
 
 import (
+	"strconv"
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -20,15 +22,10 @@ func NewPaging(c *gin.Context) *Paging {
 }
 
 func (p *Paging) Parse() {
-	p.Page = p.GetInt("page")
-	p.Limit = p.GetInt("size")
+	p.Page, _ = strconv.Atoi(p.DefaultQuery("page", "1"))
+	p.Limit, _ = strconv.Atoi(p.DefaultQuery("size", "5"))
 	if p.Limit > 100 {
 		p.Limit = 100
-	} else if p.Limit < 1 {
-		p.Limit = 5
-	}
-	if p.Page < 1 {
-		p.Page = 1
 	}
 	p.Offset = (p.Page - 1) * p.Limit
 }

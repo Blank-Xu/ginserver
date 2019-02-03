@@ -3,15 +3,14 @@ package admin
 import (
 	"fmt"
 
+	"ginserver/modules/config"
+	"ginserver/modules/e"
+
 	"github.com/casbin/casbin"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-contrib/sessions/memstore"
 	"github.com/gin-contrib/sessions/redis"
 	"github.com/gin-gonic/gin"
-	"github.com/sirupsen/logrus"
-
-	"ginserver/modules/config"
-	"ginserver/modules/e"
 )
 
 func newSessionStore() (store sessions.Store) {
@@ -35,9 +34,7 @@ func newSessionStore() (store sessions.Store) {
 
 	store.Options(sessions.Options{
 		Path:     "/",
-		Domain:   "",
 		MaxAge:   cfgSession.MaxAge,
-		Secure:   true,
 		HttpOnly: true,
 	})
 	return
@@ -46,19 +43,13 @@ func newSessionStore() (store sessions.Store) {
 func authSession(enforcer *casbin.Enforcer, location string) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		newCtx := NewContext(ctx)
-		var err error
-		if err = newCtx.ParseSession(); err == nil {
-			if newCtx.IsLogin() {
-				var ok bool
-				if ok, err = enforcer.EnforceSafe(newCtx.GetRole(), ctx.Request.URL.Path, ctx.Request.Method); ok {
-					ctx.Next()
-					return
-				}
+		if newCtx.ParseSession() && newCtx.IsLogin() {
+			if ok, _ := enforcer.EnforceSafe(newCtx.GetRole(), ctx.Request.URL.Path, ctx.Request.Method); ok {
+				ctx.Next()
+				return
 			}
-			e.RespRedirect308(ctx, location)
-			return
 		}
-		logrus.Error(err)
-		e.RespErrForbidden(ctx)
+		e.RespRedirect302(ctx, location)
+		ctx.Abort()
 	}
 }

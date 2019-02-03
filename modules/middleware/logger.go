@@ -15,8 +15,7 @@ func Logger(log *logrus.Logger) gin.HandlerFunc {
 		c.Next()
 		status := c.Writer.Status()
 		entry := log.WithFields(logrus.Fields{
-			"method": c.Request.Method,
-			// "host":       c.Request.Host,
+			"method":     c.Request.Method,
 			"ip":         c.ClientIP(),
 			"path":       c.Request.URL.Path,
 			"referer":    c.Request.Referer(),
