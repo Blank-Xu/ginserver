@@ -1,30 +1,30 @@
 package admin
 
 import (
+	"errors"
+	"net/http"
+
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
-	"github.com/pkg/errors"
+
+	"ginserver/modules/e"
 )
 
 type Context struct {
 	*gin.Context
-	uid  int
-	role string
+	userId int
+	roleId int
 }
 
 func NewContext(context *gin.Context) *Context {
 	return &Context{Context: context}
 }
 
-func NewContextLogin(context *gin.Context, uid int, role string) *Context {
-	return &Context{Context: context, uid: uid, role: role}
-}
-
-func (p *Context) SessionCreate() error {
+func (p *Context) SessionCreate(userId, roleId int) error {
 	session := sessions.Default(p.Context)
 	if session != nil {
-		session.Set("uid", p.uid)
-		session.Set("role", p.role)
+		session.Set("userId", userId)
+		session.Set("roleId", roleId)
 		return session.Save()
 	}
 	return errors.New("session is nil")
@@ -33,11 +33,11 @@ func (p *Context) SessionCreate() error {
 func (p *Context) SessionParse() (ok bool) {
 	session := sessions.Default(p.Context)
 	if session != nil {
-		vUid := session.Get("uid")
-		vRole := session.Get("role")
+		vUid := session.Get("userId")
+		vRole := session.Get("roleId")
 		if vUid != nil && vRole != nil {
-			if p.uid, ok = vUid.(int); ok {
-				if p.role, ok = vRole.(string); ok {
+			if p.userId, ok = vUid.(int); ok {
+				if p.roleId, ok = vRole.(int); ok {
 					return
 				}
 			}
@@ -56,10 +56,56 @@ func (p *Context) SessionDestroy() {
 	}
 }
 
-func (p *Context) GetRole() string {
-	return p.role
+func (p *Context) GetRoleId() int {
+	return p.roleId
 }
 
 func (p *Context) GetUserId() int {
-	return p.uid
+	return p.userId
+}
+
+func (p *Context) RespDataOk(data interface{}) {
+	p.JSON(http.StatusOK, data)
+}
+
+func (p *Context) RespDataCreated(data interface{}) {
+	p.JSON(http.StatusCreated, data)
+}
+
+func (p *Context) RespDataAccepted(data interface{}) {
+	p.JSON(http.StatusAccepted, data)
+}
+
+func (p *Context) RespRedirect301(location string) {
+	p.Redirect(http.StatusMovedPermanently, location)
+}
+
+func (p *Context) RespRedirect302(location string) {
+	p.Redirect(http.StatusFound, location)
+}
+
+func (p *Context) RespErrInvalidParams(err ...interface{}) {
+	p.AbortWithStatusJSON(http.StatusBadRequest, e.RespErrCode(e.CodeInvalidParams, err...))
+}
+
+func (p *Context) RespErrForbidden() {
+	p.AbortWithStatusJSON(e.RespErrHttp(http.StatusForbidden))
+}
+
+func (p *Context) RespErrNotFound() {
+	p.AbortWithStatusJSON(e.RespErrHttp(http.StatusNotFound))
+}
+
+func (p *Context) RespErrInternalServerError(err error) {
+	p.Error(err)
+	p.AbortWithStatusJSON(e.RespErrHttp(http.StatusInternalServerError))
+}
+
+func (p *Context) RespErrDBError(err error) {
+	p.Error(err)
+	if gin.Mode() != gin.ReleaseMode {
+		p.AbortWithStatusJSON(http.StatusNotImplemented, e.RespErrCode(e.CodeDBErr, err))
+	} else {
+		p.AbortWithStatusJSON(http.StatusNotImplemented, e.RespErrCode(e.CodeDBErr))
+	}
 }

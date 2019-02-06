@@ -30,7 +30,7 @@ func RespErrHttp(httpCode int) (int, *ResponseErr) {
 }
 
 func RespErrParamsInvalid(ctx *gin.Context, err ...interface{}) {
-	ctx.AbortWithStatusJSON(http.StatusBadRequest, RespErrCode(CodeParamInvalid, err...))
+	ctx.AbortWithStatusJSON(http.StatusBadRequest, RespErrCode(CodeInvalidParams, err...))
 }
 
 func RespErrForbidden(ctx *gin.Context) {

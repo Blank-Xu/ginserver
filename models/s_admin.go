@@ -7,9 +7,11 @@ import (
 type SAdmin struct {
 	*db.Model  `xorm:"-" json:"-"`
 	Id         int         `xorm:"pk autoincr" json:"id"`
+	RoleId     int         `json:"role_id"`
 	Username   string      `xorm:"unique" json:"username"`
 	Password   string      `json:"-"`
 	Salt       string      `json:"-"`
+	State      bool        `json:"state"`
 	Nickname   string      `json:"nickname"`
 	Email      string      `json:"email"`
 	Phone      string      `json:"phone"`
@@ -34,7 +36,7 @@ type SAdminInsert struct {
 	Username   string      `xorm:"unique" json:"username" binding:"required"`
 	Password   string      `json:"password" binding:"required"`
 	Salt       string      `json:"-"`
-	Enable     bool        `json:"enable"`
+	State      bool        `json:"state"`
 	Nickname   string      `json:"nickname"`
 	Email      string      `json:"email"`
 	Phone      string      `json:"phone"`
@@ -53,7 +55,7 @@ type SAdminUpdate struct {
 	Id        int         `xorm:"pk autoincr" json:"-"`
 	Password  string      `json:"password"`
 	Salt      string      `json:"-"`
-	Enable    bool        `json:"enable"`
+	State     bool        `json:"state"`
 	Nickname  string      `json:"nickname"`
 	Email     string      `json:"email"`
 	Phone     string      `json:"phone"`
@@ -62,5 +64,17 @@ type SAdminUpdate struct {
 }
 
 func (p *SAdminUpdate) TableName() string {
+	return "s_admin"
+}
+
+// SAdminLogin login check
+type SAdminLogin struct {
+	*db.Model `xorm:"-" json:"-"`
+	Id        int    `xorm:"pk autoincr" json:"-"`
+	Username  string `xorm:"unique" json:"username" binding:"required"`
+	Password  string `json:"password" binding:"required"`
+}
+
+func (p *SAdminLogin) TableName() string {
 	return "s_admin"
 }

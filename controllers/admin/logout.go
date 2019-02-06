@@ -1,8 +1,6 @@
 package admin
 
 import (
-	"ginserver/modules/e"
-
 	"github.com/gin-gonic/gin"
 )
 
@@ -16,6 +14,7 @@ func (p *logout) registerRouter(r *gin.RouterGroup, location string) {
 }
 
 func (p *logout) get(ctx *gin.Context) {
-	NewContext(ctx).SessionDestroy()
-	e.RespRedirect302(ctx, p.loginLocation)
+	newCtx := NewContext(ctx)
+	newCtx.SessionDestroy()
+	newCtx.RespRedirect302(p.loginLocation)
 }

@@ -61,35 +61,9 @@ import (
 // @authorizationurl https://example.com/oauth/authorize
 // @scope.admin Grants read and write access to administrative information
 
-var configFile = flag.String("config", "config/app_debug.yaml", "config file")
-
-func init() {
-	if !flag.Parsed() {
-		flag.Parse()
-	}
-
-	fmt.Printf("Server Starting ... \n - version: [%s]  \n - args: %s\n", config.Version, os.Args)
-	fmt.Printf("Read Config File ... \n - file_name: [%s]\n", *configFile)
-	fmt.Println(" - you can use [-config file] command to set config file when server start.")
-
-	config.Init(*configFile)
-	fmt.Println("Read Config Success")
-
-	// fix default setting
-	fix()
-
-	// start log first
-	log.Init()
-	logrus.Info("Server Starting ...")
-
-	db.Init()
-
-	models.Init()
-
-	controllers.Init()
-}
-
 func main() {
+	Init()
+
 	var cfg = config.GetConfig().Server
 
 	defer func() {
@@ -129,6 +103,34 @@ func main() {
 		logrus.Fatal("shutdown err: ", err)
 	}
 	logrus.Info("server exit.")
+}
+
+var configFile = flag.String("config", "config/app_debug.yaml", "config file")
+
+func Init() {
+	if !flag.Parsed() {
+		flag.Parse()
+	}
+
+	fmt.Printf("Server Starting ... \n - version: [%s]  \n - args: %s\n", config.Version, os.Args)
+	fmt.Printf("Read Config File ... \n - file_name: [%s]\n", *configFile)
+	fmt.Println(" - you can use [-config file] command to set config file when server start.")
+
+	config.Init(*configFile)
+	fmt.Println("Read Config Success")
+
+	// fix default setting
+	fix()
+
+	// start log first
+	log.Init()
+	logrus.Info("Server Starting ...")
+
+	db.Init()
+
+	models.Init()
+
+	controllers.Init()
 }
 
 func fix() {

@@ -25,7 +25,7 @@ func Init(r *gin.Engine, enforcer *casbin.Enforcer) {
 	// register login router
 	new(login).registerRouter(adminRouter)
 	new(logout).registerRouter(adminRouter, loginLocation)
-	// casbin role check
+	// casbin roleId check
 	adminRouter.Use(authSession(enforcer, loginLocation))
 	// admin root router
 	new(index).registerRouter(adminRouter)

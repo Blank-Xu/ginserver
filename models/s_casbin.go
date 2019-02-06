@@ -10,7 +10,7 @@ import (
 type SCasbin struct {
 	*db.Model `xorm:"-" json:"-"`
 	Id        int    `xorm:"int(11) pk autoincr" json:"id"`
-	Ptype     string `xorm:"varchar(50) index not null default ''" json:"ptype"`
+	Ptype     string `xorm:"varchar(32) index not null default ''" json:"ptype"`
 	V0        string `xorm:"varchar(255) index not null default ''" json:"v0"`
 	V1        string `xorm:"varchar(255) index not null default ''" json:"v1"`
 	V2        string `xorm:"varchar(255) index not null default ''" json:"v2"`
