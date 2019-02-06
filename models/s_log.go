@@ -4,17 +4,25 @@ import (
 	"ginserver/modules/db"
 )
 
+type LogType int
+
+const (
+	LogTypeLogin LogType = iota + 1
+	LogTypeLogout
+)
+
 type SLog struct {
 	*db.Model `xorm:"-" json:"-"`
 	Id        int64 `xorm:"pk autoincr"`
-	Uid       int   `xorm:"index"`
-	Role      string
+	LogType   LogType
+	UserId    int `xorm:"index"`
+	RoleId    int `xorm:"index"`
 	Method    string
-	Router    string
+	Path      string
 	Params    string
-	Created   db.JSONTime
 	Ip        string
 	Remark    string
+	Created   db.JSONTime `xorm:"created"`
 }
 
 func (p *SLog) TableName() string {

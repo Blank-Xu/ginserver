@@ -31,6 +31,7 @@ CREATE TABLE IF NOT EXISTS s_params
 CREATE TABLE IF NOT EXISTS s_log
 (
   id      bigint AUTO_INCREMENT PRIMARY KEY,
+  log_type   tinyint(2)   NOT NULL,
   user_id int          NOT NULL COMMENT 'user id',
   role_id int          NOT NULL COMMENT 'user role',
   method  varchar(10)  NOT NULL COMMENT 'http method',

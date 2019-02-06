@@ -6,7 +6,9 @@ import (
 
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
+	"github.com/gin-gonic/gin/json"
 
+	"ginserver/models"
 	"ginserver/modules/e"
 )
 
@@ -62,6 +64,29 @@ func (p *Context) GetRoleId() int {
 
 func (p *Context) GetUserId() int {
 	return p.userId
+}
+
+var logWithoutParamsRouter = map[string]bool{
+	"/admin/login": true,
+}
+
+func (p *Context) Log(logType models.LogType, remark ...string) {
+	log := &models.SLog{
+		LogType: logType,
+		UserId:  p.userId,
+		RoleId:  p.roleId,
+		Method:  p.Request.Method,
+		Path:    p.Request.URL.Path,
+		Ip:      p.ClientIP(),
+	}
+	if !logWithoutParamsRouter[log.Path] {
+		param, _ := json.Marshal(p.Request.Form)
+		log.Params = string(param)
+	}
+	if len(remark) > 0 {
+		log.Remark = remark[0]
+	}
+	log.InsertOne(log)
 }
 
 func (p *Context) RespDataOk(data interface{}) {

@@ -30,24 +30,25 @@ func (p *login) post(ctx *gin.Context) {
 		req    = new(models.SAdminLogin)
 		newCtx = NewContext(ctx)
 		err    error
-		has    bool
 	)
 	if err = newCtx.Bind(req); err != nil {
 		newCtx.RespErrInvalidParams(err)
 		return
 	}
 
-	recordAdmin := models.SAdmin{Username: req.Username}
+	recordAdmin := &models.SAdmin{Username: req.Username}
+	var has bool
 	if has, err = recordAdmin.SelectOne(recordAdmin); err != nil {
 		newCtx.RespErrDBError(err)
 		return
 	}
-	if !has {
+	if !has ||
+		recordAdmin.Password != utils.GenPassword(req.Password, recordAdmin.Salt) {
 		newCtx.RespErrInvalidParams()
 		return
 	}
-	if recordAdmin.Password != utils.GenPassword(req.Password, recordAdmin.Salt) {
-		newCtx.RespErrInvalidParams()
+	if recordAdmin.State == false {
+		newCtx.RespErrForbidden()
 		return
 	}
 
@@ -55,5 +56,6 @@ func (p *login) post(ctx *gin.Context) {
 		newCtx.RespErrInternalServerError(err)
 		return
 	}
-	newCtx.RespRedirect302("/recordAdmin")
+	newCtx.Log(models.LogTypeLogin)
+	newCtx.RespRedirect302("/")
 }
