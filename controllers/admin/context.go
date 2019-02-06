@@ -3,6 +3,7 @@ package admin
 import (
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
+	"github.com/pkg/errors"
 )
 
 type Context struct {
@@ -19,14 +20,17 @@ func NewContextLogin(context *gin.Context, uid int, role string) *Context {
 	return &Context{Context: context, uid: uid, role: role}
 }
 
-func (p *Context) CreateSession() error {
+func (p *Context) SessionCreate() error {
 	session := sessions.Default(p.Context)
-	session.Set("uid", p.uid)
-	session.Set("role", p.role)
-	return session.Save()
+	if session != nil {
+		session.Set("uid", p.uid)
+		session.Set("role", p.role)
+		return session.Save()
+	}
+	return errors.New("session is nil")
 }
 
-func (p *Context) ParseSession() (ok bool) {
+func (p *Context) SessionParse() (ok bool) {
 	session := sessions.Default(p.Context)
 	if session != nil {
 		vUid := session.Get("uid")
@@ -42,14 +46,20 @@ func (p *Context) ParseSession() (ok bool) {
 	return
 }
 
+func (p *Context) SessionDestroy() {
+	session := sessions.Default(p.Context)
+	if session != nil {
+		session.Clear()
+		if err := session.Save(); err != nil {
+			p.Error(err)
+		}
+	}
+}
+
 func (p *Context) GetRole() string {
 	return p.role
 }
 
 func (p *Context) GetUserId() int {
 	return p.uid
-}
-
-func (p *Context) IsLogin() bool {
-	return (p.uid > 0) && (len(p.role) > 0)
 }

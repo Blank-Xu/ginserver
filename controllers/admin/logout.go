@@ -3,7 +3,6 @@ package admin
 import (
 	"ginserver/modules/e"
 
-	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 )
 
@@ -17,8 +16,6 @@ func (p *logout) registerRouter(r *gin.RouterGroup, location string) {
 }
 
 func (p *logout) get(ctx *gin.Context) {
-	if session := sessions.Default(ctx); session != nil {
-		session.Clear()
-	}
+	NewContext(ctx).SessionDestroy()
 	e.RespRedirect302(ctx, p.loginLocation)
 }

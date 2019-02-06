@@ -23,7 +23,8 @@ func (p *login) get(ctx *gin.Context) {
 
 func (p *login) post(ctx *gin.Context) {
 	newCtx := NewContextLogin(ctx, 1, "admin")
-	if err := newCtx.CreateSession(); err != nil {
+	if err := newCtx.SessionCreate(); err != nil {
+		ctx.Error(err)
 		e.RespErrInternalServerError(ctx)
 		return
 	}

@@ -43,8 +43,8 @@ func newSessionStore() (store sessions.Store) {
 func authSession(enforcer *casbin.Enforcer, location string) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		newCtx := NewContext(ctx)
-		if newCtx.ParseSession() && newCtx.IsLogin() {
-			if ok, _ := enforcer.EnforceSafe(newCtx.GetRole(), ctx.Request.URL.Path, ctx.Request.Method); ok {
+		if newCtx.SessionParse() {
+			if ok, _ := enforcer.EnforceSafe(newCtx.GetRole(), newCtx.Request.URL.Path, newCtx.Request.Method); ok {
 				ctx.Next()
 				return
 			}

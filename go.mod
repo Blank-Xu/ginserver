@@ -4,7 +4,6 @@ require (
 	cloud.google.com/go v0.34.0 // indirect
 	github.com/boj/redistore v0.0.0-20180917114910-cd5dcc76aeff // indirect
 	github.com/casbin/casbin v1.8.0
-	github.com/ghodss/yaml v1.0.0 // indirect
 	github.com/gin-contrib/cors v0.0.0-20190101123304-5e7acb10687f
 	github.com/gin-contrib/multitemplate v0.0.0-20190118042248-542ef922db4b
 	github.com/gin-contrib/sessions v0.0.0-20181124110724-7687b645ca6b
@@ -21,7 +20,6 @@ require (
 	github.com/sirupsen/logrus v1.3.0
 	github.com/swaggo/gin-swagger v1.0.0
 	github.com/swaggo/swag v1.4.0
-	github.com/urfave/cli v1.20.0 // indirect
 	golang.org/x/net v0.0.0-20190110200230-915654e7eabc // indirect
 	golang.org/x/tools v0.0.0-20190130173957-1c3581914d33 // indirect
 	google.golang.org/appengine v1.4.0 // indirect
