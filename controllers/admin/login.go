@@ -19,8 +19,8 @@ func (p *login) registerRouter(r *gin.RouterGroup) {
 func (p *login) get(ctx *gin.Context) {
 	ctx.HTML(http.StatusOK, "login.html",
 		map[string]string{
-			"Title":    "ginserverLogin",
-			"UserName": "adming",
+			"Title":    "Login",
+			"UserName": "admin",
 			"Password": "123456",
 		})
 }
@@ -31,7 +31,7 @@ func (p *login) post(ctx *gin.Context) {
 		newCtx = NewContext(ctx)
 		err    error
 	)
-	if err = newCtx.Bind(req); err != nil {
+	if err = newCtx.ShouldBind(req); err != nil {
 		newCtx.RespErrInvalidParams(err)
 		return
 	}
@@ -57,5 +57,5 @@ func (p *login) post(ctx *gin.Context) {
 		return
 	}
 	newCtx.Log(models.LogTypeLogin)
-	newCtx.RespRedirect302("/")
+	newCtx.RespRedirect302("/admin")
 }

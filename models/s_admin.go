@@ -71,8 +71,8 @@ func (p *SAdminUpdate) TableName() string {
 type SAdminLogin struct {
 	*db.Model `xorm:"-" json:"-"`
 	Id        int    `xorm:"pk autoincr" json:"-"`
-	Username  string `xorm:"unique" json:"username" binding:"required"`
-	Password  string `json:"password" binding:"required"`
+	Username  string `xorm:"unique" form:"username" json:"username" binding:"required"`
+	Password  string `form:"password" json:"password" binding:"required"`
 }
 
 func (p *SAdminLogin) TableName() string {

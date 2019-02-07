@@ -27,6 +27,8 @@ func (p *Context) SessionCreate(userId, roleId int) error {
 	if session != nil {
 		session.Set("userId", userId)
 		session.Set("roleId", roleId)
+		p.userId = userId
+		p.roleId = roleId
 		return session.Save()
 	}
 	return errors.New("session is nil")
