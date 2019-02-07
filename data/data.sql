@@ -96,6 +96,7 @@ CREATE TABLE IF NOT EXISTS s_admin
   salt        varchar(32)  NOT NULL COMMENT 'salt for encrypt password',
   state       tinyint(1)   NOT NULL DEFAULT 0 COMMENT 'user state, 0:disable, 1:enable',
   nickname    varchar(32)  NOT NULL DEFAULT '',
+  icon        varchar(64)  NOT NULL DEFAULT '',
   email       varchar(64)  NOT NULL DEFAULT '',
   phone       varchar(32)  NOT NULL DEFAULT '',
   remark      varchar(255) NOT NULL DEFAULT '',
@@ -113,9 +114,11 @@ CREATE TABLE IF NOT EXISTS s_admin
 # login password: 123456
 # salt: dc83c7d015da92a93b0bd90144604d04
 # salted password:  bfba91e771a65b4f0a10ba358d9c7655
-INSERT INTO s_admin (username, password, salt, state, nickname, email,
+INSERT INTO s_admin (username, password, salt,
+                     state, nickname, icon, email,
                      updater, register_ip, login_ip)
-VALUES ('admin', 'bfba91e771a65b4f0a10ba358d9c7655', 'dc83c7d015da92a93b0bd90144604d04', 1,
-        'blank', 'blank.xu@qq.com', 10000, '127.0.0.1', '127.0.0.1');
+VALUES ('admin', 'bfba91e771a65b4f0a10ba358d9c7655', 'dc83c7d015da92a93b0bd90144604d04',
+        1, 'blank', 'statics/img/avatar/avatar5.png', 'blank.xu@qq.com',
+        10000, '127.0.0.1', '127.0.0.1');
 
 

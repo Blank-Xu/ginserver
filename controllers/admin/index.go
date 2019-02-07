@@ -1,8 +1,6 @@
 package admin
 
 import (
-	"net/http"
-
 	"github.com/gin-gonic/gin"
 )
 
@@ -13,5 +11,11 @@ func (p *index) registerRouter(r *gin.RouterGroup) {
 }
 
 func (p *index) Get(ctx *gin.Context) {
-	ctx.HTML(http.StatusOK, "admin.html", nil)
+	newCtx := NewContext(ctx)
+	if !newCtx.SessionParse() {
+		return
+	}
+	newCtx.Render("admin.html", map[string]interface{}{
+		"content": "admin login",
+	})
 }

@@ -13,6 +13,7 @@ type SAdmin struct {
 	Salt       string      `json:"-"`
 	State      bool        `json:"state"`
 	Nickname   string      `json:"nickname"`
+	Icon       string      `json:"icon"`
 	Email      string      `json:"email"`
 	Phone      string      `json:"phone"`
 	Remark     string      `json:"remark"`

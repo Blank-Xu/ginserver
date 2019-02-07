@@ -136,3 +136,14 @@ func (p *Context) RespErrDBError(err error) {
 		p.AbortWithStatusJSON(http.StatusNotImplemented, e.RespErrCode(e.CodeDBErr))
 	}
 }
+
+func (p *Context) Render(tmpl string, value map[string]interface{}) {
+	recordAdmin := models.NewSAdmin(p.userId)
+	if _, err := recordAdmin.SelectOne(recordAdmin); err != nil {
+		p.RespErrDBError(err)
+		return
+	}
+
+	value["recordAdmin"] = recordAdmin
+	p.HTML(http.StatusOK, tmpl, value)
+}
