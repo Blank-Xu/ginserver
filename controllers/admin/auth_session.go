@@ -1,20 +1,24 @@
 package admin
 
 import (
+	"net/http"
+
 	"github.com/casbin/casbin"
+	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 )
 
-func AuthSession(enforcer *casbin.Enforcer, location string) gin.HandlerFunc {
+func AuthSession(sessionKey string, enforcer *casbin.Enforcer, location string) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		newCtx := NewContext(ctx)
-		if newCtx.SessionParse() {
-			if ok, _ := enforcer.EnforceSafe(newCtx.GetRoleId(), newCtx.Request.URL.Path, newCtx.Request.Method); ok {
-				newCtx.Next()
-				return
+		if value := sessions.Default(ctx).Get(sessionKey); value != nil {
+			if roleId, ok := value.(int); ok {
+				if ok, _ = enforcer.EnforceSafe(roleId, ctx.Request.URL.Path, ctx.Request.Method); ok {
+					ctx.Next()
+					return
+				}
 			}
 		}
-		newCtx.RespRedirect302(location)
-		newCtx.Abort()
+		ctx.Redirect(http.StatusFound, location)
+		ctx.Abort()
 	}
 }

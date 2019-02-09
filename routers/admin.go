@@ -25,7 +25,7 @@ func registerAdminRouter() {
 	// register logout router
 	groupAdmin.GET("logout", new(admin.ControllerLogout).Get)
 	// casbin roleId check
-	groupAdmin.Use(admin.AuthSession(enforcer, "/admin/login"))
+	groupAdmin.Use(admin.AuthSession("roleId", enforcer, "/admin/login"))
 	// admin root router
 	groupAdmin.GET("/", new(admin.ControllerIndex).Get)
 }
