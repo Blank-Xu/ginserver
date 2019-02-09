@@ -11,7 +11,7 @@ func (p *ControllerIndex) Get(ctx *gin.Context) {
 	if !newCtx.SessionParse() {
 		return
 	}
-	newCtx.Render("admin.html", map[string]interface{}{
+	newCtx.Render("index_admin.html", map[string]interface{}{
 		"content": "admin login",
 	})
 }

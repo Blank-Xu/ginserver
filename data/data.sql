@@ -30,19 +30,22 @@ CREATE TABLE IF NOT EXISTS s_params
 -- admin log
 CREATE TABLE IF NOT EXISTS s_log
 (
-  id       bigint AUTO_INCREMENT PRIMARY KEY,
-  log_type tinyint(2)   NOT NULL,
-  user_id  int          NOT NULL COMMENT 'user id',
-  role_id  int          NOT NULL COMMENT 'user role',
-  method   varchar(10)  NOT NULL COMMENT 'http method',
-  path     varchar(50)  NOT NULL COMMENT 'router path',
-  params   text         NOT NULL COMMENT 'request params',
-  ip       varchar(32)  NOT NULL DEFAULT '' COMMENT 'request ip address',
-  remark   varchar(255) NOT NULL DEFAULT '',
-  created  timestamp    NOT NULL DEFAULT current_timestamp,
-  v1       varchar(255) NOT NULL DEFAULT '',
-  v2       varchar(255) NOT NULL DEFAULT '',
-  v3       varchar(255) NOT NULL DEFAULT '',
+  id      bigint AUTO_INCREMENT PRIMARY KEY,
+  level   tinyint(2)   NOT NULL,
+  type    tinyint(2)   NOT NULL,
+  user_id int          NOT NULL COMMENT 'user id',
+  role_id int          NOT NULL COMMENT 'user role',
+  method  varchar(10)  NOT NULL COMMENT 'http method',
+  path    varchar(50)  NOT NULL COMMENT 'router path',
+  params  text         NOT NULL COMMENT 'request params',
+  ip      varchar(32)  NOT NULL DEFAULT '' COMMENT 'request ip address',
+  remark  varchar(255) NOT NULL DEFAULT '',
+  created timestamp    NOT NULL DEFAULT current_timestamp,
+  v1      varchar(255) NOT NULL DEFAULT '',
+  v2      varchar(255) NOT NULL DEFAULT '',
+  v3      varchar(255) NOT NULL DEFAULT '',
+  INDEX idx_s_log_level (level),
+  INDEX idx_s_log_type (type),
   INDEX idx_s_log_user_id (user_id),
   INDEX idx_s_log_role_id (role_id)
 ) DEFAULT CHARACTER SET = utf8mb4;
@@ -76,6 +79,7 @@ CREATE TABLE IF NOT EXISTS s_menu
 (
   id       int AUTO_INCREMENT PRIMARY KEY,
   name     varchar(64)  NOT NULL,
+  method   varchar(32)  NOT NULL,
   path     varchar(255) NOT NULL,
   icon     varchar(255) NOT NULL DEFAULT '',
   level    tinyint(3)   NOT NULL DEFAULT 0,

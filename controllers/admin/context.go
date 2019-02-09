@@ -72,14 +72,15 @@ var logWithoutParamsRouter = map[string]bool{
 	"/admin/login": true,
 }
 
-func (p *Context) Log(logType models.LogType, remark ...string) {
+func (p *Context) Log(logType models.LogType, level models.LogLevel, remark ...string) {
 	log := &models.SLog{
-		LogType: logType,
-		UserId:  p.userId,
-		RoleId:  p.roleId,
-		Method:  p.Request.Method,
-		Path:    p.Request.URL.Path,
-		Ip:      p.ClientIP(),
+		Type:   logType,
+		Level:  level,
+		UserId: p.userId,
+		RoleId: p.roleId,
+		Method: p.Request.Method,
+		Path:   p.Request.URL.Path,
+		Ip:     p.ClientIP(),
 	}
 	if !logWithoutParamsRouter[log.Path] {
 		param, _ := json.Marshal(p.Request.Form)

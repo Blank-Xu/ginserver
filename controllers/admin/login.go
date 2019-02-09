@@ -51,6 +51,6 @@ func (p *ControllerLogin) Post(ctx *gin.Context) {
 		newCtx.RespErrInternalServerError(err)
 		return
 	}
-	newCtx.Log(models.LogTypeLogin)
+	newCtx.Log(models.LogTypeLogin, models.LogLevelInfo)
 	newCtx.RespRedirect302("/admin")
 }
