@@ -12,15 +12,7 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-type Admins struct{}
-
-func (p *Admins) RegisterRouter(r *gin.RouterGroup) {
-	r.GET(":id", p.GetOne)
-	r.GET("", p.Get)
-	r.POST("", p.Post)
-	r.PUT(":id", p.Put)
-	r.DELETE(":id", p.Delete)
-}
+type ControllerAdmins struct{}
 
 // GetOne godoc
 // @Summary get a admins record
@@ -34,7 +26,7 @@ func (p *Admins) RegisterRouter(r *gin.RouterGroup) {
 // @Failure 404 {object} e.ResponseErr
 // @Failure 501 {object} e.ResponseErr
 // @Router /admins/{id} [get]
-func (p *Admins) GetOne(ctx *gin.Context) {
+func (p *ControllerAdmins) GetOne(ctx *gin.Context) {
 	id, _ := strconv.Atoi(ctx.Param("id"))
 	if id < 1 {
 		e.RespErrParamsInvalid(ctx)
@@ -55,7 +47,7 @@ func (p *Admins) GetOne(ctx *gin.Context) {
 	e.RespDataOk(ctx, record)
 }
 
-func (p *Admins) Get(ctx *gin.Context) {
+func (p *ControllerAdmins) Get(ctx *gin.Context) {
 	var err error
 	orderBy := db.NewOrderBy(ctx)
 	if err = orderBy.Parse(); err != nil {
@@ -73,7 +65,7 @@ func (p *Admins) Get(ctx *gin.Context) {
 	e.RespDataOk(ctx, &records)
 }
 
-func (p *Admins) Post(ctx *gin.Context) {
+func (p *ControllerAdmins) Post(ctx *gin.Context) {
 	record := new(models.SAdminInsert)
 	if err := ctx.BindJSON(record); err != nil {
 		e.RespErrParamsInvalid(ctx, err)
@@ -94,7 +86,7 @@ func (p *Admins) Post(ctx *gin.Context) {
 	e.RespDataCreated(ctx, count)
 }
 
-func (p *Admins) Put(ctx *gin.Context) {
+func (p *ControllerAdmins) Put(ctx *gin.Context) {
 	id, _ := strconv.Atoi(ctx.Param("id"))
 	if id < 1 {
 		e.RespErrParamsInvalid(ctx)
@@ -127,7 +119,7 @@ func (p *Admins) Put(ctx *gin.Context) {
 	e.RespDataOk(ctx, count)
 }
 
-func (p *Admins) Delete(ctx *gin.Context) {
+func (p *ControllerAdmins) Delete(ctx *gin.Context) {
 	id, _ := strconv.Atoi(ctx.Param("id"))
 	if id < 1 {
 		e.RespErrParamsInvalid(ctx)

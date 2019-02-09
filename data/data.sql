@@ -76,14 +76,15 @@ CREATE TABLE IF NOT EXISTS s_menu
 (
   id       int AUTO_INCREMENT PRIMARY KEY,
   name     varchar(64)  NOT NULL,
-  state    tinyint(1)   NOT NULL DEFAULT 0 COMMENT '0:disable, 1:enable',
-  order_no tinyint(3)   NOT NULL DEFAULT 0,
+  path     varchar(255) NOT NULL,
   icon     varchar(255) NOT NULL DEFAULT '',
-  method   varchar(32)  NOT NULL DEFAULT '',
-  path     varchar(255) NOT NULL DEFAULT '',
+  level    tinyint(3)   NOT NULL DEFAULT 0,
+  order_no tinyint(4)   NOT NULL DEFAULT 0,
+  state    tinyint(1)   NOT NULL DEFAULT 0 COMMENT '0:disable, 1:enable',
   created  timestamp    NOT NULL DEFAULT current_timestamp,
   updater  int          NOT NULL,
   updated  timestamp    NOT NULL DEFAULT current_timestamp ON UPDATE current_timestamp,
+  UNIQUE uq_s_menu_name (name)
 ) DEFAULT CHARACTER SET = utf8mb4;
 
 -- admin users

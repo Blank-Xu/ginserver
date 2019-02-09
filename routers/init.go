@@ -1,4 +1,4 @@
-package controllers
+package routers
 
 import (
 	"fmt"
@@ -6,6 +6,10 @@ import (
 	"path/filepath"
 	"time"
 
+	ginSwagger "github.com/swaggo/gin-swagger"
+	"github.com/swaggo/gin-swagger/swaggerFiles"
+
+	"ginserver/controllers"
 	"ginserver/models"
 	"ginserver/modules/config"
 	"ginserver/modules/e"
@@ -19,7 +23,10 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-var router = gin.New()
+var (
+	router   = gin.New()
+	enforcer *casbin.Enforcer
+)
 
 func Init() {
 	var cfg = config.GetConfig()
@@ -36,7 +43,7 @@ func Init() {
 	// set global middleware
 	router.Use(gin.Recovery())
 	// statics and templates
-	router.Static("statics/", cfg.StaticDir)
+	router.Static("/statics", cfg.StaticDir)
 	router.SetFuncMap(func_map.GetFunMap())
 	router.HTMLRender = loadTemplates(cfg.TemplateDir)
 	// cors middleware
@@ -57,9 +64,15 @@ func Init() {
 	})
 
 	// load casbin
-	casbinEnforcer := casbin.NewEnforcer(cfg.RbacFile, &models.SCasbin{})
-	// register routers
-	registerRouter(router, casbinEnforcer)
+	enforcer = casbin.NewEnforcer(cfg.RbacFile, &models.SCasbin{})
+	// register swagger doc router
+	router.GET("swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+	// home page
+	router.GET("/", new(controllers.IndexController).Get)
+
+	registerAdminRouter()
+
+	registerApiRouter()
 }
 
 func GetRouter() *gin.Engine {

@@ -9,23 +9,18 @@ import (
 	"ginserver/modules/utils"
 )
 
-type login struct{}
+type ControllerLogin struct{}
 
-func (p *login) registerRouter(r *gin.RouterGroup) {
-	r.GET("login", p.get)
-	r.POST("login", p.post)
-}
-
-func (p *login) get(ctx *gin.Context) {
+func (p *ControllerLogin) Get(ctx *gin.Context) {
 	ctx.HTML(http.StatusOK, "login.html",
 		map[string]string{
 			"Title":    "Login",
-			"UserName": "admin",
+			"Username": "admin",
 			"Password": "123456",
 		})
 }
 
-func (p *login) post(ctx *gin.Context) {
+func (p *ControllerLogin) Post(ctx *gin.Context) {
 	var (
 		req    = new(models.SAdminLogin)
 		newCtx = NewContext(ctx)

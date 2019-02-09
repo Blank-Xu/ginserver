@@ -4,17 +4,10 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type logout struct {
-	loginLocation string
-}
+type ControllerLogout struct{}
 
-func (p *logout) registerRouter(r *gin.RouterGroup, location string) {
-	p.loginLocation = location
-	r.GET("logout", p.get)
-}
-
-func (p *logout) get(ctx *gin.Context) {
+func (p *ControllerLogout) Get(ctx *gin.Context) {
 	newCtx := NewContext(ctx)
 	newCtx.SessionDestroy()
-	newCtx.RespRedirect302(p.loginLocation)
+	newCtx.RespRedirect302("/admin/login")
 }

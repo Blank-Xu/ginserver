@@ -5,8 +5,8 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func authJwt(enforcer *casbin.Enforcer) gin.HandlerFunc {
-	return func(c *gin.Context) {
+func AuthJwt(enforcer *casbin.Enforcer) gin.HandlerFunc {
+	return func(ctx *gin.Context) {
 
 	}
 }

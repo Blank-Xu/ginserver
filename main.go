@@ -9,12 +9,12 @@ import (
 	"os/signal"
 	"time"
 
-	"ginserver/controllers"
 	_ "ginserver/docs"
 	"ginserver/models"
 	"ginserver/modules/config"
 	"ginserver/modules/db"
 	"ginserver/modules/log"
+	"ginserver/routers"
 
 	"github.com/sirupsen/logrus"
 )
@@ -76,7 +76,7 @@ func main() {
 
 	srv := &http.Server{
 		Addr:           ":" + cfg.HttpPort,
-		Handler:        controllers.GetRouter(),
+		Handler:        routers.GetRouter(),
 		ReadTimeout:    time.Duration(cfg.ReadTimeout) * time.Second,
 		WriteTimeout:   time.Duration(cfg.WriteTimeout) * time.Second,
 		MaxHeaderBytes: 1 << 20,
@@ -130,7 +130,7 @@ func Init() {
 
 	models.Init()
 
-	controllers.Init()
+	routers.Init()
 }
 
 func fix() {
