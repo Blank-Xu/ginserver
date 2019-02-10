@@ -18,8 +18,10 @@ type Context struct {
 	roleId int
 }
 
-func NewContext(context *gin.Context) *Context {
-	return &Context{Context: context}
+func NewContext(context *gin.Context) (ctx *Context) {
+	ctx = &Context{Context: context}
+	ctx.SessionParse()
+	return
 }
 
 func (p *Context) SessionCreate(userId, roleId int) error {
@@ -139,12 +141,21 @@ func (p *Context) RespErrDBError(err error) {
 }
 
 func (p *Context) Render(tmpl string, value map[string]interface{}) {
-	recordAdmin := models.NewSAdmin(p.userId)
-	if _, err := recordAdmin.SelectOne(recordAdmin); err != nil {
-		p.RespErrDBError(err)
+	if p.userId == 0 {
+		p.RespErrInvalidParams()
 		return
 	}
-
-	value["recordAdmin"] = recordAdmin
+	user, err := GetCacheUser(p.userId)
+	if err != nil {
+		p.RespErrInternalServerError(err)
+		return
+	}
+	menu, err := GetCacheRoleMenu(p.roleId)
+	if err != nil {
+		p.RespErrInternalServerError(err)
+		return
+	}
+	value["main_user"] = user
+	value["main_menu"] = menu
 	p.HTML(http.StatusOK, tmpl, value)
 }

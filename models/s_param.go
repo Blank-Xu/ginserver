@@ -4,7 +4,7 @@ import (
 	"ginserver/modules/db"
 )
 
-type SParams struct {
+type SParam struct {
 	*db.Model `xorm:"-" json:"-"`
 	Id        int         `xorm:"pk autoincr" json:"id"`
 	Name      string      `xorm:"unique"`
@@ -13,6 +13,6 @@ type SParams struct {
 	Updated   db.JSONTime `json:"updated"`
 }
 
-func (p *SParams) TableName() string {
-	return "s_params"
+func (p *SParam) TableName() string {
+	return "s_param"
 }

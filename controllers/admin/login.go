@@ -22,7 +22,7 @@ func (p *ControllerLogin) Get(ctx *gin.Context) {
 
 func (p *ControllerLogin) Post(ctx *gin.Context) {
 	var (
-		req    = new(models.SAdminLogin)
+		req    = new(models.SUserLogin)
 		newCtx = NewContext(ctx)
 		err    error
 	)
@@ -30,27 +30,39 @@ func (p *ControllerLogin) Post(ctx *gin.Context) {
 		newCtx.RespErrInvalidParams(err)
 		return
 	}
-
-	recordAdmin := &models.SAdmin{Username: req.Username}
+	// check user
+	recordUser := &models.SUser{Username: req.Username}
 	var has bool
-	if has, err = recordAdmin.SelectOne(recordAdmin); err != nil {
+	if has, err = recordUser.SelectOne(recordUser); err != nil {
 		newCtx.RespErrDBError(err)
 		return
 	}
 	if !has ||
-		recordAdmin.Password != utils.GenPassword(req.Password, recordAdmin.Salt) {
+		recordUser.Password != utils.GenPassword(req.Password, recordUser.Salt) {
 		newCtx.RespErrInvalidParams()
 		return
 	}
-	if recordAdmin.State == false {
+	if recordUser.State == false {
 		newCtx.RespErrForbidden()
 		return
 	}
-
-	if err = newCtx.SessionCreate(recordAdmin.Id, recordAdmin.RoleId); err != nil {
+	// check role
+	recordRole := new(models.SRole)
+	if has, err = recordRole.SelectOneByUserId(recordUser.Id); err != nil {
+		newCtx.RespErrDBError(err)
+		return
+	}
+	if !has || recordRole.State == false {
+		newCtx.RespErrForbidden()
+		return
+	}
+	// check success
+	if err = newCtx.SessionCreate(recordUser.Id, recordRole.Id); err != nil {
 		newCtx.RespErrInternalServerError(err)
 		return
 	}
+	// cache user
+	SetCacheUser(recordUser)
 	newCtx.Log(models.LogTypeLogin, models.LogLevelInfo)
 	newCtx.RespRedirect302("/admin")
 }

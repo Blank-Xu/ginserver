@@ -15,13 +15,13 @@ import (
 type ControllerAdmins struct{}
 
 // GetOne godoc
-// @Summary get a admins record
+// @Summary get an user record
 // @Description get string by ID
 // @ID get-string-by-int
 // @Accept  json
 // @Produce  json
-// @Param id path int true "admins ID"
-// @Success 200 {object} models.SAdmin
+// @Param id path int true "user id"
+// @Success 200 {object} models.SUser
 // @Failure 400 {object} e.ResponseErr
 // @Failure 404 {object} e.ResponseErr
 // @Failure 501 {object} e.ResponseErr
@@ -33,7 +33,7 @@ func (p *ControllerAdmins) GetOne(ctx *gin.Context) {
 		return
 	}
 	cols, _ := ctx.GetQueryArray("cols")
-	record := models.NewSAdmin(id)
+	record := models.NewSUser(id)
 	has, err := record.SelectOne(record, cols...)
 	if err != nil {
 		e.RespErrDBError(ctx, err)
@@ -54,9 +54,9 @@ func (p *ControllerAdmins) Get(ctx *gin.Context) {
 		e.RespErrParamsInvalid(ctx, err)
 		return
 	}
-	record := new(models.SAdmin)
+	record := new(models.SUser)
 	cols := ctx.GetStringSlice("cols")
-	var records []*models.SAdmin
+	var records []*models.SUser
 	if err = record.SelectCond(record, &records, nil, orderBy.String(), db.NewPaging(ctx), cols...); err != nil {
 		e.RespErrDBError(ctx, err)
 		logrus.Error(err)
@@ -66,7 +66,7 @@ func (p *ControllerAdmins) Get(ctx *gin.Context) {
 }
 
 func (p *ControllerAdmins) Post(ctx *gin.Context) {
-	record := new(models.SAdminInsert)
+	record := new(models.SUserInsert)
 	if err := ctx.BindJSON(record); err != nil {
 		e.RespErrParamsInvalid(ctx, err)
 		logrus.Error(err)
@@ -92,7 +92,7 @@ func (p *ControllerAdmins) Put(ctx *gin.Context) {
 		e.RespErrParamsInvalid(ctx)
 		return
 	}
-	record := &models.SAdminUpdate{Id: id}
+	record := &models.SUserUpdate{Id: id}
 	has, err := record.IsExists(record)
 	if err != nil {
 		e.RespErrDBError(ctx, err)
@@ -126,7 +126,7 @@ func (p *ControllerAdmins) Delete(ctx *gin.Context) {
 		return
 	}
 
-	record := models.NewSAdmin(id)
+	record := models.NewSUser(id)
 	count, err := record.Delete(record)
 	if err != nil {
 		e.RespErrDBError(ctx, err)

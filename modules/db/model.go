@@ -54,6 +54,13 @@ func (p *Model) SelectAll(modelPtr, modelsPtr interface{}, cols ...string) error
 	return defaultEngine.Cols(cols...).Find(modelsPtr, modelPtr)
 }
 
+// SelectSql select table records
+// param: modelsPtr is a pointer slice struct like *[]*Model
+// param: sql is the raw sql
+func (p *Model) SelectSql(modelsPtr, sql interface{}, args ...interface{}) error {
+	return defaultEngine.SQL(sql, args...).Find(modelsPtr)
+}
+
 // SelectCond select table records with condition
 // param: modelPtr is a pointer struct like *Model
 // param: modelsPtr is a pointer slice struct like *[]*Model
