@@ -145,7 +145,7 @@ INSERT INTO s_user (username, password, salt,
                     state, nickname, icon, email,
                     updater, register_ip, login_ip)
 VALUES ('admin', 'bfba91e771a65b4f0a10ba358d9c7655', 'dc83c7d015da92a93b0bd90144604d04',
-        1, 'blank', 'statics/img/avatar/avatar5.png', 'blank.xu@qq.com',
+        1, 'blank', '/statics/img/avatar/avatar5.png', 'blank.xu@qq.com',
         10000, '127.0.0.1', '127.0.0.1');
 
 CREATE TABLE IF NOT EXISTS s_user_role

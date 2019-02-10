@@ -43,47 +43,48 @@
                 <ul class="nav navbar-nav">
                     <!-- User Account Menu -->
                     {{if .main_user}}
-                    {{with .main_user}}
-                        <li class="dropdown user user-menu">
-                            <!-- Menu Toggle Button -->
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                <!-- The user image in the navbar-->
-                                <img src="{{.Icon}}" class="user-image" alt="User Image">
-                                <!-- hidden-xs hides the username on small devices so only the image appears. -->
-                                <span class="hidden-xs">{{.Username}}</span>
-                            </a>
-                            <ul class="dropdown-menu">
-                                <!-- The user image in the menu -->
-                                <li class="user-header">
-                                    <img src="{{.Icon}}" class="img-circle" alt="User Image">
-                                    <p>
-                                        {{.Username}}
-                                        <small>{{.Nickname}}</small>
-                                    </p>
-                                </li>
-                                {{if .Email}}
-                                    <!-- Menu Body -->
-                                    <li class="user-body">
-                                        <div class="row">
-                                            <div class="col-xs-12 text-center">
-                                                <span>email: <b><a href="mailto:{{.Email}}">{{.Email}}</a></b></span>
+                        {{with .main_user}}
+                            <li class="dropdown user user-menu">
+                                <!-- Menu Toggle Button -->
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                    <!-- The user image in the navbar-->
+                                    <img src="{{.Icon}}" class="user-image" alt="User Image">
+                                    <!-- hidden-xs hides the username on small devices so only the image appears. -->
+                                    <span class="hidden-xs">{{.Username}}</span>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <!-- The user image in the menu -->
+                                    <li class="user-header">
+                                        <img src="{{.Icon}}" class="img-circle" alt="User Image">
+                                        <p>
+                                            {{.Username}}
+                                            <small>{{.Nickname}}</small>
+                                        </p>
+                                    </li>
+                                    {{if .Email}}
+                                        <!-- Menu Body -->
+                                        <li class="user-body">
+                                            <div class="row">
+                                                <div class="col-xs-12 text-center">
+                                                    <span>email: <b><a
+                                                                    href="mailto:{{.Email}}">{{.Email}}</a></b></span>
+                                                </div>
                                             </div>
+                                        </li>
+                                    {{end}}
+                                    <!-- Menu Footer-->
+                                    <li class="user-footer">
+                                        <div class="pull-left">
+                                            <a href="#" class="btn btn-default btn-flat">Profile</a>
+                                        </div>
+                                        <div class="pull-right">
+                                            <a href="/admin/logout" class="btn btn-default btn-flat">Sign out</a>
                                         </div>
                                     </li>
-                                {{end}}
-                                <!-- Menu Footer-->
-                                <li class="user-footer">
-                                    <div class="pull-left">
-                                        <a href="#" class="btn btn-default btn-flat">Profile</a>
-                                    </div>
-                                    <div class="pull-right">
-                                        <a href="/admin/logout" class="btn btn-default btn-flat">Sign out</a>
-                                    </div>
-                                </li>
-                            </ul>
-                        </li>
-                        <!-- Control Sidebar Toggle Button -->
-                    {{end}}
+                                </ul>
+                            </li>
+                            <!-- Control Sidebar Toggle Button -->
+                        {{end}}
                     {{end}}
                 </ul>
             </div>
@@ -98,7 +99,7 @@
             <form action="#" method="get" class="sidebar-form">
                 <div class="input-group">
                     <input type="text" name="q" class="form-control" placeholder="Search...">
-                        <span class="input-group-btn">
+                    <span class="input-group-btn">
                             <button type="submit" name="search" id="search-btn" class="btn btn-flat">
                                 <i class="fa fa-search"></i>
                             </button>
@@ -109,21 +110,45 @@
 
             <!-- Sidebar Menu -->
             <ul class="sidebar-menu" data-widget="tree">
-                <li class="header">HEADER</li>
-                <!-- Optionally, you can add icons to the links -->
-                <li class="active"><a href="#"><i class="fa fa-link"></i> <span>Link</span></a></li>
-                <li><a href="#"><i class="fa fa-link"></i> <span>Another Link</span></a></li>
-                <li class="treeview">
-                    <a href="#"><i class="fa fa-link"></i> <span>Multilevel</span>
-                        <span class="pull-right-container">
-                <i class="fa fa-angle-left pull-right"></i>
-              </span>
-                    </a>
-                    <ul class="treeview-menu">
-                        <li><a href="#">Link in level 2</a></li>
-                        <li><a href="#">Link in level 2</a></li>
-                    </ul>
-                </li>
+                {{if .main_menu}}
+                    {{range .main_menu}}
+                        {{if .List}}
+                            <li class="treeview">
+                                <a href="#"><i class="fa fa-link"></i>
+                                    <span>{{.Name}}</span>
+                                    <span class="pull-right-container">
+                                        <i class="fa fa-angle-left pull-right"></i>
+                                    </span>
+                                </a>
+                                <ul class="treeview-menu">
+                                    {{range .List}}
+                                        <li><a href="{{.Path}}">{{.Name}}</a></li>
+                                        {{if .List}}
+                                            <li class="treeview">
+                                                <a href="#"><i class="fa fa-link"></i>
+                                                    <span>{{.Name}}</span>
+                                                    <span class="pull-right-container">
+                                                        <i class="fa fa-angle-left pull-right"></i>
+                                                    </span>
+                                                </a>
+                                                <ul class="treeview-menu">
+                                                    {{range .List}}
+                                                        <li><a href="{{.Path}}">{{.Name}}</a></li>
+                                                    {{end}}
+                                                </ul>
+                                            </li>
+                                        {{else}}
+                                            <li><a href="{{.Path}}"><i class="fa fa-link"></i><span>{{.Name}}</span></a>
+                                            </li>
+                                        {{end}}
+                                    {{end}}
+                                </ul>
+                            </li>
+                        {{else}}
+                            <li><a href="{{.Path}}"><i class="fa fa-link"></i><span>{{.Name}}</span></a></li>
+                        {{end}}
+                    {{end}}
+                {{end}}
             </ul>
             <!-- /.sidebar-menu -->
         </section>
