@@ -75,10 +75,10 @@
                                     <!-- Menu Footer-->
                                     <li class="user-footer">
                                         <div class="pull-left">
-                                            <a href="#" class="btn btn-default btn-flat">Profile</a>
+                                            <a href="/admin/user_set/info" class="btn btn-default btn-flat">User Set</a>
                                         </div>
                                         <div class="pull-right">
-                                            <a href="/admin/logout" class="btn btn-default btn-flat">Sign out</a>
+                                            <a href="/admin/logout" class="btn btn-default btn-flat">Sign Out</a>
                                         </div>
                                     </li>
                                 </ul>

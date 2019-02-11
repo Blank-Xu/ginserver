@@ -140,7 +140,7 @@ func (p *Context) RespErrDBError(err error) {
 	}
 }
 
-func (p *Context) Render(tmpl string, value map[string]interface{}) {
+func (p *Context) Render(tpl string, value map[string]interface{}) {
 	if p.userId == 0 {
 		p.RespErrInvalidParams()
 		return
@@ -157,5 +157,5 @@ func (p *Context) Render(tmpl string, value map[string]interface{}) {
 	}
 	value["main_user"] = user
 	value["main_menu"] = menu
-	p.HTML(http.StatusOK, tmpl, value)
+	p.HTML(http.StatusOK, tpl, value)
 }

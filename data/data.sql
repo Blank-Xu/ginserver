@@ -99,8 +99,10 @@ CREATE TABLE IF NOT EXISTS s_menu
 ) DEFAULT CHARACTER SET = utf8mb4;
 
 INSERT INTO s_menu(name, method, path, icon, level, order_no, state, parent_id, updater)
-VALUES ('about', 'GET', '/admin/about', '', 0, 2, 1, 0, 10000),
-       ('users', 'GET', '/admin/users', '', 0, 1, 1, 0, 10000);
+VALUES ('About', 'GET', '/admin/about', '', 0, 5, 1, 0, 10000),
+       ('User Set', 'MENU', '', '', 0, 1, 1, 0, 10000),
+       ('Info', 'GET', '/admin/user_set/info', '', 1, 1, 1, 2, 10000),
+       ('Change Password', 'GET', '/admin/user_set/change_pwd', '', 1, 2, 1, 2, 10000);
 
 CREATE TABLE IF NOT EXISTS s_role_menu
 (
@@ -112,7 +114,9 @@ CREATE TABLE IF NOT EXISTS s_role_menu
 
 INSERT INTO s_role_menu
 VALUES (100, 1),
-       (100, 2);
+       (100, 2),
+       (100, 3),
+       (100, 4);
 
 -- admin users
 CREATE TABLE IF NOT EXISTS s_user
