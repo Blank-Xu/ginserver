@@ -2,6 +2,7 @@ package routers
 
 import (
 	"fmt"
+	"os"
 	"path/filepath"
 	"strings"
 
@@ -10,6 +11,8 @@ import (
 
 func loadTemplates(templatesDir string) multitemplate.Renderer {
 	r := multitemplate.NewRenderer()
+
+	templatesDir = filepath.Base(templatesDir)
 
 	layouts, err := filepath.Glob(templatesDir + "/layouts/*.*")
 	if err != nil {
@@ -31,6 +34,7 @@ func loadTemplates(templatesDir string) multitemplate.Renderer {
 		layoutCopy := make([]string, len(layouts))
 		copy(layoutCopy, layouts)
 		files := append(layoutCopy, include)
+		include = strings.Replace(include, string(os.PathSeparator), "/", -1)
 		include = strings.TrimPrefix(include, templatesDir+"/includes/")
 		r.AddFromFiles(include, files...)
 	}
