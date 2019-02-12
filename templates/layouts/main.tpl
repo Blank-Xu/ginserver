@@ -68,8 +68,9 @@
                                         <li class="user-body">
                                             <div class="row">
                                                 <div class="col-xs-12 text-center">
-                                                    <span>email: <b><a
-                                                                    href="mailto:{{.Email}}">{{.Email}}</a></b></span>
+                                                    <span>email:
+                                                        <b><a href="mailto:{{.Email}}">{{.Email}}</a></b>
+                                                    </span>
                                                 </div>
                                             </div>
                                         </li>
@@ -77,7 +78,7 @@
                                     <!-- Menu Footer-->
                                     <li class="user-footer">
                                         <div class="pull-left">
-                                            <a href="/admin/user_set/info" class="btn btn-default btn-flat">User Set</a>
+                                            <a href="/admin/info" class="btn btn-default btn-flat">Info</a>
                                         </div>
                                         <div class="pull-right">
                                             <a href="/admin/logout" class="btn btn-default btn-flat">Sign Out</a>
@@ -126,7 +127,8 @@
                                     {{range .List}}
                                         {{if .List}}
                                             <li class="treeview">
-                                                <a href="#"><i class="fa {{if .Icon}}{{.Icon}}{{else}}fa-link{{end}}"></i>
+                                                <a href="#"><i
+                                                            class="fa {{if .Icon}}{{.Icon}}{{else}}fa-link{{end}}"></i>
                                                     <span>{{.Name}}</span>
                                                     <span class="pull-right-container">
                                                         <i class="fa fa-angle-left pull-right"></i>
@@ -140,14 +142,17 @@
                                             </li>
                                         {{else}}
                                             <li>
-                                                <a href="{{.Path}}"><i class="fa {{if .Icon}}{{.Icon}}{{else}}fa-link{{end}}"></i><span>{{.Name}}</span></a>
+                                                <a href="{{.Path}}"><i
+                                                            class="fa {{if .Icon}}{{.Icon}}{{else}}fa-link{{end}}"></i><span>{{.Name}}</span></a>
                                             </li>
                                         {{end}}
                                     {{end}}
                                 </ul>
                             </li>
                         {{else}}
-                            <li><a href="{{.Path}}"><i class="fa {{if .Icon}}{{.Icon}}{{else}}fa-link{{end}}"></i><span>{{.Name}}</span></a></li>
+                            <li><a href="{{.Path}}"><i
+                                            class="fa {{if .Icon}}{{.Icon}}{{else}}fa-link{{end}}"></i><span>{{.Name}}</span></a>
+                            </li>
                         {{end}}
                     {{end}}
                 {{end}}
@@ -202,8 +207,8 @@
 <script src="/statics/dist/js/adminlte.min.js"></script>
 <script type="text/javascript">
     $(document).ajaxStart(function () {
-            Pace.restart()
-        })
+        Pace.restart()
+    })
 </script>
 <script src="/statics/bower_components/jquery-slimscroll/jquery.slimscroll.min.js"></script>
 <script src="/statics/bower_components/fastclick/lib/fastclick.js"></script>

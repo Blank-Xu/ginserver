@@ -4,7 +4,6 @@ import (
 	"github.com/gin-contrib/sessions"
 
 	"ginserver/controllers/admin"
-	"ginserver/controllers/admin/user_set"
 	"ginserver/modules/config"
 	"ginserver/modules/func_map"
 )
@@ -35,15 +34,11 @@ func registerAdminRouter() {
 	// casbin roleId check
 	groupAdmin.Use(admin.AuthSession("roleId", enforcer, "/admin/login"))
 	{
-		// admin root router
 		groupAdmin.GET("/", new(admin.ControllerAdmin).Get)
 		groupAdmin.GET("about", new(admin.ControllerAbout).Get)
-	}
-	userSet := groupAdmin.Group("user_set")
-	{
-		userSet.GET("info", new(user_set.ControllerInfo).Get)
-		userSet.POST("info", new(user_set.ControllerInfo).Post)
-		userSet.GET("change_pwd", new(user_set.ControllerChangePwd).Get)
-		userSet.POST("change_pwd", new(user_set.ControllerChangePwd).Post)
+		groupAdmin.GET("info", new(admin.ControllerInfo).Get)
+		groupAdmin.POST("info", new(admin.ControllerInfo).Post)
+		groupAdmin.GET("change_pwd", new(admin.ControllerChangePwd).Get)
+		groupAdmin.POST("change_pwd", new(admin.ControllerChangePwd).Post)
 	}
 }

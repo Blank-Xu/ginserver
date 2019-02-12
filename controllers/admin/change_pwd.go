@@ -1,24 +1,22 @@
-package user_set
+package admin
 
 import (
 	"ginserver/models"
 	"ginserver/modules/utils"
 
 	"github.com/gin-gonic/gin"
-
-	"ginserver/controllers/admin"
 )
 
 type ControllerChangePwd struct{}
 
 func (p *ControllerChangePwd) Get(ctx *gin.Context) {
-	newCtx := admin.NewContext(ctx)
-	newCtx.Render("user_set/change_pwd.tpl", gin.H{})
+	newCtx := NewContext(ctx)
+	newCtx.Render("change_pwd.tpl", gin.H{})
 }
 
 func (p *ControllerChangePwd) Post(ctx *gin.Context) {
 	var err error
-	newCtx := admin.NewContext(ctx)
+	newCtx := NewContext(ctx)
 	req := new(reqChangePwd)
 	if err = ctx.ShouldBind(req); err != nil {
 		newCtx.RespErrInvalidParams()
