@@ -20,6 +20,8 @@ github.com/gin-contrib/cors v0.0.0-20190101123304-5e7acb10687f h1:iYwRrkSI4/6UeK
 github.com/gin-contrib/cors v0.0.0-20190101123304-5e7acb10687f/go.mod h1:pL2kNE+DgDU+eQ+dary5bX0Z6LPP8nR6Mqs1iejILw4=
 github.com/gin-contrib/multitemplate v0.0.0-20190118042248-542ef922db4b h1:5Sfih+y5Wtk5i4uXsogommve+oOrv3ygu7GJVRAP6Qs=
 github.com/gin-contrib/multitemplate v0.0.0-20190118042248-542ef922db4b/go.mod h1:YmpmOqeqyaEaRuij7jkG3n0Hd3K/EeGFQt24Z4Fx91w=
+github.com/gin-contrib/pprof v0.0.0-20181223171755-ea03ef73484d h1:Oiq07zK8qp0v2QQCp5E0pA2xbcqJz1BQx06W7f8qiBA=
+github.com/gin-contrib/pprof v0.0.0-20181223171755-ea03ef73484d/go.mod h1:gOv+/B5pK9Hm3wuppCDM+WUwmGff5bwenVHS9/qpYYk=
 github.com/gin-contrib/sessions v0.0.0-20181124110724-7687b645ca6b h1:anIoEqZRku2+0ugTPlRXdW62w1KSwEOHC2h9EU7Hn5w=
 github.com/gin-contrib/sessions v0.0.0-20181124110724-7687b645ca6b/go.mod h1:F4TwIEOO0sgMULDVvcP85n9Jl8RPcOWfs17D0/fCWcE=
 github.com/gin-contrib/sse v0.0.0-20170109093832-22d885f9ecc7 h1:AzN37oI0cOS+cougNAV9szl6CVoj2RYwzS3DpUQNtlY=
@@ -120,6 +122,7 @@ golang.org/x/sync v0.0.0-20181221193216-37e7f081c4d4 h1:YUO/7uOKsKeq9UokNS62b8FY
 golang.org/x/sync v0.0.0-20181221193216-37e7f081c4d4/go.mod h1:RxMgew5VJxzue5/jJTE5uejpjVlOe/izrB70Jof72aM=
 golang.org/x/sys v0.0.0-20180905080454-ebe1bf3edb33 h1:I6FyU15t786LL7oL/hn43zqTuEGr4PN7F4XJ1p4E3Y8=
 golang.org/x/sys v0.0.0-20180905080454-ebe1bf3edb33/go.mod h1:STP8DvDyc/dI5b8T5hshtkjS+E42TnysNCUPdjciGhY=
+golang.org/x/sys v0.0.0-20181221143128-b4a75ba826a6/go.mod h1:STP8DvDyc/dI5b8T5hshtkjS+E42TnysNCUPdjciGhY=
 golang.org/x/sys v0.0.0-20181228144115-9a3f9b0469bb h1:pf3XwC90UUdNPYWZdFjhGBE7DUFuK3Ct1zWmZ65QN30=
 golang.org/x/sys v0.0.0-20181228144115-9a3f9b0469bb/go.mod h1:STP8DvDyc/dI5b8T5hshtkjS+E42TnysNCUPdjciGhY=
 golang.org/x/text v0.3.0 h1:g61tztE5qeGQ89tm6NTjjM9VPIm088od1l6aSorWRWg=
