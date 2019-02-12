@@ -56,8 +56,8 @@ func Init() {
 	router.GET("/", new(controllers.IndexController).Get)
 	// load casbin
 	enforcer = casbin.NewEnforcer(cfg.RbacFile, &models.SCasbin{})
-	registerAdminRouter()
 
+	registerAdminRouter()
 	registerApiRouter()
 }
 

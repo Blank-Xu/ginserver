@@ -4,12 +4,12 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type ControllerIndex struct{}
+type ControllerAdmin struct{}
 
-func (p *ControllerIndex) Get(ctx *gin.Context) {
+func (p *ControllerAdmin) Get(ctx *gin.Context) {
 	newCtx := NewContext(ctx)
 
-	newCtx.Render("index.tpl",
+	newCtx.Render("admin.tpl",
 		map[string]interface{}{
 			"content": "admin login",
 		})

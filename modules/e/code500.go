@@ -6,5 +6,5 @@ const (
 )
 
 func init() {
-	registerErrMsg(CodeDBErr, "database err")
+	registerErrMsg(CodeDBErr, "Database Error")
 }

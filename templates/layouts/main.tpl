@@ -11,6 +11,8 @@
     <!-- Theme style -->
     <link rel="stylesheet" href="/statics/dist/css/AdminLTE.min.css">
     <link rel="stylesheet" href="/statics/dist/css/skins/skin-blue.min.css">
+    <!-- Pace style -->
+    <link rel="stylesheet" href="/statics/plugins/pace/pace.min.css">
     {{template "css" .}}
     <!--[if lt IE 9]>
     <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
@@ -114,7 +116,7 @@
                     {{range .main_menu}}
                         {{if .List}}
                             <li class="treeview">
-                                <a href="#"><i class="fa fa-link"></i>
+                                <a href="#"><i class="fa {{if .Icon}}{{.Icon}}{{else}}fa-link{{end}}"></i>
                                     <span>{{.Name}}</span>
                                     <span class="pull-right-container">
                                         <i class="fa fa-angle-left pull-right"></i>
@@ -122,10 +124,9 @@
                                 </a>
                                 <ul class="treeview-menu">
                                     {{range .List}}
-                                        <li><a href="{{.Path}}">{{.Name}}</a></li>
                                         {{if .List}}
                                             <li class="treeview">
-                                                <a href="#"><i class="fa fa-link"></i>
+                                                <a href="#"><i class="fa {{if .Icon}}{{.Icon}}{{else}}fa-link{{end}}"></i>
                                                     <span>{{.Name}}</span>
                                                     <span class="pull-right-container">
                                                         <i class="fa fa-angle-left pull-right"></i>
@@ -138,14 +139,15 @@
                                                 </ul>
                                             </li>
                                         {{else}}
-                                            <li><a href="{{.Path}}"><i class="fa fa-link"></i><span>{{.Name}}</span></a>
+                                            <li>
+                                                <a href="{{.Path}}"><i class="fa {{if .Icon}}{{.Icon}}{{else}}fa-link{{end}}"></i><span>{{.Name}}</span></a>
                                             </li>
                                         {{end}}
                                     {{end}}
                                 </ul>
                             </li>
                         {{else}}
-                            <li><a href="{{.Path}}"><i class="fa fa-link"></i><span>{{.Name}}</span></a></li>
+                            <li><a href="{{.Path}}"><i class="fa {{if .Icon}}{{.Icon}}{{else}}fa-link{{end}}"></i><span>{{.Name}}</span></a></li>
                         {{end}}
                     {{end}}
                 {{end}}
@@ -194,8 +196,15 @@
 <script src="/statics/bower_components/jquery/dist/jquery.min.js"></script>
 <!-- Bootstrap 3.3.7 -->
 <script src="/statics/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+<!-- PACE -->
+<script src="/statics/bower_components/PACE/pace.min.js"></script>
 <!-- AdminLTE App -->
 <script src="/statics/dist/js/adminlte.min.js"></script>
+<script type="text/javascript">
+    $(document).ajaxStart(function () {
+            Pace.restart()
+        })
+</script>
 <script src="/statics/bower_components/jquery-slimscroll/jquery.slimscroll.min.js"></script>
 <script src="/statics/bower_components/fastclick/lib/fastclick.js"></script>
 {{template "js" .}}

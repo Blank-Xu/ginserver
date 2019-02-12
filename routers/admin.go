@@ -36,7 +36,7 @@ func registerAdminRouter() {
 	groupAdmin.Use(admin.AuthSession("roleId", enforcer, "/admin/login"))
 	{
 		// admin root router
-		groupAdmin.GET("/", new(admin.ControllerIndex).Get)
+		groupAdmin.GET("/", new(admin.ControllerAdmin).Get)
 		groupAdmin.GET("about", new(admin.ControllerAbout).Get)
 	}
 	userSet := groupAdmin.Group("user_set")

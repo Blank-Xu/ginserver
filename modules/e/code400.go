@@ -6,5 +6,5 @@ const (
 )
 
 func init() {
-	registerErrMsg(CodeInvalidParams, "invalid params")
+	registerErrMsg(CodeInvalidParams, "Invalid Params")
 }

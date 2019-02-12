@@ -1,6 +1,9 @@
 package routers
 
 import (
+	"net/http"
+
+	"github.com/gin-gonic/gin"
 	ginSwagger "github.com/swaggo/gin-swagger"
 	"github.com/swaggo/gin-swagger/swaggerFiles"
 
@@ -13,7 +16,9 @@ func registerApiRouter() {
 	router.GET("swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	groupApi := router.Group("api")
-	groupApi.GET("/", api.Index)
+	groupApi.GET("/", func(ctx *gin.Context) {
+		ctx.Redirect(http.StatusFound, "/swagger/index.html")
+	})
 	// jwt and casbin auth
 	groupApi.Use(api.AuthJwt(enforcer))
 
