@@ -7,8 +7,11 @@ import (
 type ControllerInfo struct{}
 
 func (p *ControllerInfo) Get(ctx *gin.Context) {
-	newCtx := NewContext(ctx)
-	newCtx.Render("info.tpl", gin.H{})
+	c := ContextParse(ctx)
+	if c == nil {
+		return
+	}
+	c.Render("info.tpl", gin.H{})
 }
 
 func (p *ControllerInfo) Post(ctx *gin.Context) {

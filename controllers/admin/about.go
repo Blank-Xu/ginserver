@@ -7,9 +7,12 @@ import (
 type ControllerAbout struct{}
 
 func (p *ControllerAbout) Get(ctx *gin.Context) {
-	newCtx := NewContext(ctx)
+	c := ContextParse(ctx)
+	if c == nil {
+		return
+	}
 
-	newCtx.Render("about.tpl",
+	c.Render("about.tpl",
 		map[string]interface{}{
 			"content": "admin login",
 		})

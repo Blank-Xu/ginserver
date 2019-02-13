@@ -8,7 +8,6 @@ import (
 	"github.com/swaggo/gin-swagger/swaggerFiles"
 
 	"ginserver/controllers/api/v1/admins"
-	"ginserver/models/casbin"
 )
 
 func registerApiRouter() {
@@ -19,8 +18,6 @@ func registerApiRouter() {
 	groupApi.GET("/", func(ctx *gin.Context) {
 		ctx.Redirect(http.StatusFound, "/swagger/index.html")
 	})
-	// jwt and casbin auth
-	groupApi.Use(casbin.AuthJwt())
 
 	apiV1 := groupApi.Group("v1")
 	{

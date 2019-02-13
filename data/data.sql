@@ -29,8 +29,8 @@ CREATE TABLE IF NOT EXISTS s_param
 ) DEFAULT CHARACTER SET = utf8mb4;
 
 
--- table s_log
-CREATE TABLE IF NOT EXISTS s_log
+-- table log
+CREATE TABLE IF NOT EXISTS log
 (
   id      bigint AUTO_INCREMENT PRIMARY KEY,
   level   tinyint(2)   NOT NULL,
@@ -46,10 +46,10 @@ CREATE TABLE IF NOT EXISTS s_log
   v1      varchar(255) NOT NULL DEFAULT '',
   v2      varchar(255) NOT NULL DEFAULT '',
   v3      varchar(255) NOT NULL DEFAULT '',
-  INDEX idx_s_log_level (level),
-  INDEX idx_s_log_type (type),
-  INDEX idx_s_log_user_id (user_id),
-  INDEX idx_s_log_role_id (role_id)
+  INDEX idx_log_level (level),
+  INDEX idx_log_type (type),
+  INDEX idx_log_user_id (user_id),
+  INDEX idx_log_role_id (role_id)
 ) DEFAULT CHARACTER SET = utf8mb4;
 
 
@@ -92,7 +92,7 @@ CREATE TABLE IF NOT EXISTS s_menu
   id        int AUTO_INCREMENT PRIMARY KEY,
   type      tinyint(2)   NOT NULL DEFAULT 0 COMMENT '0:main, 1:button, 2:href',
   name      varchar(64)  NOT NULL,
-  method    varchar(32)  NOT NULL,
+  method    varchar(32)  NOT NULL COMMENT 'GET, POST, PUT, PATCH, HEAD, OPTIONS, DELETE, CONNECT, TRACE',
   path      varchar(255) NOT NULL DEFAULT '',
   icon      varchar(255) NOT NULL DEFAULT '',
   level     tinyint(3)   NOT NULL DEFAULT 0,

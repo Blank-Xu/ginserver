@@ -1,8 +1,6 @@
 package routers
 
 import (
-	"ginserver/models/casbin"
-
 	"github.com/gin-contrib/sessions"
 
 	"ginserver/controllers/admin"
@@ -32,10 +30,6 @@ func registerAdminRouter() {
 		groupAdmin.POST("login", new(admin.ControllerLogin).Post)
 		// register logout router
 		groupAdmin.GET("logout", new(admin.ControllerLogout).Get)
-	}
-	// casbin roleId check
-	groupAdmin.Use(casbin.AuthSession("userId", "/admin/login"))
-	{
 		groupAdmin.GET("/", new(admin.ControllerAdmin).Get)
 		groupAdmin.GET("about", new(admin.ControllerAbout).Get)
 		groupAdmin.GET("info", new(admin.ControllerInfo).Get)

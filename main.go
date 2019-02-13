@@ -11,7 +11,7 @@ import (
 
 	_ "ginserver/docs"
 	"ginserver/models"
-	"ginserver/models/casbin"
+	"ginserver/modules/casbin"
 	"ginserver/modules/config"
 	"ginserver/modules/db"
 	"ginserver/modules/log"

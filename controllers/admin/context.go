@@ -1,15 +1,17 @@
 package admin
 
 import (
+	"encoding/json"
 	"errors"
 	"net/http"
 
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
-	"github.com/gin-gonic/gin/json"
 
 	"ginserver/models"
+	"ginserver/modules/casbin"
 	"ginserver/modules/e"
+	"ginserver/modules/log"
 )
 
 type Context struct {
@@ -18,10 +20,25 @@ type Context struct {
 	roleId int
 }
 
-func NewContext(context *gin.Context) (ctx *Context) {
-	ctx = &Context{Context: context}
-	ctx.SessionParse()
-	return
+func ContextParse(context *gin.Context) *Context {
+	session := sessions.Default(context)
+	if session != nil {
+		vUid := session.Get("userId")
+		vRole := session.Get("roleId")
+		if userId, ok := vUid.(int); ok {
+			if roleId, ok := vRole.(int); ok {
+				if userId > 0 && roleId > 0 {
+					if casbin.Auth(context, userId) {
+						return &Context{context, userId, roleId}
+					}
+					context.AbortWithStatusJSON(e.RespErrHttp(http.StatusForbidden))
+					return nil
+				}
+			}
+		}
+	}
+	context.Redirect(http.StatusFound, "/admin/login")
+	return nil
 }
 
 func (p *Context) SessionCreate(userId, roleId int) error {
@@ -36,22 +53,6 @@ func (p *Context) SessionCreate(userId, roleId int) error {
 	return errors.New("session is nil")
 }
 
-func (p *Context) SessionParse() (ok bool) {
-	session := sessions.Default(p.Context)
-	if session != nil {
-		vUid := session.Get("userId")
-		vRole := session.Get("roleId")
-		if vUid != nil && vRole != nil {
-			if p.userId, ok = vUid.(int); ok {
-				if p.roleId, ok = vRole.(int); ok {
-					return
-				}
-			}
-		}
-	}
-	return
-}
-
 func (p *Context) SessionDestroy() {
 	session := sessions.Default(p.Context)
 	if session != nil {
@@ -62,40 +63,12 @@ func (p *Context) SessionDestroy() {
 	}
 }
 
-func (p *Context) IsLogin() bool {
-	return p.userId > 0 && p.roleId > 0
-}
-
 func (p *Context) GetRoleId() int {
 	return p.roleId
 }
 
 func (p *Context) GetUserId() int {
 	return p.userId
-}
-
-var logWithoutParamsRouter = map[string]bool{
-	"/admin/login": true,
-}
-
-func (p *Context) Log(logType models.LogType, level models.LogLevel, remark ...string) {
-	log := &models.SLog{
-		Type:   logType,
-		Level:  level,
-		UserId: p.userId,
-		RoleId: p.roleId,
-		Method: p.Request.Method,
-		Path:   p.Request.URL.Path,
-		Ip:     p.ClientIP(),
-	}
-	if !logWithoutParamsRouter[log.Path] {
-		param, _ := json.Marshal(p.Request.Form)
-		log.Params = string(param)
-	}
-	if len(remark) > 0 {
-		log.Remark = remark[0]
-	}
-	log.InsertOne(log)
 }
 
 func (p *Context) RespDataOk(data interface{}) {
@@ -162,4 +135,28 @@ func (p *Context) Render(tpl string, value map[string]interface{}) {
 	value["main_user"] = user
 	value["main_menu"] = menu
 	p.HTML(http.StatusOK, tpl, value)
+}
+
+var logWithoutParamsRouter = map[string]bool{
+	"/admin/login": true,
+}
+
+func (p *Context) Log(lType log.Type, level log.Level, remark ...string) {
+	recordLog := &models.Log{
+		Type:   lType,
+		Level:  level,
+		UserId: p.userId,
+		RoleId: p.roleId,
+		Method: p.Request.Method,
+		Path:   p.Request.URL.Path,
+		Ip:     p.ClientIP(),
+	}
+	if !logWithoutParamsRouter[recordLog.Path] {
+		param, _ := json.Marshal(p.Request.Form)
+		recordLog.Params = string(param)
+	}
+	if len(remark) > 0 {
+		recordLog.Remark = remark[0]
+	}
+	recordLog.InsertOne(recordLog)
 }

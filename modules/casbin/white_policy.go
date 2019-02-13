@@ -5,25 +5,29 @@ import (
 )
 
 var (
-	_whitePolicy     = make(map[string]bool)
+	_whitePolicy     = make([]string, 0)
 	_whitePolicyLock sync.RWMutex
 )
 
 func setWhitePolicy(path, method string) {
 	path = getWhitePolicyPath(path, method)
 	_whitePolicyLock.Lock()
-	_whitePolicy[path] = true
+	_whitePolicy = append(_whitePolicy, path)
 	_whitePolicyLock.Unlock()
 }
 
-func getWhitePolicy(path, method string) (has bool) {
+func getWhitePolicy(path, method string) bool {
 	path = getWhitePolicyPath(path, method)
 	_whitePolicyLock.RLock()
-	has = _whitePolicy[path]
+	for _, value := range _whitePolicy {
+		if value == path {
+			return true
+		}
+	}
 	_whitePolicyLock.RUnlock()
-	return
+	return false
 }
 
 func getWhitePolicyPath(path, method string) string {
-	return path + ":" + method
+	return method + path
 }

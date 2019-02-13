@@ -7,7 +7,10 @@ import (
 type ControllerLogout struct{}
 
 func (p *ControllerLogout) Get(ctx *gin.Context) {
-	newCtx := NewContext(ctx)
-	newCtx.SessionDestroy()
-	newCtx.RespRedirect302("/admin/login")
+	c := ContextParse(ctx)
+	if c == nil {
+		return
+	}
+	c.SessionDestroy()
+	c.RespRedirect302("/admin/login")
 }

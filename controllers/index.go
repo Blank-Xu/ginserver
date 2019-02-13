@@ -8,9 +8,9 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type IndexController struct{}
+type ControllerIndex struct{}
 
-func (p *IndexController) Get(c *gin.Context) {
+func (p *ControllerIndex) Get(c *gin.Context) {
 	c.HTML(http.StatusOK, "index.html",
 		map[string]string{
 			"AppName": config.GetConfig().AppName,

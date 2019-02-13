@@ -6,6 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 
 	"ginserver/models"
+	"ginserver/modules/log"
 	"ginserver/modules/utils"
 )
 
@@ -22,47 +23,47 @@ func (p *ControllerLogin) Get(ctx *gin.Context) {
 
 func (p *ControllerLogin) Post(ctx *gin.Context) {
 	var (
-		req    = new(models.SUserLogin)
-		newCtx = NewContext(ctx)
-		err    error
+		req = new(models.SUserLogin)
+		c   = &Context{Context: ctx}
+		err error
 	)
-	if err = newCtx.ShouldBind(req); err != nil {
-		newCtx.RespErrInvalidParams(err)
+	if err = c.ShouldBind(req); err != nil {
+		c.RespErrInvalidParams(err)
 		return
 	}
 	// check user
 	recordUser := &models.SUser{Username: req.Username}
 	var has bool
 	if has, err = recordUser.SelectOne(recordUser); err != nil {
-		newCtx.RespErrDBError(err)
+		c.RespErrDBError(err)
 		return
 	}
 	if !has ||
 		recordUser.Password != utils.GenPassword(req.Password, recordUser.Salt) {
-		newCtx.RespErrInvalidParams()
+		c.RespErrInvalidParams()
 		return
 	}
 	if recordUser.State == false {
-		newCtx.RespErrForbidden()
+		c.RespErrForbidden()
 		return
 	}
 	// check role
 	recordRole := new(models.SRole)
 	if has, err = recordRole.SelectOneByUserId(recordUser.Id); err != nil {
-		newCtx.RespErrDBError(err)
+		c.RespErrDBError(err)
 		return
 	}
 	if !has || recordRole.State == false {
-		newCtx.RespErrForbidden()
+		c.RespErrForbidden()
 		return
 	}
 	// check success
-	if err = newCtx.SessionCreate(recordUser.Id, recordRole.Id); err != nil {
-		newCtx.RespErrInternalServerError(err)
+	if err = c.SessionCreate(recordUser.Id, recordRole.Id); err != nil {
+		c.RespErrInternalServerError(err)
 		return
 	}
 	// cache user
 	SetCacheUser(recordUser)
-	newCtx.Log(models.LogTypeLogin, models.LogLevelInfo)
-	newCtx.RespRedirect302("/admin")
+	c.Log(log.TypeLogin, log.LevelInfo)
+	c.RespRedirect302("/admin")
 }

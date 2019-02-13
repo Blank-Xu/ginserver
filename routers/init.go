@@ -48,7 +48,7 @@ func Init() {
 		c.AbortWithStatusJSON(e.RespErrHttp(http.StatusMethodNotAllowed))
 	})
 	// home page
-	router.GET("/", new(controllers.IndexController).Get)
+	router.GET("/", new(controllers.ControllerIndex).Get)
 
 	registerAdminRouter()
 	registerApiRouter()
