@@ -62,6 +62,10 @@ func (p *Context) SessionDestroy() {
 	}
 }
 
+func (p *Context) IsLogin() bool {
+	return p.userId > 0 && p.roleId > 0
+}
+
 func (p *Context) GetRoleId() int {
 	return p.roleId
 }

@@ -11,6 +11,7 @@ import (
 
 	_ "ginserver/docs"
 	"ginserver/models"
+	"ginserver/models/casbin"
 	"ginserver/modules/config"
 	"ginserver/modules/db"
 	"ginserver/modules/log"
@@ -129,6 +130,8 @@ func Init() {
 	db.Init()
 
 	models.Init()
+
+	casbin.Init()
 
 	routers.Init()
 }

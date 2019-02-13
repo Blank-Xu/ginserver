@@ -4,7 +4,7 @@ RunMode: debug # gin.ginMode [debug, test, release]
 AppName: ginserver
 StaticDir: statics
 TemplateDir: templates
-RbacFile: config/rbac_model.conf # casbin policy config
+CasbinFile: config/casbin_model.conf # casbin policy config
 
 Server:
   HttpPort: 8080

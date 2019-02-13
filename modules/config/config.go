@@ -5,7 +5,7 @@ type config struct {
 	AppName     string      `yaml:"AppName"`
 	StaticDir   string      `yaml:"StaticDir"`
 	TemplateDir string      `yaml:"TemplateDir"`
-	RbacFile    string      `yaml:"RbacFile"`
+	CasbinFile  string      `yaml:"CasbinFile"`
 	Server      *server     `yaml:"Server"`
 	Fix         *fix        `yaml:"Fix"`
 	Log         *log        `yaml:"Log"`

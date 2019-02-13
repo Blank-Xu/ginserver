@@ -14,7 +14,8 @@ GRANT ALL PRIVILEGES ON ginserver.* TO 'ginserver'@'localhost';
 
 FLUSH PRIVILEGES;
 
--- system param
+
+-- table s_param
 CREATE TABLE IF NOT EXISTS s_param
 (
   id      int AUTO_INCREMENT PRIMARY KEY,
@@ -27,7 +28,8 @@ CREATE TABLE IF NOT EXISTS s_param
   UNIQUE uq_s_param_name (name)
 ) DEFAULT CHARACTER SET = utf8mb4;
 
--- admin log
+
+-- table s_log
 CREATE TABLE IF NOT EXISTS s_log
 (
   id      bigint AUTO_INCREMENT PRIMARY KEY,
@@ -50,6 +52,8 @@ CREATE TABLE IF NOT EXISTS s_log
   INDEX idx_s_log_role_id (role_id)
 ) DEFAULT CHARACTER SET = utf8mb4;
 
+
+-- table s_role_group
 CREATE TABLE IF NOT EXISTS s_role_group
 (
   id      int AUTO_INCREMENT PRIMARY KEY,
@@ -62,6 +66,8 @@ CREATE TABLE IF NOT EXISTS s_role_group
 ) AUTO_INCREMENT = 100
   DEFAULT CHARACTER SET = utf8mb4;
 
+
+-- table s_role
 CREATE TABLE IF NOT EXISTS s_role
 (
   id       int AUTO_INCREMENT PRIMARY KEY,
@@ -79,13 +85,15 @@ CREATE TABLE IF NOT EXISTS s_role
 INSERT INTO s_role(name, state, updater)
 VALUES ('admin', 1, 10000);
 
+
+-- table s_menu
 CREATE TABLE IF NOT EXISTS s_menu
 (
   id        int AUTO_INCREMENT PRIMARY KEY,
   type      tinyint(2)   NOT NULL DEFAULT 0 COMMENT '0:main, 1:button, 2:href',
   name      varchar(64)  NOT NULL,
   method    varchar(32)  NOT NULL,
-  path      varchar(255) NOT NULL,
+  path      varchar(255) NOT NULL DEFAULT '',
   icon      varchar(255) NOT NULL DEFAULT '',
   level     tinyint(3)   NOT NULL DEFAULT 0,
   order_no  tinyint(4)   NOT NULL DEFAULT 1,
@@ -95,7 +103,8 @@ CREATE TABLE IF NOT EXISTS s_menu
   updater   int          NOT NULL,
   updated   timestamp    NOT NULL DEFAULT current_timestamp ON UPDATE current_timestamp,
   INDEX idx_s_menu_parent_id (parent_id),
-  UNIQUE uq_s_menu_name (name)
+  INDEX idx_s_menu_method (method),
+  INDEX idx_s_menu_path (path)
 ) DEFAULT CHARACTER SET = utf8mb4;
 
 INSERT INTO s_menu(name, method, path, icon, level, order_no, state, parent_id, updater)
@@ -104,6 +113,8 @@ VALUES ('About', 'GET', '/admin/about', '', 0, 5, 1, 0, 10000),
        ('Info', 'GET', '/admin/info', '', 1, 1, 1, 2, 10000),
        ('Change Password', 'GET', '/admin/change_pwd', '', 1, 2, 1, 2, 10000);
 
+
+-- table s_role_menu
 CREATE TABLE IF NOT EXISTS s_role_menu
 (
   role_id int NOT NULL,
@@ -118,7 +129,8 @@ VALUES (100, 1),
        (100, 3),
        (100, 4);
 
--- admin users
+
+-- table s_user
 CREATE TABLE IF NOT EXISTS s_user
 (
   id          int AUTO_INCREMENT PRIMARY KEY COMMENT 'user id',
@@ -152,6 +164,8 @@ VALUES ('admin', 'bfba91e771a65b4f0a10ba358d9c7655', 'dc83c7d015da92a93b0bd90144
         1, 'blank', '/statics/img/avatar/avatar5.png', 'blank.xu@qq.com',
         10000, '127.0.0.1', '127.0.0.1');
 
+
+-- table s_user_role
 CREATE TABLE IF NOT EXISTS s_user_role
 (
   user_id int NOT NULL,

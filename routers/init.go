@@ -5,22 +5,17 @@ import (
 	"time"
 
 	"ginserver/controllers"
-	"ginserver/models"
 	"ginserver/modules/config"
 	"ginserver/modules/e"
 	"ginserver/modules/middleware"
 
-	"github.com/casbin/casbin"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-contrib/pprof"
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
 )
 
-var (
-	router   = gin.New()
-	enforcer *casbin.Enforcer
-)
+var router = gin.New()
 
 func Init() {
 	var cfg = config.GetConfig()
@@ -54,8 +49,6 @@ func Init() {
 	})
 	// home page
 	router.GET("/", new(controllers.IndexController).Get)
-	// load casbin
-	enforcer = casbin.NewEnforcer(cfg.RbacFile, &models.SCasbin{})
 
 	registerAdminRouter()
 	registerApiRouter()
