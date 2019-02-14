@@ -4,15 +4,15 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type ControllerAbout struct{}
+type ControllerAbout struct {
+	Context
+}
 
 func (p *ControllerAbout) Get(ctx *gin.Context) {
-	c := ContextParse(ctx)
-	if c == nil {
+	if !p.ParseContext(ctx) {
 		return
 	}
-
-	c.Render("about.tpl",
+	p.Render("about.tpl",
 		map[string]interface{}{
 			"content": "admin login",
 		})

@@ -4,13 +4,14 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type ControllerLogout struct{}
+type ControllerLogout struct {
+	Context
+}
 
 func (p *ControllerLogout) Get(ctx *gin.Context) {
-	c := ContextParse(ctx)
-	if c == nil {
+	if !p.ParseContext(ctx) {
 		return
 	}
-	c.SessionDestroy()
-	c.RespRedirect302("/admin/login")
+	p.SessionDestroy()
+	p.RespRedirect302("/admin/login")
 }

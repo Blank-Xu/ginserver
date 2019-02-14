@@ -20,25 +20,39 @@ type Context struct {
 	roleId int
 }
 
-func ContextParse(context *gin.Context) *Context {
+// ParseContext to check login and casbin rules
+// need to run in controller first
+func (p *Context) ParseContext(context *gin.Context, enforce ...bool) bool {
 	session := sessions.Default(context)
 	if session != nil {
+		// login session check
 		vUid := session.Get("userId")
 		vRole := session.Get("roleId")
 		if userId, ok := vUid.(int); ok {
 			if roleId, ok := vRole.(int); ok {
 				if userId > 0 && roleId > 0 {
-					if casbin.Auth(context, userId) {
-						return &Context{context, userId, roleId}
+					if len(enforce) > 0 && enforce[0] == false {
+						p.new(context, userId, roleId)
+						return true
+						// casbin rules check
+					} else if casbin.Enforce(context, userId) {
+						p.new(context, userId, roleId)
+						return true
 					}
 					context.AbortWithStatusJSON(e.RespErrHttp(http.StatusForbidden))
-					return nil
+					return false
 				}
 			}
 		}
 	}
 	context.Redirect(http.StatusFound, "/admin/login")
-	return nil
+	return false
+}
+
+func (p *Context) new(context *gin.Context, userId, roleId int) {
+	p.Context = context
+	p.userId = userId
+	p.roleId = roleId
 }
 
 func (p *Context) SessionCreate(userId, roleId int) error {

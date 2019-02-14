@@ -4,16 +4,20 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type ControllerInfo struct{}
+type ControllerInfo struct {
+	Context
+}
 
 func (p *ControllerInfo) Get(ctx *gin.Context) {
-	c := ContextParse(ctx)
-	if c == nil {
+	if !p.ParseContext(ctx) {
 		return
 	}
-	c.Render("info.tpl", gin.H{})
+	p.Render("info.tpl", gin.H{})
 }
 
 func (p *ControllerInfo) Post(ctx *gin.Context) {
+	if !p.ParseContext(ctx) {
+		return
+	}
 
 }
