@@ -9,7 +9,7 @@ type ControllerLogout struct {
 }
 
 func (p *ControllerLogout) Get(ctx *gin.Context) {
-	if !p.ParseContext(ctx) {
+	if !p.ParseContext(ctx, false) {
 		return
 	}
 	p.SessionDestroy()

@@ -14,6 +14,6 @@ func (p *ControllerAbout) Get(ctx *gin.Context) {
 	}
 	p.Render("about.tpl",
 		map[string]interface{}{
-			"content": "admin login",
+			"content": "about",
 		})
 }

@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS s_param
   updater int          NOT NULL,
   updated timestamp    NOT NULL DEFAULT current_timestamp ON UPDATE current_timestamp,
   UNIQUE uq_s_param_name (name)
-) DEFAULT CHARACTER SET = utf8mb4;
+) DEFAULT CHARSET = utf8mb4;
 
 
 -- table log
@@ -50,7 +50,7 @@ CREATE TABLE IF NOT EXISTS log
   INDEX idx_log_type (type),
   INDEX idx_log_user_id (user_id),
   INDEX idx_log_role_id (role_id)
-) DEFAULT CHARACTER SET = utf8mb4;
+) DEFAULT CHARSET = utf8mb4;
 
 
 -- table s_role_group
@@ -64,7 +64,7 @@ CREATE TABLE IF NOT EXISTS s_role_group
   updater int          NOT NULL,
   updated timestamp    NOT NULL DEFAULT current_timestamp ON UPDATE current_timestamp
 ) AUTO_INCREMENT = 100
-  DEFAULT CHARACTER SET = utf8mb4;
+  DEFAULT CHARSET = utf8mb4;
 
 
 -- table s_role
@@ -80,7 +80,7 @@ CREATE TABLE IF NOT EXISTS s_role
   updated  timestamp    NOT NULL DEFAULT current_timestamp ON UPDATE current_timestamp,
   UNIQUE uq_s_role_name (name)
 ) AUTO_INCREMENT = 100
-  DEFAULT CHARACTER SET = utf8mb4;
+  DEFAULT CHARSET = utf8mb4;
 
 INSERT INTO s_role(name, state, updater)
 VALUES ('admin', 1, 10000);
@@ -105,13 +105,14 @@ CREATE TABLE IF NOT EXISTS s_menu
   INDEX idx_s_menu_parent_id (parent_id),
   INDEX idx_s_menu_method (method),
   INDEX idx_s_menu_path (path)
-) DEFAULT CHARACTER SET = utf8mb4;
+) DEFAULT CHARSET = utf8mb4;
 
 INSERT INTO s_menu(name, method, path, icon, level, order_no, state, parent_id, updater)
-VALUES ('About', 'GET', '/admin/about', '', 0, 5, 1, 0, 10000),
-       ('User Set', 'MENU', '', '', 0, 1, 1, 0, 10000),
-       ('Info', 'GET', '/admin/info', '', 1, 1, 1, 2, 10000),
-       ('Change Password', 'GET', '/admin/change_pwd', '', 1, 2, 1, 2, 10000);
+VALUES ('Home', 'GET', '/admin', '', 0, 1, 1, 0, 10000),
+       ('About', 'GET', '/admin/about', '', 0, 5, 1, 0, 10000),
+       ('User Set', 'MENU', '', '', 0, 2, 1, 0, 10000),
+       ('Info', 'GET', '/admin/info', '', 1, 1, 1, 3, 10000),
+       ('Change Password', 'GET', '/admin/change_pwd', '', 1, 2, 1, 3, 10000);
 
 
 -- table s_role_menu
@@ -121,13 +122,14 @@ CREATE TABLE IF NOT EXISTS s_role_menu
   menu_id int NOT NULL,
   INDEX idx_s_role_menu (role_id),
   UNIQUE uq_s_role_menu (role_id, menu_id)
-) DEFAULT CHARACTER SET = utf8mb4;
+) DEFAULT CHARSET = utf8mb4;
 
 INSERT INTO s_role_menu
 VALUES (100, 1),
        (100, 2),
        (100, 3),
-       (100, 4);
+       (100, 4),
+       (100, 5);
 
 
 -- table s_user
@@ -152,7 +154,7 @@ CREATE TABLE IF NOT EXISTS s_user
   login_ip    varchar(64)  NOT NULL DEFAULT '',
   UNIQUE uq_s_user_username (username)
 ) AUTO_INCREMENT = 10000
-  DEFAULT CHARACTER SET = utf8mb4;
+  DEFAULT CHARSET = utf8mb4;
 
 # login password: 123456
 # salt: dc83c7d015da92a93b0bd90144604d04
@@ -172,7 +174,7 @@ CREATE TABLE IF NOT EXISTS s_user_role
   role_id int NOT NULL,
   INDEX idx_s_user_role (user_id),
   UNIQUE uq_s_user_role (user_id, role_id)
-) DEFAULT CHARACTER SET = utf8mb4;
+) DEFAULT CHARSET = utf8mb4;
 
 INSERT INTO s_user_role
 VALUES (10000, 100);

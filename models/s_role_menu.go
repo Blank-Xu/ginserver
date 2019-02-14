@@ -1,6 +1,9 @@
 package models
 
 import (
+	"strconv"
+
+	"ginserver/modules/casbin"
 	"ginserver/modules/db"
 )
 
@@ -16,12 +19,20 @@ func (p *SRoleMenu) TableName() string {
 
 func (p *SRoleMenu) InsertOne() error {
 	_, err := db.GetDefaultEngine().InsertOne(p)
+	// TODO:  casbin.GetEnforcer().AddPermissionForUser(strconv.Itoa(p.RoleId),...)
+	return err
+}
+
+func (p *SRoleMenu) Delete() error {
+	_, err := db.GetDefaultEngine().Delete(p)
+	casbin.GetEnforcer().DeletePermissionsForUser(strconv.Itoa(p.RoleId))
 	return err
 }
 
 type SRoleMenuDetail struct {
 	Id       int                `xorm:"pk autoincr" json:"id"`
 	ParentId int                `json:"parent_id"`
+	SubIds   map[int]bool       `xorm:"-",json:"-"`
 	Name     string             `json:"name"`
 	Method   string             `json:"method"`
 	Path     string             `json:"path"`

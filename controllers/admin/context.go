@@ -5,6 +5,8 @@ import (
 	"errors"
 	"net/http"
 
+	"ginserver/modules/config"
+
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 
@@ -146,6 +148,7 @@ func (p *Context) Render(tpl string, value map[string]interface{}) {
 		p.RespErrInternalServerError(err)
 		return
 	}
+	value["AppName"] = config.GetConfig().AppName
 	value["main_user"] = user
 	value["main_menu"] = menu
 	value["active_path"] = p.Request.URL.Path

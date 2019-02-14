@@ -6,6 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 
 	"ginserver/models"
+	"ginserver/modules/config"
 	"ginserver/modules/log"
 	"ginserver/modules/utils"
 )
@@ -15,6 +16,7 @@ type ControllerLogin struct{}
 func (p *ControllerLogin) Get(ctx *gin.Context) {
 	ctx.HTML(http.StatusOK, "login.html",
 		map[string]string{
+			"AppName":  config.GetConfig().AppName,
 			"Title":    "Login",
 			"Username": "admin",
 			"Password": "123456",

@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>{{template "title" .}}{{.TitleSuffix}}</title>
+    <title>{{.AppName}}-{{template "title" .}}</title>
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <link rel="stylesheet" href="/statics/bower_components/bootstrap/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="/statics/bower_components/font-awesome/css/font-awesome.min.css">
@@ -14,17 +14,12 @@
     <!-- Pace style -->
     <link rel="stylesheet" href="/statics/plugins/pace/pace.min.css">
     {{template "css" .}}
-    <!--[if lt IE 9]>
-    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-    <![endif]-->
     <link rel="stylesheet"
           href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
 </head>
 
 <body class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper">
-
     <!-- Main Header -->
     <header class="main-header">
         <!-- Logo -->
@@ -95,71 +90,67 @@
     </header>
     <!-- Left side column. contains the logo and sidebar -->
     <aside class="main-sidebar">
-
         <!-- sidebar: style can be found in sidebar.less -->
         <section class="sidebar">
-            <!-- search form (Optional) -->
             <form action="#" method="get" class="sidebar-form">
                 <div class="input-group">
                     <input type="text" name="q" class="form-control" placeholder="Search...">
                     <span class="input-group-btn">
-                            <button type="submit" name="search" id="search-btn" class="btn btn-flat">
-                                <i class="fa fa-search"></i>
-                            </button>
-                        </span>
+                        <button type="submit" name="search" id="search-btn" class="btn btn-flat">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </span>
                 </div>
             </form>
-            <!-- /.search form -->
-
             <!-- Sidebar Menu -->
             <ul class="sidebar-menu" data-widget="tree">
-                {{if .main_menu}}
-                    {{range .main_menu}}
-                        {{if .List}}
-                            <li class="treeview">
-                                <a href="#">
-                                    <i class="fa{{if eq $.active_path .Path}} active{{end}}{{if .Icon}} {{.Icon}}{{else}} fa-link{{end}}"></i>
-                                    <span>{{.Name}}</span>
-                                    <span class="pull-right-container">
-                                        <i class="fa fa-angle-left pull-right"></i>
-                                    </span>
-                                </a>
-                                <ul class="treeview-menu">
-                                    {{range .List}}
-                                        {{if .List}}
-                                            <li class="treeview">
-                                                <a href="#">
-                                                    <i class="fa{{if eq $.active_path .Path}} active{{end}}{{if .Icon}} {{.Icon}}{{else}} fa-link{{end}}"></i>
-                                                    <span>{{.Name}}</span>
-                                                    <span class="pull-right-container">
-                                                        <i class="fa fa-angle-left pull-right"></i>
-                                                    </span>
-                                                </a>
-                                                <ul class="treeview-menu">
-                                                    {{range .List}}
-                                                        <li><a href="{{.Path}}">{{.Name}}</a></li>
-                                                    {{end}}
-                                                </ul>
-                                            </li>
-                                        {{else}}
-                                            <li>
-                                                <a href="{{.Path}}">
-                                                    <i class="fa{{if eq $.active_path .Path}} active{{end}}{{if .Icon}} {{.Icon}}{{else}} fa-link{{end}}"></i>
-                                                    <span>{{.Name}}</span>
-                                                </a>
-                                            </li>
-                                        {{end}}
+                {{range .main_menu}}
+                    {{if .List}}
+                        <li class="treeview">
+                            <a href="#">
+                                <i class="fa{{if .Icon}} {{.Icon}}{{else}} fa-link{{end}}"></i>
+                                <span>{{.Name}}</span>
+                                <span class="pull-right-container">
+                                    <i class="fa fa-angle-left pull-right"></i>
+                                </span>
+                            </a>
+                            <ul class="treeview-menu">
+                                {{range .List}}
+                                    {{if .List}}
+                                        <li id="menu{{.Id}}" class="treeview">
+                                            <a href="#">
+                                                <i class="fa{{if .Icon}} {{.Icon}}{{else}} fa-link{{end}}"></i>
+                                                <span>{{.Name}}</span>
+                                                <span class="pull-right-container">
+                                                    <i class="fa fa-angle-left pull-right"></i>
+                                                </span>
+                                            </a>
+                                            <ul class="treeview-menu">
+                                                {{range .List}}
+                                                    <li id="menu{{.Id}}"{{if eq $.active_path .Path}} class="active"{{end}}>
+                                                        <a href="{{.Path}}">{{.Name}}</a>
+                                                    </li>
+                                                {{end}}
+                                            </ul>
+                                        </li>
+                                    {{else}}
+                                        <li id="menu{{.Id}}"{{if eq $.active_path .Path}} class="active"{{end}}>
+                                            <a href="{{.Path}}">
+                                                <i class="fa{{if .Icon}} {{.Icon}}{{else}} fa-link{{end}}"></i>
+                                                <span>{{.Name}}</span>
+                                            </a>
+                                        </li>
                                     {{end}}
-                                </ul>
-                            </li>
-                        {{else}}
-                            <li>
-                                <a href="{{.Path}}">
-                                    <i class="fa{{if eq $.active_path .Path}} active{{end}}{{if .Icon}} {{.Icon}}{{else}} fa-link{{end}}"></i>
-                                    <span>{{.Name}}</span>
-                                </a>
-                            </li>
-                        {{end}}
+                                {{end}}
+                            </ul>
+                        </li>
+                    {{else}}
+                        <li id="menu{{.Id}}"{{if eq $.active_path .Path}} class="active"{{end}}>
+                            <a href="{{.Path}}">
+                                <i class="fa{{if .Icon}} {{.Icon}}{{else}} fa-link{{end}}"></i>
+                                <span>{{.Name}}</span>
+                            </a>
+                        </li>
                     {{end}}
                 {{end}}
             </ul>
@@ -167,7 +158,6 @@
         </section>
         <!-- /.sidebar -->
     </aside>
-
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
         <!-- Content Header (Page header) -->
@@ -181,7 +171,6 @@
                 <li class="active">Here</li>
             </ol>
         </section>
-
         <!-- Main content -->
         <section class="content container-fluid">
             {{template "content" .}}
@@ -189,7 +178,6 @@
         <!-- /.content -->
     </div>
     <!-- /.content-wrapper -->
-
     <!-- Main Footer -->
     <footer class="main-footer">
         <!-- Default to the left -->
