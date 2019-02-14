@@ -156,7 +156,8 @@ func (p *Context) Render(tpl string, value map[string]interface{}) {
 }
 
 var logWithoutParamsRouter = map[string]bool{
-	"/admin/login": true,
+	"/admin/login":      true,
+	"/admin/change_pwd": true,
 }
 
 func (p *Context) Log(lType log.Type, level log.Level, remark ...string) {

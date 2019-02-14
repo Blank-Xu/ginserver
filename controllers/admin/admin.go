@@ -2,6 +2,8 @@ package admin
 
 import (
 	"github.com/gin-gonic/gin"
+
+	"ginserver/modules/config"
 )
 
 type ControllerAdmin struct {
@@ -14,6 +16,6 @@ func (p *ControllerAdmin) Get(ctx *gin.Context) {
 	}
 	p.Render("admin.tpl",
 		map[string]interface{}{
-			"content": "home",
+			"content": config.GetConfig().AppName + config.Version,
 		})
 }

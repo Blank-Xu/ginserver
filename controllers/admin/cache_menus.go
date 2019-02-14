@@ -22,19 +22,13 @@ func GetCacheRoleMenu(roleId int) (menus []*models.SRoleMenuDetail, err error) {
 	return
 }
 
-func SetCacheRoleMenu(roleId int) (err error) {
-	var (
-		menus interface{}
-		ok    bool
-	)
-	if menus, ok = cacheRoleMenu.Load(roleId); !ok {
-		return
-	}
-	if menus, err = genMenusByRoleId(roleId); err != nil {
-		return
+func SetCacheRoleMenu(roleId int) error {
+	menus, err := genMenusByRoleId(roleId)
+	if err != nil {
+		return err
 	}
 	cacheRoleMenu.Store(roleId, menus)
-	return
+	return nil
 }
 
 func genMenusByRoleId(roleId int) (menu []*models.SRoleMenuDetail, err error) {
@@ -58,6 +52,7 @@ func genMenusByRoleId(roleId int) (menu []*models.SRoleMenuDetail, err error) {
 	return
 }
 
+// buildMenuTree to build main menu tree
 func buildMenuTree(id int, data map[int]map[int]*models.SRoleMenuDetail) []*models.SRoleMenuDetail {
 	list := make([]*models.SRoleMenuDetail, 0)
 	for index, record := range data[id] {

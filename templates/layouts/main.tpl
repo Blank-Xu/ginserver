@@ -8,21 +8,16 @@
     <link rel="stylesheet" href="/statics/bower_components/bootstrap/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="/statics/bower_components/font-awesome/css/font-awesome.min.css">
     <link rel="stylesheet" href="/statics/bower_components/Ionicons/css/ionicons.min.css">
-    <!-- Theme style -->
     <link rel="stylesheet" href="/statics/dist/css/AdminLTE.min.css">
     <link rel="stylesheet" href="/statics/dist/css/skins/skin-blue.min.css">
-    <!-- Pace style -->
     <link rel="stylesheet" href="/statics/plugins/pace/pace.min.css">
     {{template "css" .}}
-    <link rel="stylesheet"
-          href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
 </head>
 
 <body class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper">
-    <!-- Main Header -->
     <header class="main-header">
-        <!-- Logo -->
         <a href="#" class="logo">
             <!-- mini logo for sidebar mini 50x50 pixels -->
             <span class="logo-mini"><b>gin</b></span>
@@ -38,51 +33,52 @@
             <!-- Navbar Right Menu -->
             <div class="navbar-custom-menu">
                 <ul class="nav navbar-nav">
-                    <!-- User Account Menu -->
-                    {{if .main_user}}
-                        {{with .main_user}}
-                            <li class="dropdown user user-menu">
-                                <!-- Menu Toggle Button -->
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                    <!-- The user image in the navbar-->
-                                    <img src="{{.Icon}}" class="user-image" alt="User Image">
-                                    <!-- hidden-xs hides the username on small devices so only the image appears. -->
-                                    <span class="hidden-xs">{{.Username}}</span>
-                                </a>
-                                <ul class="dropdown-menu">
-                                    <!-- The user image in the menu -->
-                                    <li class="user-header">
-                                        <img src="{{.Icon}}" class="img-circle" alt="User Image">
-                                        <p>
-                                            {{.Username}}
-                                            <small>{{.Nickname}}</small>
-                                        </p>
-                                    </li>
-                                    {{if .Email}}
-                                        <!-- Menu Body -->
-                                        <li class="user-body">
-                                            <div class="row">
-                                                <div class="col-xs-12 text-center">
-                                                    <span>email:
-                                                        <b><a href="mailto:{{.Email}}">{{.Email}}</a></b>
-                                                    </span>
-                                                </div>
+                    <li>
+                        <a href="/admin">
+                            <i class="fa fa-home" style="font-size:14px;"></i>
+                        </a>
+                    </li>
+                    {{with .main_user}}
+                        <li class="dropdown user user-menu">
+                            <!-- Menu Toggle Button -->
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                <!-- The user image in the navbar-->
+                                <img src="{{.Icon}}" class="user-image" alt="User Image">
+                                <!-- hidden-xs hides the username on small devices so only the image appears. -->
+                                <span class="hidden-xs">{{.Username}}</span>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <!-- The user image in the menu -->
+                                <li class="user-header">
+                                    <img src="{{.Icon}}" class="img-circle" alt="User Image">
+                                    <p>{{.Username}}
+                                        <small>{{.Nickname}}</small>
+                                    </p>
+                                </li>
+                                {{if .Email}}
+                                    <!-- Menu Body -->
+                                    <li class="user-body">
+                                        <div class="row">
+                                            <div class="col-xs-12 text-center">
+                                                <span>email:
+                                                    <b><a href="mailto:{{.Email}}">{{.Email}}</a></b>
+                                                </span>
                                             </div>
-                                        </li>
-                                    {{end}}
-                                    <!-- Menu Footer-->
-                                    <li class="user-footer">
-                                        <div class="pull-left">
-                                            <a href="/admin/info" class="btn btn-default btn-flat">Info</a>
-                                        </div>
-                                        <div class="pull-right">
-                                            <a href="/admin/logout" class="btn btn-default btn-flat">Sign Out</a>
                                         </div>
                                     </li>
-                                </ul>
-                            </li>
-                            <!-- Control Sidebar Toggle Button -->
-                        {{end}}
+                                {{end}}
+                                <!-- Menu Footer-->
+                                <li class="user-footer">
+                                    <div class="pull-left">
+                                        <a href="/admin/info" class="btn btn-default btn-flat">Info</a>
+                                    </div>
+                                    <div class="pull-right">
+                                        <a href="/admin/logout" class="btn btn-default btn-flat">Sign Out</a>
+                                    </div>
+                                </li>
+                            </ul>
+                        </li>
+                        <!-- Control Sidebar Toggle Button -->
                     {{end}}
                 </ul>
             </div>
@@ -162,8 +158,7 @@
     <div class="content-wrapper">
         <!-- Content Header (Page header) -->
         <section class="content-header">
-            <h1>
-                Page Header
+            <h1>Page Header
                 <small>Optional description</small>
             </h1>
             <ol class="breadcrumb">
@@ -177,10 +172,7 @@
         </section>
         <!-- /.content -->
     </div>
-    <!-- /.content-wrapper -->
-    <!-- Main Footer -->
     <footer class="main-footer">
-        <!-- Default to the left -->
         <strong>
             Copyright &copy; 2019
             <a target="_blank" href="https://github.com/Blank-Xu/ginserver">
@@ -190,14 +182,9 @@
     </footer>
     <div class="control-sidebar-bg"></div>
 </div>
-<!-- ./wrapper -->
-<!-- jQuery 3 -->
 <script src="/statics/bower_components/jquery/dist/jquery.min.js"></script>
-<!-- Bootstrap 3.3.7 -->
 <script src="/statics/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
-<!-- PACE -->
 <script src="/statics/bower_components/PACE/pace.min.js"></script>
-<!-- AdminLTE App -->
 <script src="/statics/dist/js/adminlte.min.js"></script>
 <script type="text/javascript">
     $(document).ajaxStart(function () {
