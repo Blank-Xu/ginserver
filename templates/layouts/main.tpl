@@ -117,7 +117,8 @@
                     {{range .main_menu}}
                         {{if .List}}
                             <li class="treeview">
-                                <a href="#"><i class="fa {{if .Icon}}{{.Icon}}{{else}}fa-link{{end}}"></i>
+                                <a href="#">
+                                    <i class="fa{{if eq $.active_path .Path}} active{{end}}{{if .Icon}} {{.Icon}}{{else}} fa-link{{end}}"></i>
                                     <span>{{.Name}}</span>
                                     <span class="pull-right-container">
                                         <i class="fa fa-angle-left pull-right"></i>
@@ -127,8 +128,8 @@
                                     {{range .List}}
                                         {{if .List}}
                                             <li class="treeview">
-                                                <a href="#"><i
-                                                            class="fa {{if .Icon}}{{.Icon}}{{else}}fa-link{{end}}"></i>
+                                                <a href="#">
+                                                    <i class="fa{{if eq $.active_path .Path}} active{{end}}{{if .Icon}} {{.Icon}}{{else}} fa-link{{end}}"></i>
                                                     <span>{{.Name}}</span>
                                                     <span class="pull-right-container">
                                                         <i class="fa fa-angle-left pull-right"></i>
@@ -142,16 +143,21 @@
                                             </li>
                                         {{else}}
                                             <li>
-                                                <a href="{{.Path}}"><i
-                                                            class="fa {{if .Icon}}{{.Icon}}{{else}}fa-link{{end}}"></i><span>{{.Name}}</span></a>
+                                                <a href="{{.Path}}">
+                                                    <i class="fa{{if eq $.active_path .Path}} active{{end}}{{if .Icon}} {{.Icon}}{{else}} fa-link{{end}}"></i>
+                                                    <span>{{.Name}}</span>
+                                                </a>
                                             </li>
                                         {{end}}
                                     {{end}}
                                 </ul>
                             </li>
                         {{else}}
-                            <li><a href="{{.Path}}"><i
-                                            class="fa {{if .Icon}}{{.Icon}}{{else}}fa-link{{end}}"></i><span>{{.Name}}</span></a>
+                            <li>
+                                <a href="{{.Path}}">
+                                    <i class="fa{{if eq $.active_path .Path}} active{{end}}{{if .Icon}} {{.Icon}}{{else}} fa-link{{end}}"></i>
+                                    <span>{{.Name}}</span>
+                                </a>
                             </li>
                         {{end}}
                     {{end}}

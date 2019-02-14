@@ -148,6 +148,7 @@ func (p *Context) Render(tpl string, value map[string]interface{}) {
 	}
 	value["main_user"] = user
 	value["main_menu"] = menu
+	value["active_path"] = p.Request.URL.Path
 	p.HTML(http.StatusOK, tpl, value)
 }
 
