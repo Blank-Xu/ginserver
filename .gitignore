@@ -16,9 +16,10 @@
 .DS_Store
 .vscode
 .idea
-pkg
-bin
+/bin
 
 *.log
 
 ginserver
+/build/ginserver
+/build/logs

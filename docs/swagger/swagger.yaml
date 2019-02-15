@@ -11,12 +11,14 @@ definitions:
         example: status bad request
         type: string
     type: object
-  models.SAdmin:
+  models.SUser:
     properties:
       created:
         $ref: '#/definitions/db.JSONTime'
         type: object
       email:
+        type: string
+      icon:
         type: string
       id:
         type: integer
@@ -31,9 +33,13 @@ definitions:
         type: string
       remark:
         type: string
+      state:
+        type: boolean
       updated:
         $ref: '#/definitions/db.JSONTime'
         type: object
+      updater:
+        type: integer
       username:
         type: string
     type: object
@@ -58,7 +64,7 @@ paths:
       description: get string by ID
       operationId: get-string-by-int
       parameters:
-      - description: admins ID
+      - description: user id
         in: path
         name: id
         required: true
@@ -69,7 +75,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/models.SAdmin'
+            $ref: '#/definitions/models.SUser'
             type: object
         "400":
           description: Bad Request
@@ -86,7 +92,7 @@ paths:
           schema:
             $ref: '#/definitions/e.ResponseErr'
             type: object
-      summary: get a admins record
+      summary: get an user record
 securityDefinitions:
   ApiKeyAuth:
     in: header

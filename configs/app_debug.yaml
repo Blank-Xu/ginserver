@@ -1,0 +1,58 @@
+# config file for ginserver
+
+RunMode: debug # gin.ginMode [debug, test, release]
+AppName: ginserver
+StaticDir: web/static
+TemplateDir: web/template
+RbacModel: configs/rbac_model.conf # casbin policy config
+
+Server:
+  HttpPort: 8080
+  ReadTimeout: 10 # second
+  WriteTimeout: 10 # second
+
+Fix:
+  TimeZone:
+    Name: UTC
+    Offset: 8 # hour
+
+Log: # logrus
+  Path: logs
+  FileName: ginserver.log
+  Level: 5 # [0:panic, 1:fatal, 2:error, 3:warn, 4:info, 5:debug, 6:trace]
+  ReportCaller: true # write log with runtime file and func
+
+DataBase: # xorm
+  - DriverName: mysql
+    DataBase: ginserver
+    Host: 127.0.0.1
+    Port: 3306
+    Username: ginserver
+    Password: 123456
+    Charset: utf8mb4
+    LogLevel: 0 # [0:LOG_DEBUG, 1:LOG_INFO, 2:LOG_WARNING, 3:LOG_ERR, 4:LOG_OFF, 5:LOG_UNKNOWN]
+    ConnMaxLifetime: 60 # minute
+    MaxIdleConns: 100
+    MaxOpenConns: 100
+    ShowSql: true
+    ShowExecTime: true
+    Connect: true # need to connect database when server start?
+#  - DriverName: mysql
+#    Connect: false
+
+Session: # Provider support [memstore, redis], you can use other types by site support [https://github.com/gin-contrib/sessions]
+  Provider: memstore # if you chose [redis], you must set Redis connect information
+  Path: ginserver
+  Domain: 127.0.0.1
+  Secret: ginserver
+  MaxAge: 7200 # second
+  HttpOnly: true
+
+Redis:
+  Host: 127.0.0.1
+  Port: 6379
+  Password:
+
+Lang:
+  Default: zh-CN
+  Lang: [zh-CN, en-US]

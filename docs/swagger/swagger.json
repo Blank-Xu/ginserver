@@ -27,12 +27,12 @@
                 "produces": [
                     "application/json"
                 ],
-                "summary": "get a admins record",
+                "summary": "get an user record",
                 "operationId": "get-string-by-int",
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "admins ID",
+                        "description": "user id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -43,7 +43,7 @@
                         "description": "OK",
                         "schema": {
                             "type": "object",
-                            "$ref": "#/definitions/models.SAdmin"
+                            "$ref": "#/definitions/models.SUser"
                         }
                     },
                     "400": {
@@ -88,7 +88,7 @@
                 }
             }
         },
-        "models.SAdmin": {
+        "models.SUser": {
             "type": "object",
             "properties": {
                 "created": {
@@ -96,6 +96,9 @@
                     "$ref": "#/definitions/db.JSONTime"
                 },
                 "email": {
+                    "type": "string"
+                },
+                "icon": {
                     "type": "string"
                 },
                 "id": {
@@ -117,9 +120,15 @@
                 "remark": {
                     "type": "string"
                 },
+                "state": {
+                    "type": "boolean"
+                },
                 "updated": {
                     "type": "object",
                     "$ref": "#/definitions/db.JSONTime"
+                },
+                "updater": {
+                    "type": "integer"
                 },
                 "username": {
                     "type": "string"

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>{{.AppName}}-{{.Title}}</title>
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <link rel="stylesheet" href="/static/bower_components/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/bower_components/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/static/bower_components/Ionicons/css/ionicons.min.css">
+    <link rel="stylesheet" href="/static/dist/css/AdminLTE.min.css">
+    <link rel="stylesheet" href="/static/dist/css/skins/skin-blue.min.css">
+    <link rel="stylesheet" href="/static/plugins/iCheck/square/blue.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+</head>
+
+<body class="hold-transition login-page">
+<div class="login-box">
+    <div class="login-logo">
+        <a><b>gin</b>Server <sub>v{{.Version}}</sub></a>
+    </div>
+    <div class="login-box-body">
+        <p class="login-box-msg">login account: admin/123456</p>
+        <form action="/admin/login" method="post">
+            <div class="form-group has-feedback">
+                <input name="username" type="text" class="form-control" placeholder="username">
+                <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+            </div>
+            <div class="form-group has-feedback">
+                <input name="password" type="password" class="form-control" placeholder="password">
+                <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+            </div>
+            <div class="form-group">
+                <label>
+                    <input name="rememberMe" type="checkbox"> Remember Me
+                </label>
+            </div>
+            <div class="form-group">
+                <button id="btnSubmit" class="btn btn-primary btn-block btn-flat">Sign In</button>
+            </div>
+        </form>
+    </div>
+    <br>
+    <footer class="text-center">
+        <p>
+            Copyright &copy; 2019
+            <a target="_blank" href="https://github.com/Blank-Xu/ginserver">
+                ginserver
+            </a>.
+        </p> All rights reserved.
+    </footer>
+</div>
+<script src="/static/bower_components/jquery/dist/jquery.min.js"></script>
+<script src="/static/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="/static/plugins/iCheck/icheck.min.js"></script>
+<script>
+    $(function () {
+        $('input').iCheck({
+            checkboxClass: 'icheckbox_square-blue',
+            radioClass: 'iradio_square-blue',
+            increaseArea: '20%'
+        });
+
+        fillbackLoginForm();
+
+        function rememberMe(rememberMe_flag) {
+            if (rememberMe_flag) {
+                localStorage.username = $("input[name='username']").val();
+                localStorage.password = $("input[name='password']").val();
+                localStorage.rememberMe = 1;
+            } else {
+                localStorage.username = null;
+                localStorage.password = null;
+                localStorage.rememberMe = 0;
+            }
+        }
+
+        function fillbackLoginForm() {
+            if (localStorage.rememberMe && localStorage.rememberMe == "1") {
+                $("input[name='username']").val(localStorage.username);
+                $("input[name='password']").val(localStorage.password);
+                $("input[name='rememberMe']").iCheck('check');
+                $("input[name='rememberMe']").iCheck('update');
+            }
+        }
+    })
+</script>
+</body>
+</html>
