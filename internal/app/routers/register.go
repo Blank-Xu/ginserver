@@ -2,6 +2,7 @@ package routers
 
 import (
 	"net/http"
+	"strings"
 	"time"
 
 	"ginserver/init/config"
@@ -50,7 +51,11 @@ func register(router *gin.Engine) {
 	}))
 
 	router.NoRoute(func(c *gin.Context) {
-		c.AbortWithStatusJSON(e.RespErrHttp(http.StatusNotFound))
+		if strings.HasPrefix(c.Request.URL.Path, "/api") {
+			c.AbortWithStatusJSON(e.RespErrHttp(http.StatusNotFound))
+		} else {
+			c.Redirect(http.StatusFound, "/admin/404")
+		}
 	})
 	router.NoMethod(func(c *gin.Context) {
 		c.AbortWithStatusJSON(e.RespErrHttp(http.StatusMethodNotAllowed))

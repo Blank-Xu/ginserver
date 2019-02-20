@@ -166,6 +166,9 @@ func (p *Context) Render(tpl string, value map[string]interface{}) {
 		p.RespErrInternalServerError(err)
 		return
 	}
+	if value == nil {
+		value = make(map[string]interface{})
+	}
 	value["AppName"] = config.GetConfig().AppName
 	value["main_user"] = user
 	value["main_menu"] = menu
