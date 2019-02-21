@@ -5,13 +5,10 @@ import (
 )
 
 type ControllerLogout struct {
-	Context
+	Controller
 }
 
 func (p *ControllerLogout) Get(ctx *gin.Context) {
-	if !p.ParseContext(ctx, false) {
-		return
-	}
-	p.sessionDestroy()
+	p.New(ctx)
 	p.RespRedirect302("/admin/login")
 }

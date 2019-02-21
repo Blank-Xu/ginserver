@@ -18,11 +18,12 @@ func (p JSONTime) MarshalJSON() ([]byte, error) {
 
 func (p *JSONTime) UnmarshalJSON(data []byte) error {
 	// Ignore null, like in the main JSON package.
-	if string(data) == "null" {
+	s := string(data)
+	if s == "null" {
 		return nil
 	}
 
-	t, err := time.ParseInLocation(`"`+utils.TimeLayoutDefault+`"`, string(data), time.Local)
+	t, err := time.ParseInLocation(`"`+utils.TimeLayoutDefault+`"`, s, time.Local)
 	if err != nil {
 		return err
 	}

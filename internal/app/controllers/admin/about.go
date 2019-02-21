@@ -5,13 +5,11 @@ import (
 )
 
 type ControllerAbout struct {
-	Context
+	Controller
 }
 
 func (p *ControllerAbout) Get(ctx *gin.Context) {
-	if !p.ParseContext(ctx) {
-		return
-	}
+	p.New(ctx)
 	p.Render("about.tpl",
 		map[string]interface{}{
 			"content": "about",

@@ -8,20 +8,16 @@ import (
 )
 
 type ControllerChangePwd struct {
-	Context
+	Controller
 }
 
 func (p *ControllerChangePwd) Get(ctx *gin.Context) {
-	if !p.ParseContext(ctx) {
-		return
-	}
-	p.Render("change_pwd.tpl", gin.H{})
+	p.New(ctx)
+	p.Render("change_pwd.tpl", nil)
 }
 
 func (p *ControllerChangePwd) Post(ctx *gin.Context) {
-	if !p.ParseContext(ctx, false) {
-		return
-	}
+	p.New(ctx)
 	var err error
 	req := new(models.SUserChangePwd)
 	if err = ctx.ShouldBind(req); err != nil {

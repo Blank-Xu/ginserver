@@ -1,6 +1,8 @@
 package models
 
 import (
+	"time"
+
 	"ginserver/tools/db"
 )
 
@@ -16,10 +18,10 @@ type SUser struct {
 	Email      string      `json:"email"`
 	Phone      string      `json:"phone"`
 	Remark     string      `json:"remark"`
-	Created    db.JSONTime `json:"created" swaggertype:"primitive,integer"`
+	Created    db.JSONTime `json:"created" swaggertype:"primitive,string"`
 	Updater    int         `json:"updater"`
 	Updated    db.JSONTime `json:"updated" swaggertype:"primitive,string"`
-	Deleted    db.JSONTime `xorm:"deleted" json:"-"`
+	Deleted    time.Time   `json:"-"`
 	RegisterIp string      `json:"-"`
 	LoginTime  db.JSONTime `json:"login_time" swaggertype:"primitive,string"`
 	LoginIp    string      `json:"login_ip"`

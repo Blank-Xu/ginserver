@@ -6,7 +6,7 @@ import (
 	"strconv"
 )
 
-func errorMsg(code int, err ...interface{}) (int, string) {
+func ErrorMsg(code int, err ...interface{}) (int, string) {
 	var (
 		msg string
 		ok  bool

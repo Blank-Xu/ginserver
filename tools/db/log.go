@@ -21,7 +21,7 @@ func NewSimpleLogger(log *logrus.Logger, database string, logLevel core.LogLevel
 // Error implement core.ILogger
 func (s *SimpleLogger) Error(v ...interface{}) {
 	if s.level <= core.LOG_ERR {
-		s.entry.Error(v)
+		s.entry.Error(v...)
 	}
 	return
 }

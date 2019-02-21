@@ -21,7 +21,7 @@ func NewResponseErr(code int, msg string) *ResponseErr {
 
 // RespErrCode return http code, server code and msg struct
 func RespErrCode(code int, err ...interface{}) *ResponseErr {
-	return NewResponseErr(errorMsg(code, err...))
+	return NewResponseErr(ErrorMsg(code, err...))
 }
 
 //  RespErrHttp return http code and msg struct

@@ -4,6 +4,8 @@ import (
 	"net/http"
 
 	"ginserver/internal/app/controllers/api/v1/users"
+	"ginserver/tools/casbin"
+	"ginserver/tools/middleware"
 
 	"github.com/gin-gonic/gin"
 	ginSwagger "github.com/swaggo/gin-swagger"
@@ -21,6 +23,9 @@ func registerApiRouter(router *gin.Engine) {
 
 	apiV1 := groupApi.Group("v1")
 	{
+		apiV1.Use(middleware.JwtAuth())
+
+		apiV1.Use(middleware.CasbinEnforce(casbin.GetEnforcer()))
 		apiV1.GET("users/:id", new(users.ControllerUsers).GetOne)
 		apiV1.GET("users", new(users.ControllerUsers).Get)
 		apiV1.POST("users", new(users.ControllerUsers).Post)

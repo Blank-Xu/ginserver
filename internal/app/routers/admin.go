@@ -1,13 +1,16 @@
 package routers
 
 import (
-	"github.com/gin-gonic/gin"
+	"net/http"
 
 	"ginserver/init/config"
 	"ginserver/internal/app/controllers/admin"
+	"ginserver/tools/casbin"
 	"ginserver/tools/func_map"
+	"ginserver/tools/middleware"
 
 	"github.com/gin-contrib/sessions"
+	"github.com/gin-gonic/gin"
 )
 
 var cookieName = "ginserver"
@@ -20,6 +23,8 @@ func registerAdminRouter(router *gin.Engine) {
 
 	// statics and templates
 	router.Static("/static", cfg.StaticDir)
+	router.StaticFS("/assets", http.Dir("./assets"))
+	router.StaticFile("/favicon.ico", cfg.StaticDir+"/favicon.ico")
 	router.SetFuncMap(func_map.GetFunMap())
 	router.HTMLRender = loadTemplates(cfg.TemplateDir)
 
@@ -31,7 +36,9 @@ func registerAdminRouter(router *gin.Engine) {
 		groupAdmin.GET("login", new(admin.ControllerLogin).Get)
 		groupAdmin.POST("login", new(admin.ControllerLogin).Post)
 		// register logout router
-		groupAdmin.GET("logout", new(admin.ControllerLogout).Get)
+		groupAdmin.GET("logout", middleware.SessionDestroy(), new(admin.ControllerLogout).Get)
+
+		groupAdmin.Use(middleware.SessionAuth("/admin/login"))
 		groupAdmin.GET("/", new(admin.ControllerAdmin).Get)
 		groupAdmin.GET("404", new(admin.Controller404).Get)
 		groupAdmin.GET("500", new(admin.Controller500).Get)
@@ -40,5 +47,7 @@ func registerAdminRouter(router *gin.Engine) {
 		groupAdmin.POST("info", new(admin.ControllerInfo).Post)
 		groupAdmin.GET("change_pwd", new(admin.ControllerChangePwd).Get)
 		groupAdmin.POST("change_pwd", new(admin.ControllerChangePwd).Post)
+
+		groupAdmin.Use(middleware.CasbinEnforce(casbin.GetEnforcer()))
 	}
 }

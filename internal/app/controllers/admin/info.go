@@ -7,20 +7,16 @@ import (
 )
 
 type ControllerInfo struct {
-	Context
+	Controller
 }
 
 func (p *ControllerInfo) Get(ctx *gin.Context) {
-	if !p.ParseContext(ctx) {
-		return
-	}
+	p.New(ctx)
 	p.Render("info.tpl", gin.H{})
 }
 
 func (p *ControllerInfo) Post(ctx *gin.Context) {
-	if !p.ParseContext(ctx, false) {
-		return
-	}
+	p.New(ctx)
 	var err error
 	req := new(models.SUserInfoUpdate)
 	if err = p.ShouldBind(req); err != nil {

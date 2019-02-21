@@ -5,12 +5,10 @@ import (
 )
 
 type Controller404 struct {
-	Context
+	Controller
 }
 
 func (p *Controller404) Get(ctx *gin.Context) {
-	if !p.ParseContext(ctx, false) {
-		return
-	}
+	p.New(ctx)
 	p.Render("admin404.tpl", nil)
 }

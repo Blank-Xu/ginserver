@@ -7,12 +7,15 @@ import (
 	"ginserver/init/config"
 	"ginserver/internal/app/models"
 	"ginserver/tools/db"
+	"ginserver/tools/middleware"
 	"ginserver/tools/utils"
 
 	"github.com/gin-gonic/gin"
 )
 
-type ControllerLogin struct{}
+type ControllerLogin struct {
+	Controller
+}
 
 func (p *ControllerLogin) Get(ctx *gin.Context) {
 	ctx.HTML(http.StatusOK, "login.html",
@@ -24,51 +27,51 @@ func (p *ControllerLogin) Get(ctx *gin.Context) {
 }
 
 func (p *ControllerLogin) Post(ctx *gin.Context) {
+	p.New(ctx)
 	var (
 		req = new(models.SUserLogin)
-		c   = &Context{Context: ctx}
 		err error
 	)
-	if err = c.ShouldBind(req); err != nil {
-		c.RespErrInvalidParams(err)
+	if err = p.ShouldBind(req); err != nil {
+		p.RespErrInvalidParams(err)
 		return
 	}
 	// check user
 	recordUser := &models.SUser{Username: req.Username}
 	var has bool
 	if has, err = recordUser.SelectOne(recordUser); err != nil {
-		c.RespErrDBError(err)
+		p.RespErrDBError(err)
 		return
 	}
 	if !has ||
 		recordUser.Password != utils.GenPassword(req.Password, recordUser.Salt) {
-		c.RespErrInvalidParams()
+		p.RespErrInvalidParams()
 		return
 	}
 	if recordUser.State == false {
-		c.RespErrForbidden()
+		p.RespErrForbidden()
 		return
 	}
 	// check role
 	recordRole := new(models.SRole)
 	if has, err = recordRole.SelectOneByUserId(recordUser.Id); err != nil {
-		c.RespErrDBError(err)
+		p.RespErrDBError(err)
 		return
 	}
 	if !has || recordRole.State == false {
-		c.RespErrForbidden()
+		p.RespErrForbidden()
 		return
 	}
 	// check success
-	if err = c.sessionCreate(recordUser.Id, recordRole.Id); err != nil {
-		c.RespErrInternalServerError(err)
+	if err = middleware.SessionCreate(ctx, recordUser.Id, recordRole.Id); err != nil {
+		p.RespErrInternalServerError(err)
 		return
 	}
 	recordUser.LoginTime = db.JSONTime(time.Now())
-	recordUser.LoginIp = c.ClientIP()
+	recordUser.LoginIp = p.ClientIP()
 	recordUser.Update(recordUser, recordUser.Id, "login_time,login_ip")
 	// cache user
 	SetCacheUser(recordUser)
-	c.Log(models.LogTypeLogin, models.LogLevelInfo)
-	c.RespRedirect302("/admin")
+	p.Log(models.LogTypeLogin, models.LogLevelInfo)
+	p.RespRedirect302("/admin")
 }

@@ -3,16 +3,18 @@ package users
 import (
 	"strconv"
 
+	"ginserver/internal/app/controllers/api"
 	"ginserver/internal/app/models"
 	"ginserver/tools/db"
-	"ginserver/tools/e"
 	"ginserver/tools/utils"
 
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
 )
 
-type ControllerUsers struct{}
+type ControllerUsers struct {
+	api.Controller
+}
 
 // GetOne godoc
 // @Summary get an user record
@@ -25,50 +27,53 @@ type ControllerUsers struct{}
 // @Failure 400 {object} e.ResponseErr
 // @Failure 404 {object} e.ResponseErr
 // @Failure 501 {object} e.ResponseErr
-// @Router /admins/{id} [get]
+// @Router /users/{id} [get]
 func (p *ControllerUsers) GetOne(ctx *gin.Context) {
+	p.New(ctx)
 	id, _ := strconv.Atoi(ctx.Param("id"))
 	if id < 1 {
-		e.RespErrInvalidParams(ctx)
+		p.RespErrInvalidParams()
 		return
 	}
 	cols, _ := ctx.GetQueryArray("cols")
 	record := models.NewSUser(id)
 	has, err := record.SelectOne(record, cols...)
 	if err != nil {
-		e.RespErrDBError(ctx, err)
+		p.RespErrDBError(err)
 		logrus.Error(err)
 		return
 	}
 	if !has {
-		e.RespErrNotFound(ctx)
+		p.RespErrNotFound()
 		return
 	}
-	e.RespDataOk(ctx, record)
+	p.RespOk(record)
 }
 
 func (p *ControllerUsers) Get(ctx *gin.Context) {
+	p.New(ctx)
 	var err error
 	orderBy := db.NewOrderBy(ctx)
 	if err = orderBy.Parse(); err != nil {
-		e.RespErrInvalidParams(ctx, err)
+		p.RespErrInvalidParams(err)
 		return
 	}
 	record := new(models.SUser)
 	cols := ctx.GetStringSlice("cols")
 	var records []*models.SUser
 	if err = record.SelectCond(record, &records, nil, orderBy.String(), db.NewPaging(ctx), cols...); err != nil {
-		e.RespErrDBError(ctx, err)
+		p.RespErrDBError(err)
 		logrus.Error(err)
 		return
 	}
-	e.RespDataOk(ctx, &records)
+	p.RespOk(&records)
 }
 
 func (p *ControllerUsers) Post(ctx *gin.Context) {
+	p.New(ctx)
 	record := new(models.SUserInsert)
 	if err := ctx.BindJSON(record); err != nil {
-		e.RespErrInvalidParams(ctx, err)
+		p.RespErrInvalidParams(err)
 		logrus.Error(err)
 		return
 	}
@@ -77,61 +82,62 @@ func (p *ControllerUsers) Post(ctx *gin.Context) {
 	record.Password = utils.GenPassword(record.Password, record.Salt)
 	record.RegisterIp = ctx.ClientIP()
 
-	count, err := record.InsertOne(record)
+	_, err := record.InsertOne(record)
 	if err != nil {
-		e.RespErrDBError(ctx, err)
+		p.RespErrDBError(err)
 		logrus.Error(err)
 		return
 	}
-	e.RespDataCreated(ctx, count)
+	p.RespCreated(nil)
 }
 
 func (p *ControllerUsers) Put(ctx *gin.Context) {
+	p.New(ctx)
 	id, _ := strconv.Atoi(ctx.Param("id"))
 	if id < 1 {
-		e.RespErrInvalidParams(ctx)
+		p.RespErrInvalidParams(ctx)
 		return
 	}
 	record := &models.SUserUpdate{Id: id}
 	has, err := record.IsExists(record)
 	if err != nil {
-		e.RespErrDBError(ctx, err)
+		p.RespErrDBError(err)
 		logrus.Error(err)
 		return
 	}
 	if !has {
-		e.RespErrNotFound(ctx)
+		p.RespErrNotFound()
 		return
 	}
 
 	if err := ctx.BindJSON(record); err != nil {
-		e.RespErrInvalidParams(ctx, err)
+		p.RespErrInvalidParams(err)
 		return
 	}
 	record.Salt = utils.GenSalt()
 	record.Password = utils.GenPassword(record.Password, record.Salt)
-	count, err := record.Update(record, record.Id)
-	if err != nil {
-		e.RespErrDBError(ctx, err)
+	if _, err = record.Update(record, record.Id); err != nil {
+		p.RespErrDBError(err)
 		logrus.Error(err)
 		return
 	}
-	e.RespDataOk(ctx, count)
+	p.RespOk(nil)
 }
 
 func (p *ControllerUsers) Delete(ctx *gin.Context) {
+	p.New(ctx)
 	id, _ := strconv.Atoi(ctx.Param("id"))
 	if id < 1 {
-		e.RespErrInvalidParams(ctx)
+		p.RespErrInvalidParams(ctx)
 		return
 	}
 
 	record := models.NewSUser(id)
-	count, err := record.Delete(record)
+	_, err := record.Delete(record)
 	if err != nil {
-		e.RespErrDBError(ctx, err)
+		p.RespErrDBError(err)
 		logrus.Error(err)
 		return
 	}
-	e.RespDataOk(ctx, count)
+	p.RespOk(nil)
 }

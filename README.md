@@ -20,4 +20,4 @@
     $ go get -u github.com/swaggo/swag/cmd/swag
     $ go get -u github.com/swaggo/gin-swagger
     $ go get -u github.com/swaggo/gin-swagger/swaggerFiles
-    $ swag init --generalInfo cmd/ginserver/main.go
+    $ swag init -g cmd/ginserver/main.go

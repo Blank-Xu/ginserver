@@ -7,13 +7,11 @@ import (
 )
 
 type ControllerAdmin struct {
-	Context
+	Controller
 }
 
 func (p *ControllerAdmin) Get(ctx *gin.Context) {
-	if !p.ParseContext(ctx, false) {
-		return
-	}
+	p.New(ctx)
 	p.Render("admin.tpl",
 		map[string]interface{}{
 			"content": config.GetConfig().AppName + config.Version,

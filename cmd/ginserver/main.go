@@ -8,7 +8,8 @@ import (
 	"os/signal"
 	"time"
 
-	_ "ginserver/docs"
+	// _ "ginserver/docs"
+
 	defaultInit "ginserver/init"
 	"ginserver/init/config"
 	"ginserver/internal/app/routers"
