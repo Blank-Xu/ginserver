@@ -47,5 +47,6 @@ func (p *ControllerChangePwd) Post(ctx *gin.Context) {
 		p.RespErrDBError(err)
 		return
 	}
+	p.Log(models.LogTypeChangePwd, models.LogLevelInfo)
 	p.RespCreated(nil)
 }

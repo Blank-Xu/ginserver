@@ -15,18 +15,23 @@ import (
 
 type Controller struct {
 	*gin.Context
+	userId int
+	roleId int
 }
 
+// New need set context first
 func (p *Controller) New(context *gin.Context) {
 	p.Context = context
+	p.userId = p.GetInt(middleware.KeyUserId)
+	p.roleId = p.GetInt(middleware.KeyRoleId)
 }
 
 func (p *Controller) GetUserId() int {
-	return p.GetInt(middleware.KeyUserId)
+	return p.userId
 }
 
 func (p *Controller) GetRoleId() int {
-	return p.GetInt(middleware.KeyRoleId)
+	return p.roleId
 }
 
 // RespOk 200
@@ -96,12 +101,12 @@ func (p *Controller) RespErrDBError(err error) {
 }
 
 func (p *Controller) Render(tpl string, value map[string]interface{}) {
-	user, err := GetCacheUser(p.GetUserId())
+	user, err := GetCacheUser(p.userId)
 	if err != nil {
 		p.RespErrInternalServerError(err)
 		return
 	}
-	menu, err := GetCacheRoleMenu(p.GetRoleId())
+	menu, err := GetCacheRoleMenu(p.roleId)
 	if err != nil {
 		p.RespErrInternalServerError(err)
 		return
@@ -125,8 +130,8 @@ func (p *Controller) Log(lType models.LogType, level models.LogLevel, remark ...
 	recordLog := &models.Log{
 		Type:   lType,
 		Level:  level,
-		UserId: p.GetInt(middleware.KeyUserId),
-		RoleId: p.GetInt(middleware.KeyRoleId),
+		UserId: p.userId,
+		RoleId: p.roleId,
 		Method: p.Request.Method,
 		Path:   p.Request.URL.Path,
 		Ip:     p.ClientIP(),

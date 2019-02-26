@@ -7,7 +7,6 @@ import (
 	"ginserver/init/config"
 	"ginserver/tools/db"
 
-	xormLogrus "github.com/Blank-Xu/xorm-logrus"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/go-xorm/core"
 	"github.com/go-xorm/xorm"
@@ -35,7 +34,7 @@ func newEngine(cfg *config.DataBase) *xorm.Engine {
 		panic(fmt.Sprintf("Database [%s] engine create error \n - dns: [%s] \n - err: [%v]", cfg.DataBase, dataSourceName, err))
 	}
 
-	engine.SetLogger(xormLogrus.NewSimpleLogger(logrus.StandardLogger(), cfg.DataBase, core.LogLevel(cfg.LogLevel)))
+	engine.SetLogger(db.NewSimpleLogger(logrus.StandardLogger(), cfg.DataBase, core.LogLevel(cfg.LogLevel)))
 
 	// check connection
 	if cfg.Connect {

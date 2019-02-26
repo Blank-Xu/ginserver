@@ -1,7 +1,6 @@
 module ginserver
 
 require (
-	github.com/Blank-Xu/xorm-logrus v0.0.0-20190216070134-6f99ab6091ac
 	github.com/PuerkitoBio/purell v1.1.1 // indirect
 	github.com/boj/redistore v0.0.0-20180917114910-cd5dcc76aeff // indirect
 	github.com/casbin/casbin v1.8.0

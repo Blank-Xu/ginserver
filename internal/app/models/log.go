@@ -9,6 +9,7 @@ type LogType int
 const (
 	LogTypeLogin LogType = iota + 1
 	LogTypeLogout
+	LogTypeChangePwd
 )
 
 type LogLevel int
