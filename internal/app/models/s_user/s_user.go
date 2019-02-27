@@ -1,4 +1,4 @@
-package models
+package s_user
 
 import (
 	"time"
@@ -6,7 +6,7 @@ import (
 	"ginserver/tools/db"
 )
 
-type SUser struct {
+type User struct {
 	*db.Model  `xorm:"-" json:"-"`
 	Id         int         `xorm:"pk autoincr" json:"id"`
 	Username   string      `xorm:"unique" json:"username"`
@@ -27,15 +27,11 @@ type SUser struct {
 	LoginIp    string      `json:"login_ip"`
 }
 
-func NewSUser(id int) *SUser {
-	return &SUser{Id: id}
-}
-
-func (p *SUser) TableName() string {
+func (p *User) TableName() string {
 	return "s_user"
 }
 
-type SUserInsert struct {
+type UserInsert struct {
 	*db.Model  `xorm:"-" json:"-"`
 	Username   string      `xorm:"unique" json:"username" binding:"required"`
 	Password   string      `json:"password" binding:"required"`
@@ -51,11 +47,11 @@ type SUserInsert struct {
 	Updated    db.JSONTime `xorm:"updated" json:"-"`
 }
 
-func (p *SUserInsert) TableName() string {
+func (p *UserInsert) TableName() string {
 	return "s_user"
 }
 
-type SUserUpdate struct {
+type UserUpdate struct {
 	*db.Model `xorm:"-" json:"-"`
 	Id        int    `xorm:"pk autoincr" json:"-"`
 	Password  string `json:"-"`
@@ -69,24 +65,24 @@ type SUserUpdate struct {
 	Updated   db.JSONTime `xorm:"updated" json:"-"`
 }
 
-func (p *SUserUpdate) TableName() string {
+func (p *UserUpdate) TableName() string {
 	return "s_user"
 }
 
-// SUserLogin login check
-type SUserLogin struct {
+// UserLogin login check
+type UserLogin struct {
 	Username string `form:"username" json:"username" binding:"required"`
 	Password string `form:"password" json:"password" binding:"required"`
 }
 
-// SUserChangePwd
-type SUserChangePwd struct {
+// UserChangePwd
+type UserChangePwd struct {
 	Password        string `form:"password" json:"password" binding:"required"`
 	NewPassword     string `form:"new_password" json:"new_password" binding:"required"`
 	ConfirmPassword string `form:"confirm_password" json:"confirm_password" binding:"required"`
 }
 
-type SUserInfoUpdate struct {
+type UserInfoUpdate struct {
 	*db.Model `xorm:"-" json:"-"`
 	Id        int    `xorm:"pk autoincr" json:"-"`
 	Nickname  string `json:"nickname"`

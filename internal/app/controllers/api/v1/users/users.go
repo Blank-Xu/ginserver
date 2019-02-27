@@ -4,7 +4,7 @@ import (
 	"strconv"
 
 	"ginserver/internal/app/controllers/api"
-	"ginserver/internal/app/models"
+	"ginserver/internal/app/models/s_user"
 	"ginserver/tools/db"
 	"ginserver/tools/utils"
 
@@ -23,7 +23,7 @@ type ControllerUsers struct {
 // @Accept  json
 // @Produce  json
 // @Param id path int true "user id"
-// @Success 200 {object} models.SUser
+// @Success 200 {object} s_user.User
 // @Failure 400 {object} e.ResponseErr
 // @Failure 404 {object} e.ResponseErr
 // @Failure 501 {object} e.ResponseErr
@@ -36,7 +36,7 @@ func (p *ControllerUsers) GetOne(ctx *gin.Context) {
 		return
 	}
 	cols, _ := ctx.GetQueryArray("cols")
-	record := models.NewSUser(id)
+	record := &s_user.User{Id: id}
 	has, err := record.SelectOne(record, cols...)
 	if err != nil {
 		p.RespErrDBError(err)
@@ -58,9 +58,9 @@ func (p *ControllerUsers) Get(ctx *gin.Context) {
 		p.RespErrInvalidParams(err)
 		return
 	}
-	record := new(models.SUser)
+	record := new(s_user.User)
 	cols := ctx.GetStringSlice("cols")
-	var records []*models.SUser
+	var records []*s_user.User
 	if err = record.SelectCond(record, &records, nil, orderBy.String(), db.NewPaging(ctx), cols...); err != nil {
 		p.RespErrDBError(err)
 		logrus.Error(err)
@@ -71,7 +71,7 @@ func (p *ControllerUsers) Get(ctx *gin.Context) {
 
 func (p *ControllerUsers) Post(ctx *gin.Context) {
 	p.New(ctx)
-	record := new(models.SUserInsert)
+	record := new(s_user.UserInsert)
 	if err := ctx.BindJSON(record); err != nil {
 		p.RespErrInvalidParams(err)
 		logrus.Error(err)
@@ -98,7 +98,7 @@ func (p *ControllerUsers) Put(ctx *gin.Context) {
 		p.RespErrInvalidParams(ctx)
 		return
 	}
-	record := &models.SUserUpdate{Id: id}
+	record := &s_user.UserUpdate{Id: id}
 	has, err := record.IsExists(record)
 	if err != nil {
 		p.RespErrDBError(err)
@@ -132,7 +132,7 @@ func (p *ControllerUsers) Delete(ctx *gin.Context) {
 		return
 	}
 
-	record := models.NewSUser(id)
+	record := &s_user.User{Id: id}
 	_, err := record.Delete(record)
 	if err != nil {
 		p.RespErrDBError(err)

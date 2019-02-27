@@ -1,4 +1,4 @@
-package models
+package s_user
 
 import (
 	"strconv"
@@ -7,18 +7,18 @@ import (
 	"ginserver/tools/db"
 )
 
-type SUserRole struct {
+type UserRole struct {
 	*db.Model `xorm:"-" json:"-"`
 	Id        int `xorm:"pk autoincr" json:"id"`
 	UserId    int
 	RoleId    int
 }
 
-func (p *SUserRole) TableName() string {
+func (p *UserRole) TableName() string {
 	return "s_user_role"
 }
 
-func (p *SUserRole) InsertOne() error {
+func (p *UserRole) InsertOne() error {
 	_, err := db.GetDefaultEngine().InsertOne(p)
 	if err != nil {
 		casbin.GetEnforcer().AddRoleForUser(strconv.Itoa(p.UserId), strconv.Itoa(p.RoleId))
@@ -26,7 +26,7 @@ func (p *SUserRole) InsertOne() error {
 	return err
 }
 
-func (p *SUserRole) Delete() error {
+func (p *UserRole) Delete() error {
 	_, err := db.GetDefaultEngine().Delete(p)
 	if err != nil {
 		casbin.GetEnforcer().DeleteUser(strconv.Itoa(p.UserId))

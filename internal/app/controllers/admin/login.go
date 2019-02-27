@@ -5,7 +5,9 @@ import (
 	"time"
 
 	"ginserver/init/config"
-	"ginserver/internal/app/models"
+	"ginserver/internal/app/models/log"
+	"ginserver/internal/app/models/s_role"
+	"ginserver/internal/app/models/s_user"
 	"ginserver/tools/db"
 	"ginserver/tools/middleware"
 	"ginserver/tools/utils"
@@ -29,7 +31,7 @@ func (p *ControllerLogin) Get(ctx *gin.Context) {
 func (p *ControllerLogin) Post(ctx *gin.Context) {
 	p.New(ctx)
 	var (
-		req = new(models.SUserLogin)
+		req = new(s_user.UserLogin)
 		err error
 	)
 	if err = p.ShouldBind(req); err != nil {
@@ -37,7 +39,7 @@ func (p *ControllerLogin) Post(ctx *gin.Context) {
 		return
 	}
 	// check user
-	recordUser := &models.SUser{Username: req.Username}
+	recordUser := &s_user.User{Username: req.Username}
 	var has bool
 	if has, err = recordUser.SelectOne(recordUser); err != nil {
 		p.RespErrDBError(err)
@@ -53,7 +55,7 @@ func (p *ControllerLogin) Post(ctx *gin.Context) {
 		return
 	}
 	// check role
-	recordRole := new(models.SRole)
+	recordRole := new(s_role.Role)
 	if has, err = recordRole.SelectOneByUserId(recordUser.Id); err != nil {
 		p.RespErrDBError(err)
 		return
@@ -72,6 +74,6 @@ func (p *ControllerLogin) Post(ctx *gin.Context) {
 	recordUser.Update(recordUser, recordUser.Id, "login_time,login_ip")
 	// cache user
 	SetCacheUser(recordUser)
-	p.Log(models.LogTypeLogin, models.LogLevelInfo)
+	p.LogDB(log.TypeLogin, log.LevelInfo)
 	p.RespRedirect302("/admin")
 }

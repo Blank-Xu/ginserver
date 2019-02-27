@@ -1,15 +1,7 @@
-package models
+package s_menu
 
 import (
 	"ginserver/tools/db"
-)
-
-type MenuType int
-
-const (
-	MenuTypeMain MenuType = iota
-	MenuTypeButton
-	MenuTypeHref
 )
 
 type SMenu struct {
@@ -38,6 +30,6 @@ func (p *SMenu) SelectByParentId(parentId int) (records []*SMenu, err error) {
 FROM s_menu
 WHERE parent_id = ?
   AND type = ?
-  AND state = 1`, parentId, MenuTypeMain).Find(&records)
+  AND state = 1`, parentId, TypeMain).Find(&records)
 	return
 }

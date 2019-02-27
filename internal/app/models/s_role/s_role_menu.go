@@ -1,48 +1,49 @@
-package models
+package s_role
 
 import (
 	"strconv"
 
+	"ginserver/internal/app/models/s_menu"
 	"ginserver/tools/casbin"
 	"ginserver/tools/db"
 )
 
-type SRoleMenu struct {
+type RoleMenu struct {
 	*db.Model `xorm:"-" json:"-"`
 	Id        int `xorm:"pk autoincr" json:"id"`
 	RoleId    int
 	MenuId    int
 }
 
-func (p *SRoleMenu) TableName() string {
+func (p *RoleMenu) TableName() string {
 	return "s_role_menu"
 }
 
-func (p *SRoleMenu) InsertOne() error {
+func (p *RoleMenu) InsertOne() error {
 	_, err := db.GetDefaultEngine().InsertOne(p)
 	// TODO:  casbin.GetEnforcer().AddPermissionForUser(strconv.Itoa(p.RoleId),...)
 	return err
 }
 
-func (p *SRoleMenu) Delete() error {
+func (p *RoleMenu) Delete() error {
 	_, err := db.GetDefaultEngine().Delete(p)
 	casbin.GetEnforcer().DeletePermissionsForUser(strconv.Itoa(p.RoleId))
 	return err
 }
 
-type SRoleMenuDetail struct {
-	Id       int                `xorm:"pk autoincr" json:"id"`
-	ParentId int                `json:"parent_id"`
-	SubIds   map[int]bool       `xorm:"-",json:"-"`
-	Name     string             `json:"name"`
-	Method   string             `json:"method"`
-	Path     string             `json:"path"`
-	Icon     string             `json:"icon"`
-	OrderNo  int                `json:"order_no"`
-	List     []*SRoleMenuDetail `xorm:"-" json:"list,omitempty"`
+type RoleMenuDetail struct {
+	Id       int               `xorm:"pk autoincr" json:"id"`
+	ParentId int               `json:"parent_id"`
+	SubIds   map[int]bool      `xorm:"-",json:"-"`
+	Name     string            `json:"name"`
+	Method   string            `json:"method"`
+	Path     string            `json:"path"`
+	Icon     string            `json:"icon"`
+	OrderNo  int               `json:"order_no"`
+	List     []*RoleMenuDetail `xorm:"-" json:"list,omitempty"`
 }
 
-func (p *SRoleMenuDetail) SelectMainMenuByUserId(userId int) (records []*SRoleMenuDetail, err error) {
+func (p *RoleMenuDetail) SelectMainMenuByUserId(userId int) (records []*RoleMenuDetail, err error) {
 	err = db.GetDefaultEngine().SQL(`SELECT menu.id,
        menu.name,
        menu.method,
@@ -57,11 +58,11 @@ FROM s_user user
 WHERE user.id = ?
   AND menu.type = 0
   AND menu.state = 1
-ORDER BY menu.parent_id`, userId, MenuTypeMain).Find(&records)
+ORDER BY menu.parent_id`, userId, s_menu.TypeMain).Find(&records)
 	return
 }
 
-func (p *SRoleMenuDetail) SelectMainMenuByRoleId(roleId int) (records []*SRoleMenuDetail, err error) {
+func (p *RoleMenuDetail) SelectMainMenuByRoleId(roleId int) (records []*RoleMenuDetail, err error) {
 	err = db.GetDefaultEngine().SQL(`SELECT menu.id,
        menu.name,
        menu.method,
@@ -74,6 +75,6 @@ FROM s_role_menu role_menu
 WHERE role_menu.role_id = ?
   AND menu.type = ?
   AND menu.state = 1
-ORDER BY menu.parent_id`, roleId, MenuTypeMain).Find(&records)
+ORDER BY menu.parent_id`, roleId, s_menu.TypeMain).Find(&records)
 	return
 }

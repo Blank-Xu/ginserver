@@ -1,7 +1,8 @@
 package admin
 
 import (
-	"ginserver/internal/app/models"
+	"ginserver/internal/app/models/log"
+	"ginserver/internal/app/models/s_user"
 	"ginserver/tools/utils"
 
 	"github.com/gin-gonic/gin"
@@ -19,7 +20,7 @@ func (p *ControllerChangePwd) Get(ctx *gin.Context) {
 func (p *ControllerChangePwd) Post(ctx *gin.Context) {
 	p.New(ctx)
 	var err error
-	req := new(models.SUserChangePwd)
+	req := new(s_user.UserChangePwd)
 	if err = ctx.ShouldBind(req); err != nil {
 		p.RespErrInvalidParams()
 		return
@@ -33,7 +34,7 @@ func (p *ControllerChangePwd) Post(ctx *gin.Context) {
 		return
 	}
 	// TODO: 验证密码强度
-	recordUser := &models.SUserUpdate{Id: p.GetUserId()}
+	recordUser := &s_user.UserUpdate{Id: p.GetUserId()}
 	if _, err := recordUser.SelectOne(recordUser); err != nil {
 		p.RespErrDBError(err)
 		return
@@ -47,6 +48,6 @@ func (p *ControllerChangePwd) Post(ctx *gin.Context) {
 		p.RespErrDBError(err)
 		return
 	}
-	p.Log(models.LogTypeChangePwd, models.LogLevelInfo)
+	p.LogDB(log.TypeChangePwd, log.LevelInfo)
 	p.RespCreated(nil)
 }

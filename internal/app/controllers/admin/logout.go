@@ -1,7 +1,7 @@
 package admin
 
 import (
-	"ginserver/internal/app/models"
+	"ginserver/internal/app/models/log"
 
 	"github.com/gin-gonic/gin"
 )
@@ -12,6 +12,6 @@ type ControllerLogout struct {
 
 func (p *ControllerLogout) Get(ctx *gin.Context) {
 	p.New(ctx)
-	p.Log(models.LogTypeLogout, models.LogLevelInfo)
+	p.LogDB(log.TypeLogout, log.LevelInfo)
 	p.RespRedirect302("/admin/login")
 }

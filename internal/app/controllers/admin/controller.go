@@ -4,10 +4,13 @@ import (
 	"encoding/json"
 	"net/http"
 
+	"github.com/sirupsen/logrus"
+
+	"ginserver/internal/app/models/log"
+
 	"ginserver/tools/middleware"
 
 	"ginserver/init/config"
-	"ginserver/internal/app/models"
 	"ginserver/tools/e"
 
 	"github.com/gin-gonic/gin"
@@ -121,13 +124,19 @@ func (p *Controller) Render(tpl string, value map[string]interface{}) {
 	p.HTML(http.StatusOK, tpl, value)
 }
 
+func (p *Controller) LogErr(err error) {
+	if err != nil {
+		logrus.Error(err)
+	}
+}
+
 var logWithoutParamsRouter = map[string]bool{
 	"/admin/login":      true,
 	"/admin/change_pwd": true,
 }
 
-func (p *Controller) Log(lType models.LogType, level models.LogLevel, remark ...string) {
-	recordLog := &models.Log{
+func (p *Controller) LogDB(lType log.Type, level log.Level, remark ...string) {
+	recordLog := &log.Log{
 		Type:   lType,
 		Level:  level,
 		UserId: p.userId,
@@ -143,5 +152,5 @@ func (p *Controller) Log(lType models.LogType, level models.LogLevel, remark ...
 	if len(remark) > 0 {
 		recordLog.Remark = remark[0]
 	}
-	recordLog.InsertOne(recordLog)
+	p.LogErr(recordLog.InsertOne())
 }
