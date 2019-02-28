@@ -35,7 +35,7 @@ func (p *ControllerLogin) Post(ctx *gin.Context) {
 		err error
 	)
 	if err = p.ShouldBind(req); err != nil {
-		p.RespErrInvalidParams(err)
+		p.RespErrInvalidParams()
 		return
 	}
 	// check user
@@ -75,5 +75,5 @@ func (p *ControllerLogin) Post(ctx *gin.Context) {
 	// cache user
 	SetCacheUser(recordUser)
 	p.LogDB(log.TypeLogin, log.LevelInfo)
-	p.RespRedirect302("/admin")
+	p.RespOk(nil)
 }

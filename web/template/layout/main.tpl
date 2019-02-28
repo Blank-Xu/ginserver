@@ -187,6 +187,8 @@
 <script src="/static/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
 <script src="/static/bower_components/PACE/pace.min.js"></script>
 <script src="/static/dist/js/adminlte.min.js"></script>
+<script src="/static/plugins/bootstrap-validator/validator.min.js"></script>
+<script src="/static/plugins/jquery-form/jquery.form.min.js"></script>
 <script type="text/javascript">
     $(document).ajaxStart(function () {
         Pace.restart()

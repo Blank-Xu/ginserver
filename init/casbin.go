@@ -28,14 +28,12 @@ type enforcer struct {
 	*casbin.Enforcer
 }
 
-type roleMenu struct {
-	RoleId string
-	Path   string
-	Method string
-}
-
 func (p *enforcer) loadRoleMenuPolicy() error {
-	var rules []*roleMenu
+	var rules []*struct {
+		RoleId string
+		Path   string
+		Method string
+	}
 	err := db.GetDefaultEngine().SQL(
 		`SELECT role_menu.role_id,
        menu.path,
@@ -54,13 +52,11 @@ ORDER BY menu.parent_id`).Find(&rules)
 	return nil
 }
 
-type userRole struct {
-	UserId string
-	RoleId string
-}
-
 func (p *enforcer) loadUserRolePolicy() error {
-	var rules []*userRole
+	var rules []*struct {
+		UserId string
+		RoleId string
+	}
 	if err := db.GetDefaultEngine().SQL("SELECT * FROM s_user_role").Find(&rules); err != nil {
 		return err
 	}

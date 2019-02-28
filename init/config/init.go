@@ -14,11 +14,11 @@ var cfg = new(config)
 func Init(file string) {
 	byt, err := ioutil.ReadFile(file)
 	if err != nil {
-		panic(fmt.Sprintf("load config error, file: [%s], err: [%v]", file, err))
+		panic(fmt.Sprintf("Load config error, file: [%s], err: [%v]", file, err))
 	}
 
 	if err = yaml.Unmarshal(byt, cfg); err != nil {
-		panic(fmt.Sprintf("read config error, file: [%s], err: [%v]", file, err))
+		panic(fmt.Sprintf("Read config error, file: [%s], err: [%v]", file, err))
 	}
 }
 

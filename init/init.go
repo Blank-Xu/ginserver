@@ -31,7 +31,7 @@ func Init() {
 
 	redisInit()
 
-	dbsInit()
+	dbInit()
 
 	modelsInit()
 

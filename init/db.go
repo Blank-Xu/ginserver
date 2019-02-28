@@ -13,12 +13,12 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-func dbsInit() {
-	var cfgDb = config.GetConfig().DataBase
+func dbInit() {
+	var cfgDatabase = config.GetConfig().DataBase
 
-	engines := make([]*xorm.Engine, len(cfgDb))
-	for idx := range cfgDb {
-		engines[idx] = newEngine(cfgDb[idx])
+	engines := make([]*xorm.Engine, len(cfgDatabase))
+	for idx := range cfgDatabase {
+		engines[idx] = newEngine(cfgDatabase[idx])
 	}
 	db.SetEngines(&engines)
 	// db.SetEngines will set default engine by index 0

@@ -1,6 +1,7 @@
 module ginserver
 
 require (
+	cloud.google.com/go v0.34.0 // indirect
 	github.com/PuerkitoBio/purell v1.1.1 // indirect
 	github.com/boj/redistore v0.0.0-20180917114910-cd5dcc76aeff // indirect
 	github.com/casbin/casbin v1.8.0
@@ -15,6 +16,7 @@ require (
 	github.com/go-sql-driver/mysql v1.4.1
 	github.com/go-xorm/core v0.6.2
 	github.com/go-xorm/xorm v0.7.1
+	github.com/google/go-cmp v0.2.0 // indirect
 	github.com/gorilla/sessions v1.1.3 // indirect
 	github.com/quasoft/memstore v0.0.0-20180925164028-84a050167438 // indirect
 	github.com/sirupsen/logrus v1.3.0
@@ -22,7 +24,8 @@ require (
 	github.com/swaggo/gin-swagger v1.0.0
 	github.com/swaggo/swag v1.4.1 // indirect
 	github.com/ugorji/go/codec v0.0.0-20190204201341-e444a5086c43 // indirect
+	golang.org/x/crypto v0.0.0-20190211182817-74369b46fc67 // indirect
 	golang.org/x/sys v0.0.0-20190215142949-d0b11bdaac8a // indirect
-	golang.org/x/tools v0.0.0-20190214204934-8dcb7bc8c7fe // indirect
+	golang.org/x/tools v0.0.0-20190227232517-f0a709d59f0f // indirect
 	gopkg.in/yaml.v2 v2.2.2
 )
