@@ -118,9 +118,9 @@ func (p *Controller) Render(tpl string, value map[string]interface{}) {
 		value = make(map[string]interface{})
 	}
 	value["AppName"] = config.GetConfig().AppName
-	value["main_user"] = user
-	value["main_menu"] = menu
-	value["active_path"] = p.Request.URL.Path
+	value["MainUser"] = user
+	value["MainMenu"] = menu
+	value["ActivePath"] = p.Request.URL.Path
 	p.HTML(http.StatusOK, tpl, value)
 }
 

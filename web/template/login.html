@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="/static/dist/css/AdminLTE.min.css">
     <link rel="stylesheet" href="/static/dist/css/skins/skin-blue.min.css">
     <link rel="stylesheet" href="/static/plugins/iCheck/square/blue.css">
+    <link rel="stylesheet" href="/static/plugins/toastr/toastr.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
 </head>
 
@@ -58,6 +59,7 @@
 <script src="/static/plugins/iCheck/icheck.min.js"></script>
 <script src="/static/plugins/bootstrap-validator/validator.min.js"></script>
 <script src="/static/plugins/jquery-form/jquery.form.min.js"></script>
+<script src="/static/plugins/toastr/toastr.min.js"></script>
 <script>
     $(function () {
         $('input').iCheck({
@@ -71,6 +73,10 @@
             $("input[name='rememberMe']").iCheck('check');
             $("input[name='rememberMe']").iCheck('update');
         }
+        toastr.options = {
+            closeButton: true,
+            positionClass: "toast-top-center"
+        };
     });
 
     var options = {
@@ -88,10 +94,14 @@
         success: function () {
             window.location = '/admin';
         },
-        error: function(xhr) {
+        error: function (xhr) {
             if (xhr) {
-                var resp = xhr.responseJSON;
-                alert("code: "+resp.code+"\nmessage: "+resp.msg);
+                if (xhr.responseJSON.code === 4001){
+                    toastr.error('please input correct username or password');
+                    $("input[name='username']").focus();
+                } else {
+                    toastr.error(xhr.responseText, 'error');
+                }
             }
         },
     };

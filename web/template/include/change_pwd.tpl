@@ -24,8 +24,7 @@
                 <div class="form-group">
                     <label for="confirm_password" class="col-sm-2 control-label">Confirm Password</label>
                     <div class="col-sm-10">
-                        <input type="password" required class="form-control" name="confirm_password"
-                               placeholder="Confirm Password">
+                        <input type="password" required class="form-control" name="confirm_password" placeholder="Confirm Password">
                         <div class="help-block with-errors"></div>
                     </div>
                 </div>
@@ -40,12 +39,15 @@
     <script type="text/javascript">
         var options = {
             success: function () {
-                alert("success");
+                $('#frmChangePwd').resetForm();
+                toastr.options.onHidden = function () {
+                    window.location = '/admin/logout';
+                };
+                toastr.success('you must login again by your new password.', 'success');
             },
-            error: function(xhr) {
+            error: function (xhr) {
                 if (xhr) {
-                    var resp = xhr.responseJSON;
-                    alert("code: "+resp.code+"\nmessage: "+resp.msg);
+                    toastr.error(xhr.responseText, 'error');
                 }
             },
         };

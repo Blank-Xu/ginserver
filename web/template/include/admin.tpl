@@ -1,4 +1,4 @@
-{{define "title"}}Admin{{end}}
+{{define "title"}}Home{{end}}
 {{define "css"}}{{end}}
 {{define "content"}}
     <div>

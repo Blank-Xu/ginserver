@@ -32,20 +32,22 @@ func (p *RoleMenu) Delete() error {
 }
 
 type RoleMenuDetail struct {
-	Id       int               `xorm:"pk autoincr" json:"id"`
-	ParentId int               `json:"parent_id"`
-	SubIds   map[int]bool      `xorm:"-",json:"-"`
-	Name     string            `json:"name"`
-	Method   string            `json:"method"`
-	Path     string            `json:"path"`
-	Icon     string            `json:"icon"`
-	OrderNo  int               `json:"order_no"`
-	List     []*RoleMenuDetail `xorm:"-" json:"list,omitempty"`
+	Id          int               `xorm:"pk autoincr" json:"id"`
+	ParentId    int               `json:"parent_id"`
+	SubIds      map[int]bool      `xorm:"-",json:"-"`
+	Name        string            `json:"name"`
+	Description string            `json:"description"`
+	Method      string            `json:"method"`
+	Path        string            `json:"path"`
+	Icon        string            `json:"icon"`
+	OrderNo     int               `json:"order_no"`
+	List        []*RoleMenuDetail `xorm:"-" json:"list,omitempty"`
 }
 
 func (p *RoleMenuDetail) SelectMainMenuByUserId(userId int) (records []*RoleMenuDetail, err error) {
 	err = db.GetDefaultEngine().SQL(`SELECT menu.id,
        menu.name,
+       menu.description,
        menu.method,
        menu.path,
        menu.icon,
@@ -65,6 +67,7 @@ ORDER BY menu.parent_id`, userId, s_menu.TypeMain).Find(&records)
 func (p *RoleMenuDetail) SelectMainMenuByRoleId(roleId int) (records []*RoleMenuDetail, err error) {
 	err = db.GetDefaultEngine().SQL(`SELECT menu.id,
        menu.name,
+       menu.description,
        menu.method,
        menu.path,
        menu.icon,

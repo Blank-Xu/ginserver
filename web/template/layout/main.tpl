@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="/static/dist/css/AdminLTE.min.css">
     <link rel="stylesheet" href="/static/dist/css/skins/skin-blue.min.css">
     <link rel="stylesheet" href="/static/plugins/pace/pace.min.css">
+    <link rel="stylesheet" href="/static/plugins/toastr/toastr.min.css">
     {{template "css" .}}
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
 </head>
@@ -38,7 +39,7 @@
                             <i class="fa fa-home" style="font-size:14px;"></i>
                         </a>
                     </li>
-                    {{with .main_user}}
+                    {{with .MainUser}}
                         <li class="dropdown user user-menu">
                             <!-- Menu Toggle Button -->
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
@@ -100,7 +101,7 @@
             </form>
             <!-- Sidebar Menu -->
             <ul class="sidebar-menu" data-widget="tree">
-                {{range .main_menu}}
+                {{range .MainMenu}}
                     {{if .List}}
                         <li class="treeview">
                             <a href="#">
@@ -158,12 +159,12 @@
     <div class="content-wrapper">
         <!-- Content Header (Page header) -->
         <section class="content-header">
-            <h1>Page Header
-                <small>Optional description</small>
+            <h1>{{template "title" .}}
+                {{/*<small>Optional description</small>*/}}
             </h1>
             <ol class="breadcrumb">
-                <li><a href="#"><i class="fa fa-dashboard"></i> Level</a></li>
-                <li class="active">Here</li>
+                <li><a href="/admin"><i class="fa fa-dashboard"></i> Home</a></li>
+                {{/*<li class="active">Here</li>*/}}
             </ol>
         </section>
         <!-- Main content -->
@@ -189,6 +190,7 @@
 <script src="/static/dist/js/adminlte.min.js"></script>
 <script src="/static/plugins/bootstrap-validator/validator.min.js"></script>
 <script src="/static/plugins/jquery-form/jquery.form.min.js"></script>
+<script src="/static/plugins/toastr/toastr.min.js"></script>
 <script type="text/javascript">
     $(document).ajaxStart(function () {
         Pace.restart()
@@ -196,13 +198,16 @@
     /** to add active class and remove previously clicked menu */
     var url = window.location;
     // for sidebar menu but not for treeview submenu
-    $('ul.sidebar-menu a').filter(function() {
+    $('ul.sidebar-menu a').filter(function () {
         return this.href == url;
     }).parent().siblings().removeClass('active').end().addClass('active');
     // for treeview which is like a submenu
-    $('ul.treeview-menu a').filter(function() {
+    $('ul.treeview-menu a').filter(function () {
         return this.href == url;
     }).parentsUntil(".sidebar-menu > .treeview-menu").siblings().removeClass('active').end().addClass('active');
+    $(function () {
+        toastr.options = {closeButton: true}
+    })
 </script>
 <script src="/static/bower_components/jquery-slimscroll/jquery.slimscroll.min.js"></script>
 <script src="/static/bower_components/fastclick/lib/fastclick.js"></script>

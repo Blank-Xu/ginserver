@@ -89,19 +89,20 @@ VALUES ('admin', 1, 10000);
 -- table s_menu
 CREATE TABLE IF NOT EXISTS s_menu
 (
-  id        int AUTO_INCREMENT PRIMARY KEY,
-  type      tinyint(2)   NOT NULL DEFAULT 0 COMMENT '0:main, 1:button, 2:href',
-  name      varchar(64)  NOT NULL,
-  method    varchar(32)  NOT NULL COMMENT 'GET, POST, PUT, PATCH, HEAD, OPTIONS, DELETE, CONNECT, TRACE',
-  path      varchar(255) NOT NULL DEFAULT '',
-  icon      varchar(255) NOT NULL DEFAULT '',
-  level     tinyint(3)   NOT NULL DEFAULT 0,
-  order_no  tinyint(4)   NOT NULL DEFAULT 1,
-  state     tinyint(1)   NOT NULL DEFAULT 0 COMMENT '0:disable, 1:enable',
-  parent_id tinyint(4)   NOT NULL DEFAULT 0,
-  created   timestamp    NOT NULL DEFAULT current_timestamp,
-  updater   int          NOT NULL,
-  updated   timestamp    NOT NULL DEFAULT current_timestamp ON UPDATE current_timestamp,
+  id          int AUTO_INCREMENT PRIMARY KEY,
+  type        tinyint(2)   NOT NULL DEFAULT 0 COMMENT '0:main, 1:button, 2:href',
+  name        varchar(64)  NOT NULL,
+  description varchar(255) NOT NULL DEFAULT '',
+  method      varchar(32)  NOT NULL COMMENT 'GET, POST, PUT, PATCH, HEAD, OPTIONS, DELETE, CONNECT, TRACE',
+  path        varchar(255) NOT NULL DEFAULT '',
+  icon        varchar(255) NOT NULL DEFAULT '',
+  level       tinyint(3)   NOT NULL DEFAULT 0,
+  order_no    tinyint(4)   NOT NULL DEFAULT 1,
+  state       tinyint(1)   NOT NULL DEFAULT 0 COMMENT '0:disable, 1:enable',
+  parent_id   tinyint(4)   NOT NULL DEFAULT 0,
+  created     timestamp    NOT NULL DEFAULT current_timestamp,
+  updater     int          NOT NULL,
+  updated     timestamp    NOT NULL DEFAULT current_timestamp ON UPDATE current_timestamp,
   INDEX idx_s_menu_parent_id (parent_id),
   INDEX idx_s_menu_method (method),
   INDEX idx_s_menu_path (path)
@@ -118,7 +119,7 @@ VALUES ('Home', 'GET', '/admin', '', 0, 1, 1, 0, 10000),
 -- table s_role_menu
 CREATE TABLE IF NOT EXISTS s_role_menu
 (
-  id int AUTO_INCREMENT PRIMARY KEY ,
+  id      int AUTO_INCREMENT PRIMARY KEY,
   role_id int NOT NULL,
   menu_id int NOT NULL,
   INDEX idx_s_role_menu (role_id),
@@ -171,7 +172,7 @@ VALUES ('admin', 'bfba91e771a65b4f0a10ba358d9c7655', 'dc83c7d015da92a93b0bd90144
 -- table s_user_role
 CREATE TABLE IF NOT EXISTS s_user_role
 (
-  id int AUTO_INCREMENT PRIMARY KEY ,
+  id      int AUTO_INCREMENT PRIMARY KEY,
   user_id int NOT NULL,
   role_id int NOT NULL,
   INDEX idx_s_user_role (user_id),
