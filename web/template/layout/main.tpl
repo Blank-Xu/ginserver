@@ -188,6 +188,7 @@
 <script src="/static/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
 <script src="/static/bower_components/PACE/pace.min.js"></script>
 <script src="/static/dist/js/adminlte.min.js"></script>
+<script src="/static/plugins/iCheck/icheck.min.js"></script>
 <script src="/static/plugins/bootstrap-validator/validator.min.js"></script>
 <script src="/static/plugins/jquery-form/jquery.form.min.js"></script>
 <script src="/static/plugins/toastr/toastr.min.js"></script>
@@ -206,6 +207,11 @@
         return this.href == url;
     }).parentsUntil(".sidebar-menu > .treeview-menu").siblings().removeClass('active').end().addClass('active');
     $(function () {
+        $('input').iCheck({
+            checkboxClass: 'icheckbox_square-blue',
+            radioClass: 'iradio_square-blue',
+            increaseArea: '20%'
+        });
         toastr.options = {closeButton: true}
     })
 </script>

@@ -53,15 +53,15 @@ func (p *UserInsert) TableName() string {
 
 type UserUpdate struct {
 	*db.Model `xorm:"-" json:"-"`
-	Id        int    `xorm:"pk autoincr" json:"-"`
-	Password  string `json:"-"`
-	Salt      string `json:"-"`
-	State     bool   `json:"state"`
-	Nickname  string `json:"nickname"`
-	Email     string `json:"email"`
-	Phone     string `json:"phone"`
-	Remark    string `json:"remark"`
-	Updater   int
+	Id        int         `xorm:"pk autoincr" json:"-"`
+	Password  string      `json:"-"`
+	Salt      string      `json:"-"`
+	State     bool        `json:"state"`
+	Nickname  string      `json:"nickname"`
+	Email     string      `json:"email"`
+	Phone     string      `json:"phone"`
+	Remark    string      `json:"remark"`
+	Updater   int         `json:"-"`
 	Updated   db.JSONTime `xorm:"updated" json:"-"`
 }
 
@@ -85,11 +85,14 @@ type UserChangePwd struct {
 type UserInfoUpdate struct {
 	*db.Model `xorm:"-" json:"-"`
 	Id        int    `xorm:"pk autoincr" json:"-"`
-	Nickname  string `json:"nickname"`
-	Icon      string `json:"icon"`
-	Email     string `json:"email"`
-	Phone     string `json:"phone"`
-	Remark    string `json:"remark"`
+	Nickname  string `form:"nickname" json:"nickname"`
+	Icon      string `form:"icon" json:"icon"`
+	Email     string `form:"email" json:"email"`
+	Phone     string `form:"phone" json:"phone"`
 	Updater   int
 	Updated   db.JSONTime `xorm:"updated" json:"-"`
+}
+
+func (p *UserInfoUpdate) TableName() string {
+	return "s_user"
 }

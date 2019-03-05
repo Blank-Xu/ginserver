@@ -3,7 +3,8 @@ package log
 type Type int
 
 const (
-	TypeLogin Type = iota + 1
+	TypeOther Type = iota
+	TypeLogin
 	TypeLogout
 	TypeChangePwd
 )

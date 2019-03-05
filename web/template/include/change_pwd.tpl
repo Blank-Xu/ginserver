@@ -7,24 +7,27 @@
         </div>
         <form role="form" id="frmChangePwd" data-toggle="validator" class="form-horizontal" action="/admin/change_pwd" method="post">
             <div class="box-body">
-                <div class="form-group">
+                <div class="form-group has-feedback">
                     <label for="password" class="col-sm-2 control-label">Password</label>
                     <div class="col-sm-10">
                         <input type="password" required class="form-control" name="password" placeholder="Password">
+                        <span class="glyphicon glyphicon-lock form-control-feedback"></span>
                         <div class="help-block with-errors"></div>
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group has-feedback">
                     <label for="new_password" class="col-sm-2 control-label">New Password</label>
                     <div class="col-sm-10">
                         <input type="password" required class="form-control" name="new_password" placeholder="New Password">
+                        <span class="glyphicon glyphicon-lock form-control-feedback"></span>
                         <div class="help-block with-errors"></div>
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group has-feedback">
                     <label for="confirm_password" class="col-sm-2 control-label">Confirm Password</label>
                     <div class="col-sm-10">
                         <input type="password" required class="form-control" name="confirm_password" placeholder="Confirm Password">
+                        <span class="glyphicon glyphicon-lock form-control-feedback"></span>
                         <div class="help-block with-errors"></div>
                     </div>
                 </div>
