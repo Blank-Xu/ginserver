@@ -148,14 +148,20 @@ func (p *Controller) LogDB(lType log.Type, level log.Level, remark ...string) {
 			break
 		}
 	}
-	if len(params) == 0 && p.Request.Form != nil {
-		param, _ := json.Marshal(p.Request.Form)
-		params = string(param)
+	if len(params) == 0 {
+		if p.Request.Form != nil {
+			param, _ := json.Marshal(p.Request.Form)
+			params = string(param)
+		} else {
+			params = "{}"
+		}
 	}
 
 	if len(remark) > 0 {
 		lRemark = remark[0]
 	}
 
-	p.LogErr(log.Insert(level, lType, p.userId, p.roleId, p.Request.Method, p.Request.URL.Path, params, p.ClientIP(), lRemark))
+	p.LogErr(
+		log.Insert(level, lType, p.userId, p.roleId, p.Request.Method, p.Request.URL.Path,
+			params, p.ClientIP(), lRemark))
 }

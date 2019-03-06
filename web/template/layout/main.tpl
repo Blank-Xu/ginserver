@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="/static/dist/css/skins/skin-blue.min.css">
     <link rel="stylesheet" href="/static/plugins/pace/pace.min.css">
     <link rel="stylesheet" href="/static/plugins/toastr/toastr.min.css">
+    <link rel="stylesheet" href="/static/plugins/bootstrap-table/bootstrap-table.min.css">
     {{template "css" .}}
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
 </head>
@@ -217,6 +218,8 @@
 </script>
 <script src="/static/bower_components/jquery-slimscroll/jquery.slimscroll.min.js"></script>
 <script src="/static/bower_components/fastclick/lib/fastclick.js"></script>
+<script src="/static/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+<script src="/static/plugins/bootstrap-table/bootstrap-table-locale-all.min.js"></script>
 {{template "js" .}}
 </body>
 </html>
