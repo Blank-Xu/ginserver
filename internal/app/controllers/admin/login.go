@@ -71,9 +71,16 @@ func (p *ControllerLogin) Post(ctx *gin.Context) {
 	}
 	recordUser.LoginTime = db.JSONTime(time.Now())
 	recordUser.LoginIp = p.ClientIP()
-	recordUser.Update(recordUser, recordUser.Id, "login_time,login_ip")
+	if _, err = recordUser.Update(recordUser, recordUser.Id, "login_time,login_ip"); err != nil {
+		p.RespErrDBError(err)
+		return
+	}
 	// cache user
 	SetCacheUser(recordUser)
+
+	p.userId = recordUser.Id
+	p.roleId = recordRole.Id
+
 	p.LogDB(log.TypeLogin, log.LevelInfo)
 	p.RespOk(nil)
 }

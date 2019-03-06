@@ -29,7 +29,10 @@ func (p *ControllerInfo) Post(ctx *gin.Context) {
 		p.RespErrDBError(err)
 		return
 	}
-	SetCacheUserById(p.userId)
+	if _, err = SetCacheUserById(p.userId); err != nil {
+		p.RespErrInternalServerError(err)
+		return
+	}
 	p.LogDB(log.TypeOther, log.LevelInfo)
 	p.RespOk(nil)
 }

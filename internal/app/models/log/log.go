@@ -27,3 +27,9 @@ func (p *Log) InsertOne() (err error) {
 	_, err = db.GetDefaultEngine().InsertOne(p)
 	return
 }
+
+func Insert(level Level, lType Type, userId, roleId int, method, path, params, ip, remark string) (err error) {
+	_, err = db.GetDefaultEngine().Exec(
+		"INSERT INTO log (level, type, user_id, role_id, method, path, params, ip, remark) VALUES (?,?,?,?,?,?,?,?,?)", level, lType, userId, roleId, method, path, params, ip, remark)
+	return
+}

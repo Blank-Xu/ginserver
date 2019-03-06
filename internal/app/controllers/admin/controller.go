@@ -90,12 +90,14 @@ func (p *Controller) RespErrNotFound() {
 }
 
 func (p *Controller) RespErrInternalServerError(err error) {
-	p.Error(err)
+	p.LogDB(log.TypeDBError, log.LevelError, p.Error(err).Error())
+
 	p.AbortWithStatusJSON(e.RespErrHttp(http.StatusInternalServerError))
 }
 
 func (p *Controller) RespErrDBError(err error) {
-	p.Error(err)
+	p.LogDB(log.TypeInternalServerError, log.LevelError, p.Error(err).Error())
+
 	if gin.Mode() != gin.ReleaseMode {
 		p.AbortWithStatusJSON(http.StatusNotImplemented, e.RespErrCode(e.CodeDBErr, err))
 	} else {
@@ -130,27 +132,30 @@ func (p *Controller) LogErr(err error) {
 	}
 }
 
-var logWithoutParamsRouter = map[string]bool{
-	"/admin/login":      true,
-	"/admin/change_pwd": true,
+var logWithoutParamsPath = []string{
+	"/admin/login",
+	"/admin/change_pwd",
 }
 
 func (p *Controller) LogDB(lType log.Type, level log.Level, remark ...string) {
-	recordLog := &log.Log{
-		Type:   lType,
-		Level:  level,
-		UserId: p.userId,
-		RoleId: p.roleId,
-		Method: p.Request.Method,
-		Path:   p.Request.URL.Path,
-		Ip:     p.ClientIP(),
+	var (
+		params  string
+		lRemark string
+	)
+	for _, v := range logWithoutParamsPath {
+		if v == p.Request.URL.Path {
+			params = "{}"
+			break
+		}
 	}
-	if !logWithoutParamsRouter[recordLog.Path] {
+	if len(params) == 0 && p.Request.Form != nil {
 		param, _ := json.Marshal(p.Request.Form)
-		recordLog.Params = string(param)
+		params = string(param)
 	}
+
 	if len(remark) > 0 {
-		recordLog.Remark = remark[0]
+		lRemark = remark[0]
 	}
-	p.LogErr(recordLog.InsertOne())
+
+	p.LogErr(log.Insert(level, lType, p.userId, p.roleId, p.Request.Method, p.Request.URL.Path, params, p.ClientIP(), lRemark))
 }

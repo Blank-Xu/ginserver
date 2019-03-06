@@ -32,13 +32,14 @@ func registerAdminRouter(router *gin.Engine) {
 	// use session middleware
 	groupAdmin.Use(sessions.Sessions(cookieName, newSessionStore()))
 	{
-		// register login router
+		// register /admin/login router
 		groupAdmin.GET("login", new(admin.ControllerLogin).Get)
 		groupAdmin.POST("login", new(admin.ControllerLogin).Post)
-		// register logout router
-		groupAdmin.GET("logout", middleware.SessionDestroy(), new(admin.ControllerLogout).Get)
 
 		groupAdmin.Use(middleware.SessionAuth("/admin/login"))
+		// register /admin/logout router
+		groupAdmin.GET("logout", new(admin.ControllerLogout).Get, middleware.SessionDestroy())
+		// register /admin router
 		groupAdmin.GET("/", new(admin.ControllerAdmin).Get)
 		groupAdmin.GET("404", new(admin.Controller404).Get)
 		groupAdmin.GET("500", new(admin.Controller500).Get)
