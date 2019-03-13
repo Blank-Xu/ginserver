@@ -31,10 +31,14 @@ func SetCacheRoleMenu(roleId int) error {
 	return nil
 }
 
-func genMenusByRoleId(roleId int) (menu []*s_role.RoleMenuDetail, err error) {
-	var records []*s_role.RoleMenuDetail
-	if records, err = new(s_role.RoleMenuDetail).SelectMainMenuByRoleId(roleId); err != nil {
-		return
+func genMenusByRoleId(roleId int) ([]*s_role.RoleMenuDetail, error) {
+	var (
+		record  s_role.RoleMenuDetail
+		records []*s_role.RoleMenuDetail
+		err     error
+	)
+	if records, err = record.SelectMainMenuByRoleId(roleId); err != nil {
+		return nil, err
 	}
 
 	var (
@@ -48,13 +52,12 @@ func genMenusByRoleId(roleId int) (menu []*s_role.RoleMenuDetail, err error) {
 		data[record.ParentId][record.Id] = record
 	}
 
-	menu = buildMenuTree(0, data)
-	return
+	return buildMenuTree(0, data), nil
 }
 
 // buildMenuTree to build main menu tree
 func buildMenuTree(id int, data map[int]map[int]*s_role.RoleMenuDetail) []*s_role.RoleMenuDetail {
-	list := make([]*s_role.RoleMenuDetail, 0)
+	list := make([]*s_role.RoleMenuDetail, 0, len(data))
 	for index, record := range data[id] {
 		if data[index] != nil {
 			record.List = buildMenuTree(index, data)

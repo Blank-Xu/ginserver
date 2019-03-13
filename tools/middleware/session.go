@@ -37,10 +37,8 @@ func SessionAuth(redirectLocation string) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		if session := sessions.Default(c); session != nil {
 			// login session check
-			uid := session.Get(KeyUserId)
-			role := session.Get(KeyRoleId)
-			if userId, ok := uid.(int); ok {
-				if roleId, ok := role.(int); ok {
+			if userId, ok := session.Get(KeyUserId).(int); ok {
+				if roleId, ok := session.Get(KeyRoleId).(int); ok {
 					if userId > 0 && roleId > 0 {
 						c.Set(KeyUserId, userId)
 						c.Set(KeyRoleId, roleId)

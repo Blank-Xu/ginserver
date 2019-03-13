@@ -8,13 +8,13 @@ import (
 	"ginserver/tools/middleware"
 
 	"github.com/gin-gonic/gin"
-	ginSwagger "github.com/swaggo/gin-swagger"
+	swagger "github.com/swaggo/gin-swagger"
 	"github.com/swaggo/gin-swagger/swaggerFiles"
 )
 
 func registerApiRouter(router *gin.Engine) {
 	// register swagger doc router
-	router.GET("swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+	router.GET("swagger/*any", swagger.WrapHandler(swaggerFiles.Handler))
 
 	groupApi := router.Group("api")
 	groupApi.GET("/", func(ctx *gin.Context) {

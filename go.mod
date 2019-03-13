@@ -14,15 +14,15 @@ require (
 	github.com/go-openapi/jsonpointer v0.18.0 // indirect
 	github.com/go-openapi/swag v0.18.0 // indirect
 	github.com/go-sql-driver/mysql v1.4.1
+	github.com/go-xorm/builder v0.3.2
 	github.com/go-xorm/core v0.6.2
 	github.com/go-xorm/xorm v0.7.1
 	github.com/google/go-cmp v0.2.0 // indirect
 	github.com/gorilla/sessions v1.1.3 // indirect
 	github.com/quasoft/memstore v0.0.0-20180925164028-84a050167438 // indirect
 	github.com/sirupsen/logrus v1.3.0
-	github.com/stretchr/testify v1.3.0 // indirect
-	github.com/swaggo/gin-swagger v1.0.0
-	github.com/swaggo/swag v1.4.1 // indirect
+	github.com/swaggo/gin-swagger v1.1.0
+	github.com/swaggo/swag v1.4.1
 	github.com/ugorji/go/codec v0.0.0-20190204201341-e444a5086c43 // indirect
 	golang.org/x/crypto v0.0.0-20190211182817-74369b46fc67 // indirect
 	golang.org/x/sys v0.0.0-20190215142949-d0b11bdaac8a // indirect

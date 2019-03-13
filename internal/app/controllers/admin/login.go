@@ -31,17 +31,19 @@ func (p *ControllerLogin) Get(ctx *gin.Context) {
 func (p *ControllerLogin) Post(ctx *gin.Context) {
 	p.New(ctx)
 	var (
-		req = new(s_user.UserLogin)
+		req s_user.UserLogin
 		err error
 	)
-	if err = p.ShouldBind(req); err != nil {
+	if err = p.ShouldBind(&req); err != nil {
 		p.RespErrInvalidParams()
 		return
 	}
 	// check user
-	recordUser := &s_user.User{Username: req.Username}
-	var has bool
-	if has, err = recordUser.SelectOne(recordUser); err != nil {
+	var (
+		recordUser = s_user.User{Username: req.Username}
+		has        bool
+	)
+	if has, err = recordUser.SelectOne(&recordUser); err != nil {
 		p.RespErrDBError(err)
 		return
 	}
@@ -55,7 +57,7 @@ func (p *ControllerLogin) Post(ctx *gin.Context) {
 		return
 	}
 	// check role
-	recordRole := new(s_role.Role)
+	var recordRole s_role.Role
 	if has, err = recordRole.SelectOneByUserId(recordUser.Id); err != nil {
 		p.RespErrDBError(err)
 		return
@@ -71,7 +73,7 @@ func (p *ControllerLogin) Post(ctx *gin.Context) {
 	}
 	recordUser.LoginTime = db.JSONTime(time.Now())
 	recordUser.LoginIp = p.ClientIP()
-	if _, err = recordUser.Update(recordUser, recordUser.Id, "login_time,login_ip"); err != nil {
+	if _, err = recordUser.Update(&recordUser, recordUser.Id, "login_time,login_ip"); err != nil {
 		p.RespErrDBError(err)
 		return
 	}

@@ -1,0 +1,127 @@
+basePath: /api/v1
+definitions:
+  e.ResponseErr:
+    properties:
+      code:
+        example: 400
+        type: integer
+      msg:
+        example: status bad request
+        type: string
+    type: object
+  s_user.User:
+    properties:
+      created:
+        type: string
+      email:
+        type: string
+      icon:
+        type: string
+      id:
+        type: integer
+      login_ip:
+        type: string
+      login_time:
+        type: string
+      nickname:
+        type: string
+      phone:
+        type: string
+      remark:
+        type: string
+      state:
+        type: boolean
+      updated:
+        type: string
+      updater:
+        type: integer
+      username:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact:
+    email: support@swagger.io
+    name: API Support
+    url: http://www.swagger.io/support
+  description: This is a sample server.
+  license:
+    name: MIT
+    url: https://github.com/Blank-Xu/ginserver/blob/master/LICENSE
+  termsOfService: http://swagger.io/terms/
+  title: ginserver Swagger API
+  version: "0.1"
+paths:
+  /users/{id}:
+    get:
+      consumes:
+      - application/json
+      description: get string by ID
+      operationId: get-string-by-int
+      parameters:
+      - description: user id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/s_user.User'
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/e.ResponseErr'
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/e.ResponseErr'
+            type: object
+        "501":
+          description: Not Implemented
+          schema:
+            $ref: '#/definitions/e.ResponseErr'
+            type: object
+      summary: get an user record
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+  JWT Auth:
+    type: basic
+  OAuth2AccessCode:
+    authorizationUrl: https://example.com/oauth/authorize
+    flow: accessCode
+    scopes:
+      admin: ' Grants read and write access to administrative information'
+    tokenUrl: https://example.com/oauth/token
+    type: oauth2
+  OAuth2Application:
+    flow: application
+    scopes:
+      admin: ' Grants read and write access to administrative information'
+      write: ' Grants write access'
+    tokenUrl: https://example.com/oauth/token
+    type: oauth2
+  OAuth2Implicit:
+    authorizationUrl: https://example.com/oauth/authorize
+    flow: implicit
+    scopes:
+      admin: ' Grants read and write access to administrative information'
+      write: ' Grants write access'
+    type: oauth2
+  OAuth2Password:
+    flow: password
+    scopes:
+      admin: ' Grants read and write access to administrative information'
+      read: ' Grants read access'
+      write: ' Grants write access'
+    tokenUrl: https://example.com/oauth/token
+    type: oauth2
+swagger: "2.0"

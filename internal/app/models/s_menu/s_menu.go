@@ -25,11 +25,11 @@ func (p *SMenu) TableName() string {
 	return "s_menu"
 }
 
-func (p *SMenu) SelectByParentId(parentId int) (records []*SMenu, err error) {
-	err = db.GetDefaultEngine().SQL(`SELECT *
+func (p *SMenu) SelectByParentId(parentId int) ([]*SMenu, error) {
+	var records []*SMenu
+	return records, db.GetDefaultEngine().SQL(`SELECT *
 FROM s_menu
 WHERE parent_id = ?
   AND type = ?
   AND state = 1`, parentId, TypeMain).Find(&records)
-	return
 }

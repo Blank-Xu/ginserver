@@ -36,8 +36,8 @@ func (p *ControllerUsers) GetOne(ctx *gin.Context) {
 		return
 	}
 	cols, _ := ctx.GetQueryArray("cols")
-	record := &s_user.User{Id: id}
-	has, err := record.SelectOne(record, cols...)
+	var record = s_user.User{Id: id}
+	has, err := record.SelectOne(&record, cols...)
 	if err != nil {
 		p.RespErrDBError(err)
 		logrus.Error(err)
@@ -58,10 +58,12 @@ func (p *ControllerUsers) Get(ctx *gin.Context) {
 		p.RespErrInvalidParams(err)
 		return
 	}
-	record := new(s_user.User)
-	cols := ctx.GetStringSlice("cols")
-	var records []*s_user.User
-	if err = record.SelectCond(record, &records, nil, orderBy.String(), db.NewPaging(ctx), cols...); err != nil {
+	var (
+		cols    = ctx.GetStringSlice("cols")
+		record  s_user.User
+		records []*s_user.User
+	)
+	if err = record.SelectCond(&record, &records, nil, orderBy.String(), db.NewPaging(ctx), cols...); err != nil {
 		p.RespErrDBError(err)
 		logrus.Error(err)
 		return
@@ -71,7 +73,7 @@ func (p *ControllerUsers) Get(ctx *gin.Context) {
 
 func (p *ControllerUsers) Post(ctx *gin.Context) {
 	p.New(ctx)
-	record := new(s_user.UserInsert)
+	var record s_user.UserInsert
 	if err := ctx.BindJSON(record); err != nil {
 		p.RespErrInvalidParams(err)
 		logrus.Error(err)
@@ -82,7 +84,7 @@ func (p *ControllerUsers) Post(ctx *gin.Context) {
 	record.Password = utils.GenPassword(record.Password, record.Salt)
 	record.RegisterIp = ctx.ClientIP()
 
-	_, err := record.InsertOne(record)
+	_, err := record.InsertOne(&record)
 	if err != nil {
 		p.RespErrDBError(err)
 		logrus.Error(err)
@@ -98,8 +100,8 @@ func (p *ControllerUsers) Put(ctx *gin.Context) {
 		p.RespErrInvalidParams(ctx)
 		return
 	}
-	record := &s_user.UserUpdate{Id: id}
-	has, err := record.IsExists(record)
+	var record = s_user.UserUpdate{Id: id}
+	has, err := record.IsExists(&record)
 	if err != nil {
 		p.RespErrDBError(err)
 		logrus.Error(err)
@@ -110,13 +112,13 @@ func (p *ControllerUsers) Put(ctx *gin.Context) {
 		return
 	}
 
-	if err := ctx.BindJSON(record); err != nil {
+	if err := ctx.BindJSON(&record); err != nil {
 		p.RespErrInvalidParams(err)
 		return
 	}
 	record.Salt = utils.GenSalt()
 	record.Password = utils.GenPassword(record.Password, record.Salt)
-	if _, err = record.Update(record, record.Id); err != nil {
+	if _, err = record.Update(&record, record.Id); err != nil {
 		p.RespErrDBError(err)
 		logrus.Error(err)
 		return
@@ -132,9 +134,8 @@ func (p *ControllerUsers) Delete(ctx *gin.Context) {
 		return
 	}
 
-	record := &s_user.User{Id: id}
-	_, err := record.Delete(record)
-	if err != nil {
+	var record = s_user.User{Id: id}
+	if _, err := record.Delete(&record); err != nil {
 		p.RespErrDBError(err)
 		logrus.Error(err)
 		return

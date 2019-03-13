@@ -44,8 +44,9 @@ type RoleMenuDetail struct {
 	List        []*RoleMenuDetail `xorm:"-" json:"list,omitempty"`
 }
 
-func (p *RoleMenuDetail) SelectMainMenuByUserId(userId int) (records []*RoleMenuDetail, err error) {
-	err = db.GetDefaultEngine().SQL(`SELECT menu.id,
+func (p *RoleMenuDetail) SelectMainMenuByUserId(userId int) ([]*RoleMenuDetail, error) {
+	var records []*RoleMenuDetail
+	return records, db.GetDefaultEngine().SQL(`SELECT menu.id,
        menu.name,
        menu.description,
        menu.method,
@@ -61,11 +62,11 @@ WHERE user.id = ?
   AND menu.type = 0
   AND menu.state = 1
 ORDER BY menu.parent_id`, userId, s_menu.TypeMain).Find(&records)
-	return
 }
 
-func (p *RoleMenuDetail) SelectMainMenuByRoleId(roleId int) (records []*RoleMenuDetail, err error) {
-	err = db.GetDefaultEngine().SQL(`SELECT menu.id,
+func (p *RoleMenuDetail) SelectMainMenuByRoleId(roleId int) ([]*RoleMenuDetail, error) {
+	var records []*RoleMenuDetail
+	return records, db.GetDefaultEngine().SQL(`SELECT menu.id,
        menu.name,
        menu.description,
        menu.method,
@@ -79,5 +80,4 @@ WHERE role_menu.role_id = ?
   AND menu.type = ?
   AND menu.state = 1
 ORDER BY menu.parent_id`, roleId, s_menu.TypeMain).Find(&records)
-	return
 }

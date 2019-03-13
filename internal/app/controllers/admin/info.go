@@ -18,14 +18,16 @@ func (p *ControllerInfo) Get(ctx *gin.Context) {
 
 func (p *ControllerInfo) Post(ctx *gin.Context) {
 	p.New(ctx)
-	var err error
-	req := &s_user.UserInfoUpdate{Id: p.userId}
-	if err = p.ShouldBind(req); err != nil || len(req.Nickname) == 0 {
+	var (
+		req = s_user.UserInfoUpdate{Id: p.userId}
+		err error
+	)
+	if err = p.ShouldBind(&req); err != nil || len(req.Nickname) == 0 {
 		p.RespErrInvalidParams()
 		return
 	}
 	req.Updater = p.userId
-	if _, err = req.Update(req, p.userId); err != nil {
+	if _, err = req.Update(&req, p.userId); err != nil {
 		p.RespErrDBError(err)
 		return
 	}
