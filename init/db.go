@@ -8,9 +8,9 @@ import (
 	"ginserver/tools/db"
 
 	_ "github.com/go-sql-driver/mysql"
-	"github.com/go-xorm/core"
 	"github.com/go-xorm/xorm"
 	"github.com/sirupsen/logrus"
+	"xorm.io/core"
 )
 
 func dbInit() {

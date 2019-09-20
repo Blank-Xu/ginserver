@@ -7,18 +7,23 @@ import (
 	defaultCasbin "ginserver/tools/casbin"
 	"ginserver/tools/db"
 
-	"github.com/casbin/casbin"
+	"github.com/casbin/casbin/v2"
 )
 
 func casbinInit() {
 	var cfg = config.GetConfig()
-	enforcer := &enforcer{casbin.NewEnforcer(cfg.RbacModel, false)}
+	enforce, err := casbin.NewEnforcer(cfg.RbacModel, false)
+	if err != nil {
+		panic("create casbin enforcer failed, err: " + err.Error())
+	}
+
+	enforcer := &enforcer{enforce}
 	// load rules
 	if err := enforcer.loadRoleMenuPolicy(); err != nil {
-		panic(fmt.Sprintf("Load casbin role menu policy error, err: [%v]", err))
+		panic(fmt.Sprintf("Load casbin role menu policy failed, err: [%v]", err))
 	}
 	if err := enforcer.loadUserRolePolicy(); err != nil {
-		panic(fmt.Sprintf("Load casbin user role policy error, err: [%v]", err))
+		panic(fmt.Sprintf("Load casbin user role policy failed, err: [%v]", err))
 	}
 
 	defaultCasbin.SetEnforcer(enforcer.Enforcer)

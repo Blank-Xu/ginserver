@@ -65,10 +65,12 @@ func main() {
 
 	defer func() {
 		if err := recover(); err != nil {
-			msg := fmt.Sprintf("Server Crashed With err: [%v]", err)
+			msg := fmt.Sprintf("server crashed with error: [%v]", err)
 			logrus.Error(msg)
+			time.Sleep(time.Second)
 			panic(msg)
 		}
+		time.Sleep(time.Second)
 	}()
 
 	var cfg = config.GetConfig().Server
@@ -82,20 +84,21 @@ func main() {
 	// run server
 	go func() {
 		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
-			logrus.Fatal("server listen err: ", err)
+			logrus.Error("server listen failed, err: ", err)
 		}
 	}()
 	logrus.Info("server start success.")
 
 	quite := make(chan os.Signal)
 	signal.Notify(quite, os.Interrupt)
+
 	logrus.Infof("server shutdown with signal %v", <-quite)
 	// wait for 5 seconds
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 	// graceful close, need golang version 1.8+
 	if err := srv.Shutdown(ctx); err != nil {
-		logrus.Fatal("shutdown err: ", err)
+		logrus.Error("server shutdown failed, err: ", err)
 	}
 	logrus.Info("server exit.")
 }

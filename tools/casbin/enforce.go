@@ -3,7 +3,7 @@ package casbin
 import (
 	"strconv"
 
-	"github.com/casbin/casbin"
+	"github.com/casbin/casbin/v2"
 	"github.com/gin-gonic/gin"
 )
 
@@ -17,10 +17,6 @@ func SetEnforcer(enforcer *casbin.Enforcer) {
 	defaultEnforcer = enforcer
 }
 
-func EnforceSafe(context *gin.Context, userId int) (bool, error) {
-	return defaultEnforcer.EnforceSafe(strconv.Itoa(userId), context.Request.URL.Path, context.Request.Method)
-}
-
-func Enforce(context *gin.Context, userId int) bool {
+func Enforce(context *gin.Context, userId int) (bool, error) {
 	return defaultEnforcer.Enforce(strconv.Itoa(userId), context.Request.URL.Path, context.Request.Method)
 }
