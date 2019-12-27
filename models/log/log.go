@@ -2,6 +2,7 @@ package log
 
 import (
 	"ginserver/pkg/db"
+	"ginserver/tools/time"
 )
 
 type Log struct {
@@ -16,7 +17,7 @@ type Log struct {
 	Params    string
 	Ip        string
 	Remark    string
-	Created   db.JSONTime `xorm:"created"`
+	Created   time.JSONTime `xorm:"created"`
 }
 
 func (p *Log) TableName() string {
@@ -24,12 +25,12 @@ func (p *Log) TableName() string {
 }
 
 func (p *Log) InsertOne() (err error) {
-	_, err = db.GetDefaultEngine().InsertOne(p)
+	_, err = db.GetDefaultDB().InsertOne(p)
 	return
 }
 
 func Insert(level Level, lType Type, userId, roleId int, method, path, params, ip, remark string) (err error) {
-	_, err = db.GetDefaultEngine().Exec(
+	_, err = db.GetDefaultDB().Exec(
 		"INSERT INTO log (level, type, user_id, role_id, method, path, params, ip, remark) VALUES (?,?,?,?,?,?,?,?,?)", level, lType, userId, roleId, method, path, params, ip, remark)
 	return
 }

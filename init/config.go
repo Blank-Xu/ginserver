@@ -6,11 +6,10 @@ type config struct {
 	StaticDir   string      `yaml:"StaticDir"`
 	TemplateDir string      `yaml:"TemplateDir"`
 	Casbin      *Casbin     `yaml:"casbin"`
-	HttpServer  *HttpServer `yaml:"http_server"`
-	Fix         *Fix        `yaml:"Fix"`
-	Log         *Log        `yaml:"Log"`
-	DataBase    []*Database `yaml:"DataBase"`
-	Session     *session    `yaml:"Session"`
-	Redis       *redis      `yaml:"Redis"`
-	Lang        *lang       `yaml:"Lang"`
+	// HttpServer  *HttpServer `yaml:"http_server"`
+	// Fix         *Fix        `yaml:"Fix"`
+	// Log         *Log        `yaml:"Log"`
+	// DataBase    []*Database `yaml:"DataBase"`
+	// Session     *session    `yaml:"Session"`
+	// Redis       *redis      `yaml:"Redis"`
 }

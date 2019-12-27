@@ -2,6 +2,7 @@ package s_menu
 
 import (
 	"ginserver/pkg/db"
+	"ginserver/tools/time"
 )
 
 type SMenu struct {
@@ -16,9 +17,9 @@ type SMenu struct {
 	OrderNo   int
 	State     bool
 	ParentId  int
-	Created   db.JSONTime `xorm:"created"`
+	Created   time.JSONTime `xorm:"created"`
 	Updater   int
-	Updated   db.JSONTime `xorm:"updated"`
+	Updated   time.JSONTime `xorm:"updated"`
 }
 
 func (p *SMenu) TableName() string {
@@ -27,7 +28,7 @@ func (p *SMenu) TableName() string {
 
 func (p *SMenu) SelectByParentId(parentId int) ([]*SMenu, error) {
 	var records []*SMenu
-	return records, db.GetDefaultEngine().SQL(`SELECT *
+	return records, db.GetDefaultDB().SQL(`SELECT *
 FROM s_menu
 WHERE parent_id = ?
   AND type = ?

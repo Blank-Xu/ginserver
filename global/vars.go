@@ -1,8 +1,7 @@
 package global
 
 import (
-	"crypto/tls"
-	"net/http"
+	"github.com/spf13/viper"
 )
 
 var (
@@ -11,12 +10,5 @@ var (
 )
 
 var (
-	DefaultHttpClient = http.Client{
-		Transport: &http.Transport{
-			TLSClientConfig: &tls.Config{
-				InsecureSkipVerify: true,
-			},
-		},
-		Timeout: DefaultHttpTimeOutSecond,
-	}
+	Config viper.Viper
 )

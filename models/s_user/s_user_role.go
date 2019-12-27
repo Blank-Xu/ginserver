@@ -19,7 +19,7 @@ func (p *UserRole) TableName() string {
 }
 
 func (p *UserRole) InsertOne() error {
-	_, err := db.GetDefaultEngine().InsertOne(p)
+	_, err := db.GetDefaultDB().InsertOne(p)
 	if err != nil {
 		casbin.GetEnforcer().AddRoleForUser(strconv.Itoa(p.UserId), strconv.Itoa(p.RoleId))
 	}
@@ -27,7 +27,7 @@ func (p *UserRole) InsertOne() error {
 }
 
 func (p *UserRole) Delete() error {
-	_, err := db.GetDefaultEngine().Delete(p)
+	_, err := db.GetDefaultDB().Delete(p)
 	if err != nil {
 		casbin.GetEnforcer().DeleteUser(strconv.Itoa(p.UserId))
 	}

@@ -9,7 +9,7 @@ import (
 )
 
 func modelsInit() {
-	var engine = db.GetDefaultEngine()
+	var engine = db.GetDefaultDB()
 
 	// just need to synchronize auto create tables
 	if err := syncServerTables(engine); err != nil {

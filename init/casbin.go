@@ -43,7 +43,7 @@ func (p *enforcer) loadRoleMenuPolicy() error {
 		Path   string
 		Method string
 	}
-	err := db.GetDefaultEngine().SQL(
+	err := db.GetDefaultDB().SQL(
 		`SELECT role_menu.role_id,
        menu.path,
        menu.method
@@ -66,7 +66,7 @@ func (p *enforcer) loadUserRolePolicy() error {
 		UserId string
 		RoleId string
 	}
-	if err := db.GetDefaultEngine().SQL("SELECT * FROM s_user_role").Find(&rules); err != nil {
+	if err := db.GetDefaultDB().SQL("SELECT * FROM s_user_role").Find(&rules); err != nil {
 		return err
 	}
 	for _, rule := range rules {

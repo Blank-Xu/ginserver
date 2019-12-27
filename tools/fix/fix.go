@@ -1,4 +1,4 @@
-package init
+package fix
 
 import (
 	"time"
@@ -11,7 +11,7 @@ type Fix struct {
 	} `yaml:"TimeZone"`
 }
 
-func (p *Fix) Init() {
+func (p *Fix) Set() {
 	// fix timezone
 	time.Local = time.FixedZone(p.TimeZone.Name, p.TimeZone.Offset*3600)
 }

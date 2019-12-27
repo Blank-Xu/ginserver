@@ -1,9 +1,9 @@
 package s_user
 
 import (
-	"time"
 
 	"ginserver/pkg/db"
+	"ginserver/tools/time"
 )
 
 type User struct {
@@ -18,12 +18,12 @@ type User struct {
 	Email      string      `json:"email"`
 	Phone      string      `json:"phone"`
 	Remark     string      `json:"remark"`
-	Created    db.JSONTime `json:"created" swaggertype:"primitive,string"`
+	Created    time.JSONTime `json:"created" swaggertype:"primitive,string"`
 	Updater    int         `json:"updater"`
-	Updated    db.JSONTime `json:"updated" swaggertype:"primitive,string"`
-	Deleted    time.Time   `json:"-"`
+	Updated    time.JSONTime `json:"updated" swaggertype:"primitive,string"`
+	Deleted    time.JSONTime   `json:"-"`
 	RegisterIp string      `json:"-"`
-	LoginTime  db.JSONTime `json:"login_time" swaggertype:"primitive,string"`
+	LoginTime  time.JSONTime `json:"login_time" swaggertype:"primitive,string"`
 	LoginIp    string      `json:"login_ip"`
 }
 
@@ -42,9 +42,9 @@ type UserInsert struct {
 	Phone      string      `json:"phone"`
 	Remark     string      `json:"remark"`
 	RegisterIp string      `json:"-"`
-	Created    db.JSONTime `xorm:"created" json:"-"`
+	Created    time.JSONTime `xorm:"created" json:"-"`
 	Updater    int
-	Updated    db.JSONTime `xorm:"updated" json:"-"`
+	Updated    time.JSONTime `xorm:"updated" json:"-"`
 }
 
 func (p *UserInsert) TableName() string {
@@ -62,7 +62,7 @@ type UserUpdate struct {
 	Phone     string      `json:"phone"`
 	Remark    string      `json:"remark"`
 	Updater   int         `json:"-"`
-	Updated   db.JSONTime `xorm:"updated" json:"-"`
+	Updated   time.JSONTime `xorm:"updated" json:"-"`
 }
 
 func (p *UserUpdate) TableName() string {
@@ -90,7 +90,7 @@ type UserInfoUpdate struct {
 	Email     string `form:"email" json:"email"`
 	Phone     string `form:"phone" json:"phone"`
 	Updater   int
-	Updated   db.JSONTime `xorm:"updated" json:"-"`
+	Updated   time.JSONTime `xorm:"updated" json:"-"`
 }
 
 func (p *UserInfoUpdate) TableName() string {

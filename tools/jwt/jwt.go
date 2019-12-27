@@ -1,4 +1,4 @@
-package init
+package jwt
 
 import (
 	"errors"

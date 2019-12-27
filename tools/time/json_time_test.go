@@ -1,4 +1,4 @@
-package db
+package time
 
 import (
 	"encoding/json"

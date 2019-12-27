@@ -10,7 +10,7 @@ type Param struct {
 	Name      string      `xorm:"unique"`
 	Param     string      `json:"param"`
 	Remark    string      `json:"remark"`
-	Updated   db.JSONTime `json:"updated"`
+	Updated   time.JSONTime `json:"updated"`
 }
 
 func (p *Param) TableName() string {

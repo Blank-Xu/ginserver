@@ -1,11 +1,7 @@
-package init
+package redis
 
-type redis struct {
+type Client struct {
 	Host     string `yaml:"Host"`
 	Port     string `yaml:"Port"`
 	Password string `yaml:"Password"`
-}
-
-func redisInit() {
-
 }

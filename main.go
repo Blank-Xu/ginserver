@@ -78,13 +78,13 @@ func main() {
 	routers.Register()
 
 	server := defaultInit.GetConfig().HttpServer.NewServer(nil)
-	// run server
+	log.Printf("server pid[%d] start success.", pid)
+	
 	go func() {
 		if err := server.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 			log.Printf("server pid[%d] exit with err: %v", pid, err)
 		}
 	}()
-	log.Printf("server pid[%d] start success.", pid)
 
 	quitSignal := make(chan os.Signal)
 	signal.Notify(quitSignal, syscall.SIGHUP, syscall.SIGINT, syscall.SIGQUIT, syscall.SIGKILL, syscall.SIGTERM)

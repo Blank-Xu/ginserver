@@ -20,13 +20,13 @@ func (p *RoleMenu) TableName() string {
 }
 
 func (p *RoleMenu) InsertOne() error {
-	_, err := db.GetDefaultEngine().InsertOne(p)
+	_, err := db.GetDefaultDB().InsertOne(p)
 	// TODO:  casbin.GetEnforcer().AddPermissionForUser(strconv.Itoa(p.RoleId),...)
 	return err
 }
 
 func (p *RoleMenu) Delete() error {
-	_, err := db.GetDefaultEngine().Delete(p)
+	_, err := db.GetDefaultDB().Delete(p)
 	casbin.GetEnforcer().DeletePermissionsForUser(strconv.Itoa(p.RoleId))
 	return err
 }
@@ -46,7 +46,7 @@ type RoleMenuDetail struct {
 
 func (p *RoleMenuDetail) SelectMainMenuByUserId(userId int) ([]*RoleMenuDetail, error) {
 	var records []*RoleMenuDetail
-	return records, db.GetDefaultEngine().SQL(`SELECT menu.id,
+	return records, db.GetDefaultDB().SQL(`SELECT menu.id,
        menu.name,
        menu.description,
        menu.method,
@@ -66,7 +66,7 @@ ORDER BY menu.parent_id`, userId, s_menu.TypeMain).Find(&records)
 
 func (p *RoleMenuDetail) SelectMainMenuByRoleId(roleId int) ([]*RoleMenuDetail, error) {
 	var records []*RoleMenuDetail
-	return records, db.GetDefaultEngine().SQL(`SELECT menu.id,
+	return records, db.GetDefaultDB().SQL(`SELECT menu.id,
        menu.name,
        menu.description,
        menu.method,

@@ -2,14 +2,12 @@ package admin
 
 import (
 	"net/http"
-	"time"
-
 	"ginserver/global"
 	"ginserver/models/log"
 	"ginserver/models/s_role"
 	"ginserver/models/s_user"
-	"ginserver/pkg/db"
 	"ginserver/pkg/middlewares"
+	"ginserver/tools/time"
 	"ginserver/tools/utils"
 
 	"github.com/gin-gonic/gin"
@@ -71,7 +69,7 @@ func (p *ControllerLogin) Post(ctx *gin.Context) {
 		p.RespErrInternalServerError(err)
 		return
 	}
-	recordUser.LoginTime = db.JSONTime(time.Now())
+	recordUser.LoginTime = time.NewJSONTime()
 	recordUser.LoginIp = p.ClientIP()
 	if _, err = recordUser.Update(&recordUser, recordUser.Id, "login_time,login_ip"); err != nil {
 		p.RespErrDBError(err)
