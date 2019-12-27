@@ -2,12 +2,16 @@ package init
 
 import (
 	"time"
-
-	"ginserver/init/config"
 )
 
-func fix() {
-	var cfg = config.GetConfig().Fix
+type Fix struct {
+	TimeZone *struct {
+		Name   string `yaml:"Name"`
+		Offset int    `yaml:"Offset"`
+	} `yaml:"TimeZone"`
+}
+
+func (p *Fix) Init() {
 	// fix timezone
-	time.Local = time.FixedZone(cfg.TimeZone.Name, cfg.TimeZone.Offset*3600)
+	time.Local = time.FixedZone(p.TimeZone.Name, p.TimeZone.Offset*3600)
 }

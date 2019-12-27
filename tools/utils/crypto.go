@@ -6,18 +6,22 @@ import (
 	"encoding/hex"
 )
 
+func Md5Byte(b []byte) string {
+	h := md5.New()
+	h.Write(b)
+	return hex.EncodeToString(h.Sum(nil))
+}
+
 func Md5(s string) string {
-	digest := md5.New()
-	digest.Write([]byte(s))
-	return hex.EncodeToString(digest.Sum(nil))
+	return Md5Byte([]byte(s))
+}
+
+func Sha1Byte(b []byte) string {
+	h := sha1.New()
+	h.Write(b)
+	return hex.EncodeToString(h.Sum(nil))
 }
 
 func Sha1(s string) string {
-	digest := sha1.New()
-	digest.Write([]byte(s))
-	return hex.EncodeToString(digest.Sum(nil))
-}
-
-func GenPassword(pwd, salt string) string {
-	return Md5(pwd + salt)
+	return Sha1Byte([]byte(s))
 }

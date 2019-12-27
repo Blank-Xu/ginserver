@@ -3,37 +3,43 @@ package init
 import (
 	"flag"
 	"fmt"
+	"io/ioutil"
+	"log"
 	"os"
 
-	"github.com/sirupsen/logrus"
+	"gopkg.in/yaml.v3"
 
-	"ginserver/init/config"
+	"ginserver/global"
 )
 
-var configFile = flag.String("config", "configs/app_debug.yaml", "config file")
+var (
+	configFile = flag.String("config", "configs/app_debug.yaml", "config file")
+
+	defaultConfig *config
+)
 
 func Init() {
 	if !flag.Parsed() {
 		flag.Parse()
 	}
 
-	fmt.Printf("Server Starting ... \n - version: [%s]  \n - args: %s\n", config.Version, os.Args)
-	fmt.Printf("Read Config File ... \n - file_name: [%s]\n", *configFile)
-	fmt.Println(" - you can use [-config file] command to set config file when server start.")
+	filename := *configFile
 
-	config.Init(*configFile)
-	fmt.Println("Read Config Success")
-	// fix default setting
-	fix()
-	// start log first
-	logInit()
-	logrus.Info("Server Starting ...")
+	log.Printf("Server Starting ... \n - version: [%s]  \n - args: %s\n", global.Version, os.Args)
+	log.Printf("Read Config File ... \n - filename: [%s]\n", filename)
+	log.Println(" - you can use [-config file] command to set config file when server start.")
 
-	redisInit()
+	byt, err := ioutil.ReadFile(filename)
+	if err != nil {
+		panic(fmt.Sprintf("load config error, file: [%s], err: [%v]", filename, err))
+	}
 
-	dbInit()
+	if err = yaml.Unmarshal(byt, defaultConfig); err != nil {
+		panic(fmt.Sprintf("read config error, file: [%s], err: [%v]", filename, err))
+	}
 
-	modelsInit()
+}
 
-	casbinInit()
+func GetConfig() *config {
+	return defaultConfig
 }

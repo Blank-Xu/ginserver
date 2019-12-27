@@ -3,30 +3,34 @@ package init
 import (
 	"fmt"
 
-	"ginserver/init/config"
-	defaultCasbin "ginserver/tools/casbin"
-	"ginserver/tools/db"
+	defaultCasbin "ginserver/pkg/casbin"
+	"ginserver/pkg/db"
 
 	"github.com/casbin/casbin/v2"
 )
 
-func casbinInit() {
-	var cfg = config.GetConfig()
-	enforce, err := casbin.NewEnforcer(cfg.RbacModel, false)
+type Casbin struct {
+	ModelFile string `yaml:"model_file"`
+}
+
+func (p *Casbin) Init() error {
+	enforce, err := casbin.NewEnforcer(p.ModelFile, false)
 	if err != nil {
-		panic("create casbin enforcer failed, err: " + err.Error())
+		return fmt.Errorf("create casbin enforcer failed, err: " + err.Error())
 	}
 
 	enforcer := &enforcer{enforce}
 	// load rules
 	if err := enforcer.loadRoleMenuPolicy(); err != nil {
-		panic(fmt.Sprintf("Load casbin role menu policy failed, err: [%v]", err))
+		return fmt.Errorf("load casbin role menu policy failed, err: %v", err)
 	}
 	if err := enforcer.loadUserRolePolicy(); err != nil {
-		panic(fmt.Sprintf("Load casbin user role policy failed, err: [%v]", err))
+		return fmt.Errorf("load casbin user role policy failed, err: %v", err)
 	}
 
 	defaultCasbin.SetEnforcer(enforcer.Enforcer)
+
+	return nil
 }
 
 type enforcer struct {

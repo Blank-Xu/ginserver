@@ -49,10 +49,10 @@ Session: # Provider support [memstore, redis], you can use other types by site s
   HttpOnly: true
 
 Redis:
-  Host: 127.0.0.1
-  Port: 6379
-  Password:
+  - Host: 127.0.0.1
+    Port: 6379
+    Password:
 
 Lang:
   Default: zh-CN
-  Lang: [zh-CN, en-US]
+  Lang: [en-US, zh-CN]

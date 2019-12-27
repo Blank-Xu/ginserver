@@ -5,7 +5,7 @@ import (
 
 	"github.com/go-xorm/xorm"
 
-	"ginserver/tools/db"
+	"ginserver/pkg/db"
 )
 
 func modelsInit() {
