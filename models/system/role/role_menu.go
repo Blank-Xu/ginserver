@@ -1,10 +1,7 @@
-package s_role
+package role
 
 import (
-	"strconv"
-
-	"ginserver/models/s_menu"
-	"ginserver/pkg/casbin"
+	s_menu "ginserver/models/system/menu"
 	"ginserver/pkg/db"
 )
 
@@ -27,7 +24,7 @@ func (p *RoleMenu) InsertOne() error {
 
 func (p *RoleMenu) Delete() error {
 	_, err := db.GetDefaultDB().Delete(p)
-	casbin.GetEnforcer().DeletePermissionsForUser(strconv.Itoa(p.RoleId))
+	// casbin.GetEnforcer().DeletePermissionsForUser(strconv.Itoa(p.RoleId))
 	return err
 }
 

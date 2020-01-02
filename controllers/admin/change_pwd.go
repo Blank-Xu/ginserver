@@ -2,7 +2,7 @@ package admin
 
 import (
 	"ginserver/models/log"
-	"ginserver/models/s_user"
+	"ginserver/models/system/user"
 	"ginserver/tools/utils"
 
 	"github.com/gin-gonic/gin"
@@ -20,7 +20,7 @@ func (p *ControllerChangePwd) Get(ctx *gin.Context) {
 func (p *ControllerChangePwd) Post(ctx *gin.Context) {
 	p.New(ctx)
 	var (
-		req s_user.UserChangePwd
+		req user.ChangePwd
 		err error
 	)
 	if err = ctx.ShouldBind(&req); err != nil {
@@ -36,7 +36,7 @@ func (p *ControllerChangePwd) Post(ctx *gin.Context) {
 		return
 	}
 	// TODO: verify password strength
-	var recordUser = s_user.UserUpdate{Id: p.GetUserId()}
+	recordUser := user.Update{Id: p.GetUserId()}
 	if _, err := recordUser.SelectOne(&recordUser); err != nil {
 		p.RespErrDBError(err)
 		return

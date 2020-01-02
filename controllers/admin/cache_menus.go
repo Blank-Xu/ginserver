@@ -4,14 +4,14 @@ import (
 	"sort"
 	"sync"
 
-	"ginserver/models/s_role"
+	"ginserver/models/system/role"
 )
 
 var cacheRoleMenu sync.Map
 
-func GetCacheRoleMenu(roleId int) (menus []*s_role.RoleMenuDetail, err error) {
+func GetCacheRoleMenu(roleId int) (menus []*role.RoleMenuDetail, err error) {
 	if record, ok := cacheRoleMenu.Load(roleId); ok {
-		if menus, ok = record.([]*s_role.RoleMenuDetail); ok {
+		if menus, ok = record.([]*role.RoleMenuDetail); ok {
 			return
 		}
 	}
@@ -31,10 +31,10 @@ func SetCacheRoleMenu(roleId int) error {
 	return nil
 }
 
-func genMenusByRoleId(roleId int) ([]*s_role.RoleMenuDetail, error) {
+func genMenusByRoleId(roleId int) ([]*role.RoleMenuDetail, error) {
 	var (
-		record  s_role.RoleMenuDetail
-		records []*s_role.RoleMenuDetail
+		record  role.RoleMenuDetail
+		records []*role.RoleMenuDetail
 		err     error
 	)
 	if records, err = record.SelectMainMenuByRoleId(roleId); err != nil {
@@ -42,12 +42,12 @@ func genMenusByRoleId(roleId int) ([]*s_role.RoleMenuDetail, error) {
 	}
 
 	var (
-		data = make(map[int]map[int]*s_role.RoleMenuDetail)
+		data = make(map[int]map[int]*role.RoleMenuDetail)
 		ok   bool
 	)
 	for _, record := range records {
 		if _, ok = data[record.ParentId]; !ok {
-			data[record.ParentId] = make(map[int]*s_role.RoleMenuDetail)
+			data[record.ParentId] = make(map[int]*role.RoleMenuDetail)
 		}
 		data[record.ParentId][record.Id] = record
 	}
@@ -56,8 +56,8 @@ func genMenusByRoleId(roleId int) ([]*s_role.RoleMenuDetail, error) {
 }
 
 // buildMenuTree to build main menu tree
-func buildMenuTree(id int, data map[int]map[int]*s_role.RoleMenuDetail) []*s_role.RoleMenuDetail {
-	list := make([]*s_role.RoleMenuDetail, 0, len(data))
+func buildMenuTree(id int, data map[int]map[int]*role.RoleMenuDetail) []*role.RoleMenuDetail {
+	list := make([]*role.RoleMenuDetail, 0, len(data))
 	for index, record := range data[id] {
 		if data[index] != nil {
 			record.List = buildMenuTree(index, data)

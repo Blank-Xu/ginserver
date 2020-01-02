@@ -1,9 +1,6 @@
-package s_user
+package user
 
 import (
-	"strconv"
-
-	"ginserver/pkg/casbin"
 	"ginserver/pkg/db"
 )
 
@@ -20,16 +17,16 @@ func (p *UserRole) TableName() string {
 
 func (p *UserRole) InsertOne() error {
 	_, err := db.GetDefaultDB().InsertOne(p)
-	if err != nil {
-		casbin.GetEnforcer().AddRoleForUser(strconv.Itoa(p.UserId), strconv.Itoa(p.RoleId))
-	}
+	// if err != nil {
+	// 	casbin.GetEnforcer().AddRoleForUser(strconv.Itoa(p.UserId), strconv.Itoa(p.RoleId))
+	// }
 	return err
 }
 
 func (p *UserRole) Delete() error {
 	_, err := db.GetDefaultDB().Delete(p)
-	if err != nil {
-		casbin.GetEnforcer().DeleteUser(strconv.Itoa(p.UserId))
-	}
+	// if err != nil {
+	// 	casbin.GetEnforcer().DeleteUser(strconv.Itoa(p.UserId))
+	// }
 	return err
 }

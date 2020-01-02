@@ -1,4 +1,4 @@
-package time
+package timeutil
 
 import (
 	"time"
@@ -6,7 +6,7 @@ import (
 
 type JSONTime time.Time
 
-func NewJSONTime()JSONTime  {
+func NewJSONTime() JSONTime {
 	return JSONTime(time.Now())
 }
 
@@ -29,7 +29,7 @@ func (p *JSONTime) UnmarshalJSON(data []byte) error {
 	if err != nil {
 		return err
 	}
-	
+
 	*p = JSONTime(t)
 	return nil
 }

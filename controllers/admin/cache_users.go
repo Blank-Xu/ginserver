@@ -4,37 +4,35 @@ import (
 	"errors"
 	"sync"
 
-	"ginserver/models/s_user"
+	"ginserver/models/system/user"
 )
 
 var cacheUsers sync.Map
 
-func GetCacheUser(userId int) (s_user.User, error) {
-	var user s_user.User
+func GetCacheUser(userId int) (user.User, error) {
+	var userInfo user.User
 	if record, ok := cacheUsers.Load(userId); ok {
-		if user, ok = record.(s_user.User); ok {
-			return user, nil
+		if userInfo, ok = record.(user.User); ok {
+			return userInfo, nil
 		}
 	}
 	return SetCacheUserById(userId)
 }
 
-func SetCacheUserById(userId int) (s_user.User, error) {
-	var (
-		user = s_user.User{Id: userId}
-		has  bool
-	)
-	has, err := user.SelectOne(&user)
+func SetCacheUserById(userId int) (user.User, error) {
+	userInfo := user.User{Id: userId}
+
+	has, err := userInfo.SelectOne(&userInfo)
 	if err != nil {
-		return user, err
+		return userInfo, err
 	}
 	if !has {
-		return user, errors.New("invalid params")
+		return userInfo, errors.New("invalid params")
 	}
-	SetCacheUser(user)
-	return user, nil
+	SetCacheUser(userInfo)
+	return userInfo, nil
 }
 
-func SetCacheUser(user s_user.User) {
+func SetCacheUser(user user.User) {
 	cacheUsers.Store(user.Id, user)
 }

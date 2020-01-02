@@ -2,7 +2,7 @@ package admin
 
 import (
 	"ginserver/models/log"
-	"ginserver/models/s_user"
+	"ginserver/models/system/user"
 
 	"github.com/gin-gonic/gin"
 )
@@ -19,7 +19,7 @@ func (p *ControllerInfo) Get(ctx *gin.Context) {
 func (p *ControllerInfo) Post(ctx *gin.Context) {
 	p.New(ctx)
 	var (
-		req = s_user.UserInfoUpdate{Id: p.userId}
+		req = user.InfoUpdate{Id: p.userId}
 		err error
 	)
 	if err = p.ShouldBind(&req); err != nil || len(req.Nickname) == 0 {

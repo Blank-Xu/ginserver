@@ -36,6 +36,6 @@ func GetDBByIndex(index uint) *xorm.Engine {
 	if nums < (index + 1) {
 		return nil
 	}
-	
+
 	return dbs[index]
 }

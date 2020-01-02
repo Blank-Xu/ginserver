@@ -1,8 +1,8 @@
-package s_role
+package role
 
 import (
 	"ginserver/pkg/db"
-	"ginserver/tools/time"
+	"ginserver/tools/timeutil"
 )
 
 type Role struct {
@@ -11,9 +11,9 @@ type Role struct {
 	Name      string `xorm:"unique"`
 	State     bool
 	Remark    string
-	Created   time.JSONTime `xorm:"created"`
+	Created   timeutil.JSONTime `xorm:"created"`
 	Updater   int
-	Updated   time.JSONTime `xorm:"updated"`
+	Updated   timeutil.JSONTime `xorm:"updated"`
 }
 
 func (p *Role) TableName() string {
@@ -21,8 +21,10 @@ func (p *Role) TableName() string {
 }
 
 func (p *Role) SelectOneByUserId(userId int) (bool, error) {
-	return db.GetDefaultDB().SQL(`SELECT role.*
-	FROM s_user_role user_role
-	LEFT JOIN s_role role ON role.id = user_role.role_id
-	WHERE user_role.user_id = ?`, userId).Get(p)
+	return db.GetDefaultDB().SQL(`
+SELECT role.*
+FROM s_user_role user_role
+LEFT JOIN s_role role ON role.id = user_role.role_id
+WHERE user_role.user_id = ?
+`, userId).Get(p)
 }

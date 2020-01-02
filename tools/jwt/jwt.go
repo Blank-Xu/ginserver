@@ -17,9 +17,9 @@ import (
 // jti (JWT ID)：编号
 
 type Jwt struct {
-	Issuer  string `yaml:"issuer"`
-	Subject string `yaml:"subject"`
-	Expire  int64  `yaml:"expire"`
+	Issuer       string `yaml:"Issuer"`
+	Subject      string `yaml:"Subject"`
+	ExpireSecond int64  `yaml:"ExpireSecond"`
 
 	SignKey       string            `yaml:"sign_key"`
 	signKey       []byte            `yaml:"-"`
@@ -30,41 +30,39 @@ type Jwt struct {
 	Password string `yaml:"password"`
 }
 
-func (p *Jwt) init() {
+func (p *Jwt) Init() error {
 	p.signingMethod = jwt.GetSigningMethod(p.SigningMethod)
 	if p.signingMethod == nil {
-		panic(fmt.Sprintf("jwt not support SigningMethod: %s", p.SigningMethod))
+		return fmt.Errorf("jwt not support SigningMethod: %s", p.SigningMethod)
 	}
 
-	if p.Expire <= 0 {
-		p.Expire = 10
+	if p.ExpireSecond <= 0 {
+		p.ExpireSecond = 10
 	}
-	p.Expire *= 60
 
 	p.signKey = []byte(p.SignKey)
+
+	return nil
 }
 
-func (p *Jwt) newClaims(user, ip string) jwt.StandardClaims {
-	var now = time.Now().Unix()
-	return jwt.StandardClaims{
+func (p *Jwt) CreateToken(user, ip string) (string, error) {
+	now := time.Now().Unix()
+
+	claims := jwt.StandardClaims{
 		Audience:  ip,
-		ExpiresAt: now + p.Expire,
+		ExpiresAt: now + p.ExpireSecond,
 		Id:        user,
 		IssuedAt:  now,
 		Issuer:    p.Issuer,
 		Subject:   p.Subject,
 		NotBefore: now,
 	}
-}
 
-func (p *Jwt) CreateToken(user, ip string) (string, error) {
-	var token = jwt.NewWithClaims(p.signingMethod, p.newClaims(user, ip))
-
-	return token.SignedString(p.signKey)
+	return jwt.NewWithClaims(p.signingMethod, claims).SignedString(p.signKey)
 }
 
 func (p *Jwt) Verify(tokenString, ip string) (string, error) {
-	var token, err = jwt.ParseWithClaims(tokenString, &jwt.StandardClaims{}, func(token *jwt.Token) (i interface{}, e error) {
+	token, err := jwt.ParseWithClaims(tokenString, &jwt.StandardClaims{}, func(token *jwt.Token) (i interface{}, e error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
 		}
@@ -79,12 +77,13 @@ func (p *Jwt) Verify(tokenString, ip string) (string, error) {
 		if claims.Subject != p.Subject {
 			return nil, errors.New("unexpected Subject")
 		}
-		if err := claims.Valid(); err != nil {
-			return nil, err
+		if e = claims.Valid(); e != nil {
+			return
 		}
 
 		return p.signKey, nil
 	})
+
 	if err != nil {
 		return "", fmt.Errorf("token parse failed, err: %v", err)
 	}

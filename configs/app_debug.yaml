@@ -4,9 +4,9 @@ RunMode: debug # gin.ginMode [debug, test, release]
 AppName: ginserver
 StaticDir: web/static
 TemplateDir: web/template
-RbacModel: configs/rbac_model.conf # casbin policy config
+CasbinModelFile: configs/rbac_model.conf # casbin policy config
 
-Server:
+HttpServer:
   HttpPort: 8080
   ReadTimeout: 10 # second
   WriteTimeout: 10 # second
@@ -16,11 +16,11 @@ Fix:
     Name: UTC
     Offset: 8 # hour
 
-Log: # logrus
-  Path: logs
-  FileName: ginserver.log
-  Level: 5 # [0:panic, 1:fatal, 2:error, 3:warn, 4:info, 5:debug, 6:trace]
-  ReportCaller: true # write log with runtime file and func
+#Log: # logrus
+#  Path: logs
+#  FileName: ginserver.log
+#  Level: 5 # [0:panic, 1:fatal, 2:error, 3:warn, 4:info, 5:debug, 6:trace]
+#  ReportCaller: true # write log with runtime file and func
 
 DataBase: # xorm
   - DriverName: mysql
@@ -43,10 +43,11 @@ DataBase: # xorm
 Session: # Provider support [memstore, redis], you can use other types by site support [https://github.com/gin-contrib/sessions]
   Provider: memstore # if you chose [redis], you must set Redis connect information
   Path: ginserver
-  Domain: 127.0.0.1
+  Domain: 127.0.0.1:3306
   Secret: ginserver
   MaxAge: 7200 # second
   HttpOnly: true
+  RedisPassword:
 
 Redis:
   - Host: 127.0.0.1

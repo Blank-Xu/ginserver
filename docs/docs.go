@@ -56,7 +56,7 @@ var doc = `{
                         "description": "OK",
                         "schema": {
                             "type": "object",
-                            "$ref": "#/definitions/s_user.User"
+                            "$ref": "#/definitions/user.User"
                         }
                     },
                     "400": {

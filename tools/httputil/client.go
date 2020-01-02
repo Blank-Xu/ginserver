@@ -1,4 +1,4 @@
-package http
+package httputil
 
 import (
 	"crypto/tls"
@@ -6,17 +6,13 @@ import (
 	"time"
 )
 
-
-
 var (
-	DefaultClient = &http.Client{
+	Client = &http.Client{
 		Transport: &http.Transport{
 			TLSClientConfig: &tls.Config{
 				InsecureSkipVerify: true,
 			},
 		},
-		Timeout: time.Second*30,
+		Timeout: time.Second * 30,
 	}
 )
-
-

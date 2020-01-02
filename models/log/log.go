@@ -2,7 +2,7 @@ package log
 
 import (
 	"ginserver/pkg/db"
-	"ginserver/tools/time"
+	"ginserver/tools/timeutil"
 )
 
 type Log struct {
@@ -17,7 +17,7 @@ type Log struct {
 	Params    string
 	Ip        string
 	Remark    string
-	Created   time.JSONTime `xorm:"created"`
+	Created   timeutil.JSONTime `xorm:"created"`
 }
 
 func (p *Log) TableName() string {

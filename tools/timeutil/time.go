@@ -1,4 +1,4 @@
-package time
+package timeutil
 
 import (
 	"time"
@@ -26,18 +26,18 @@ func Format(time time.Time, layout ...string) string {
 func GetDaysBetween(t1, t2 time.Time) int {
 	t1 = time.Date(t1.Year(), t1.Month(), t1.Day(), 0, 0, 0, 0, time.Local)
 	t2 = time.Date(t2.Year(), t2.Month(), t2.Day(), 0, 0, 0, 0, time.Local)
-	
+
 	return int(t2.Sub(t1).Hours() / 24)
 }
 
 func GetAge(birth time.Time) int {
 	today := time.Now()
 	age := today.Year() - birth.Year()
-	
+
 	if time.Now().Month() < birth.Month() {
 		age--
 	}
-	
+
 	if today.Month() == birth.Month() && today.Day() > birth.Day() {
 		age--
 	}

@@ -70,7 +70,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/s_user.User'
+            $ref: '#/definitions/user.User'
             type: object
         "400":
           description: Bad Request

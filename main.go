@@ -10,6 +10,7 @@ import (
 	"time"
 
 	_ "ginserver/docs"
+	"ginserver/pkg/config"
 
 	defaultInit "ginserver/init"
 	"ginserver/routers"
@@ -67,19 +68,16 @@ func main() {
 	defer func() {
 		if err := recover(); err != nil {
 			log.Printf("server pid[%d] crashed with error: %v", pid, err)
-			// 等待日志记录完成
-			time.Sleep(time.Second)
 			panic(err)
 		}
-		time.Sleep(time.Second)
 	}()
 
 	defaultInit.Init()
 	routers.Register()
 
-	server := defaultInit.GetConfig().HttpServer.NewServer(nil)
+	server := config.Default.HttpServer.New(nil)
 	log.Printf("server pid[%d] start success.", pid)
-	
+
 	go func() {
 		if err := server.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 			log.Printf("server pid[%d] exit with err: %v", pid, err)

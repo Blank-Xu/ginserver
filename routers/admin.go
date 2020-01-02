@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"ginserver/controllers/admin"
+	"ginserver/global"
 	"ginserver/pkg/casbin"
 	"ginserver/pkg/middlewares"
 
@@ -28,6 +29,8 @@ func registerAdminRouter(router *gin.Engine) {
 
 	groupAdmin := router.Group("admin")
 	// use session middleware
+	global.Config.Get("session")
+	// sessionStore :=
 	groupAdmin.Use(sessions.Sessions(cookieName, newSessionStore()))
 	{
 		// register /admin/login router

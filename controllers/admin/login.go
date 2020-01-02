@@ -1,14 +1,14 @@
 package admin
 
 import (
-	"net/http"
 	"ginserver/global"
 	"ginserver/models/log"
-	"ginserver/models/s_role"
-	"ginserver/models/s_user"
+	"ginserver/models/system/role"
+	"ginserver/models/system/user"
 	"ginserver/pkg/middlewares"
-	"ginserver/tools/time"
+	"ginserver/tools/timeutil"
 	"ginserver/tools/utils"
+	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
@@ -29,7 +29,7 @@ func (p *ControllerLogin) Get(ctx *gin.Context) {
 func (p *ControllerLogin) Post(ctx *gin.Context) {
 	p.New(ctx)
 	var (
-		req s_user.UserLogin
+		req user.Login
 		err error
 	)
 	if err = p.ShouldBind(&req); err != nil {
@@ -38,7 +38,7 @@ func (p *ControllerLogin) Post(ctx *gin.Context) {
 	}
 	// check user
 	var (
-		recordUser = s_user.User{Username: req.Username}
+		recordUser = user.User{Username: req.Username}
 		has        bool
 	)
 	if has, err = recordUser.SelectOne(&recordUser); err != nil {
@@ -55,7 +55,7 @@ func (p *ControllerLogin) Post(ctx *gin.Context) {
 		return
 	}
 	// check role
-	var recordRole s_role.Role
+	var recordRole role.Role
 	if has, err = recordRole.SelectOneByUserId(recordUser.Id); err != nil {
 		p.RespErrDBError(err)
 		return
@@ -69,7 +69,7 @@ func (p *ControllerLogin) Post(ctx *gin.Context) {
 		p.RespErrInternalServerError(err)
 		return
 	}
-	recordUser.LoginTime = time.NewJSONTime()
+	recordUser.LoginTime = timeutil.NewJSONTime()
 	recordUser.LoginIp = p.ClientIP()
 	if _, err = recordUser.Update(&recordUser, recordUser.Id, "login_time,login_ip"); err != nil {
 		p.RespErrDBError(err)
