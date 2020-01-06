@@ -11,6 +11,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/rs/zerolog"
 )
 
 type ControllerLogin struct {
@@ -81,6 +82,6 @@ func (p *ControllerLogin) Post(ctx *gin.Context) {
 	p.userId = recordUser.Id
 	p.roleId = recordRole.Id
 
-	p.LogDB(log.TypeLogin, log.LevelInfo)
+	p.LogDB(log.TypeLogin, zerolog.InfoLevel)
 	p.RespOk(nil)
 }

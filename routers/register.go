@@ -5,6 +5,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/rs/zerolog/log"
+
 	"ginserver/controllers"
 	"ginserver/global"
 	"ginserver/pkg/e"
@@ -13,7 +15,6 @@ import (
 	"github.com/gin-contrib/cors"
 	"github.com/gin-contrib/pprof"
 	"github.com/gin-gonic/gin"
-	"github.com/sirupsen/logrus"
 )
 
 var defaultRouter = gin.New()
@@ -31,8 +32,8 @@ func register(router *gin.Engine) {
 	gin.SetMode(global.RunMode)
 	if global.RunMode != gin.DebugMode {
 		gin.DisableConsoleColor()
-		gin.DefaultErrorWriter = logrus.StandardLogger().Out
-		router.Use(middlewares.Logger(logrus.StandardLogger()))
+		gin.DefaultErrorWriter = log.Logger
+		router.Use(middlewares.Logger(&log.Logger))
 	} else {
 		pprof.Register(router)
 		router.Use(gin.Logger())

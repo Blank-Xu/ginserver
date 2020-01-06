@@ -9,7 +9,7 @@ import (
 	"ginserver/tools/utils"
 
 	"github.com/gin-gonic/gin"
-	"github.com/sirupsen/logrus"
+	"github.com/rs/zerolog/log"
 )
 
 type ControllerUsers struct {
@@ -40,7 +40,7 @@ func (p *ControllerUsers) GetOne(ctx *gin.Context) {
 	has, err := record.SelectOne(&record, cols...)
 	if err != nil {
 		p.RespErrDBError(err)
-		logrus.Error(err)
+		log.Err(err)
 		return
 	}
 	if !has {
@@ -65,7 +65,7 @@ func (p *ControllerUsers) Get(ctx *gin.Context) {
 	)
 	if err = record.SelectCond(&record, &records, nil, orderBy.String(), db.NewPaging(ctx), cols...); err != nil {
 		p.RespErrDBError(err)
-		logrus.Error(err)
+		log.Err(err)
 		return
 	}
 	p.RespOk(&records)
@@ -76,7 +76,7 @@ func (p *ControllerUsers) Post(ctx *gin.Context) {
 	var record user.Insert
 	if err := ctx.BindJSON(record); err != nil {
 		p.RespErrInvalidParams(err)
-		logrus.Error(err)
+		log.Err(err)
 		return
 	}
 
@@ -87,7 +87,7 @@ func (p *ControllerUsers) Post(ctx *gin.Context) {
 	_, err := record.InsertOne(&record)
 	if err != nil {
 		p.RespErrDBError(err)
-		logrus.Error(err)
+		log.Err(err)
 		return
 	}
 	p.RespCreated(nil)
@@ -105,7 +105,7 @@ func (p *ControllerUsers) Put(ctx *gin.Context) {
 	has, err := record.IsExists(&record)
 	if err != nil {
 		p.RespErrDBError(err)
-		logrus.Error(err)
+		log.Err(err)
 		return
 	}
 	if !has {
@@ -121,7 +121,7 @@ func (p *ControllerUsers) Put(ctx *gin.Context) {
 	record.Password = utils.Md5(record.Password + record.Salt)
 	if _, err = record.Update(&record, record.Id); err != nil {
 		p.RespErrDBError(err)
-		logrus.Error(err)
+		log.Err(err)
 		return
 	}
 	p.RespOk(nil)
@@ -138,7 +138,7 @@ func (p *ControllerUsers) Delete(ctx *gin.Context) {
 	var record = user.User{Id: id}
 	if _, err := record.Delete(&record); err != nil {
 		p.RespErrDBError(err)
-		logrus.Error(err)
+		log.Err(err)
 		return
 	}
 	p.RespOk(nil)

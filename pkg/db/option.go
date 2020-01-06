@@ -6,7 +6,7 @@ import (
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/go-xorm/xorm"
-	"github.com/sirupsen/logrus"
+	"github.com/rs/zerolog/log"
 
 	"xorm.io/core"
 )
@@ -37,7 +37,7 @@ func (p *Option) NewEngine() (*xorm.Engine, error) {
 		return nil, fmt.Errorf("engine create failed, database: [%s], source: [%s], err: %v", p.DataBase, dataSourceName, err)
 	}
 
-	engine.SetLogger(NewSimpleLogger(logrus.StandardLogger(), p.DataBase, core.LogLevel(p.LogLevel)))
+	engine.SetLogger(NewSimpleLogger(&log.Logger, p.DataBase, core.LogLevel(p.LogLevel)))
 
 	// check connection
 	if p.Connect {

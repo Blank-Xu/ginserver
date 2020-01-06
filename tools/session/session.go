@@ -8,7 +8,7 @@ import (
 	"github.com/gin-contrib/sessions/redis"
 )
 
-type Session struct {
+type Option struct {
 	Provider      string `yaml:"Provider"`
 	Path          string `yaml:"Path"`
 	Domain        string `yaml:"Domain"`
@@ -18,7 +18,7 @@ type Session struct {
 	RedisPassword string `yaml:"RedisPassword"`
 }
 
-func (p *Session) NewStore() (store sessions.Store, err error) {
+func (p *Option) NewStore() (store sessions.Store, err error) {
 	switch p.Provider {
 	case "redis":
 		store, err = redis.NewStore(30, "tcp", p.Domain, p.RedisPassword, []byte(p.Secret))

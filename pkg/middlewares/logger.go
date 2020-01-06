@@ -1,40 +1,44 @@
 package middlewares
 
 import (
-	"strconv"
+	"net/http"
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/sirupsen/logrus"
+	"github.com/rs/zerolog"
 )
 
-// logrus middleware for gin
-func Logger(log *logrus.Logger) gin.HandlerFunc {
+// Logger middleware for gin
+func Logger(logger *zerolog.Logger) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		start := time.Now()
-		c.Next()
-		status := c.Writer.Status()
-		entry := log.WithFields(logrus.Fields{
-			"method":     c.Request.Method,
-			"ip":         c.ClientIP(),
-			"path":       c.Request.URL.Path,
-			"referer":    c.Request.Referer(),
-			"user_agent": c.Request.UserAgent(),
-			"status":     status,
-		})
 
-		if gin.Mode() == gin.DebugMode {
-			entry = entry.WithField("latency", strconv.FormatFloat(float64(
-				time.Now().Sub(start).Nanoseconds())/1000000.0, 'f', -1, 32)+" ms")
+		c.Next()
+
+		status := c.Writer.Status()
+		log := logger.With().
+			Int("status", status).
+			Str("method", c.Request.Method).
+			Str("ip", c.ClientIP()).
+			Str("path", c.Request.URL.Path).
+			Str("raw_query", c.Request.URL.RawQuery).
+			Str("referer", c.Request.Referer()).
+			Str("user_agent", c.Request.UserAgent()).
+			Float64("latency", float64(time.Now().Sub(start).Nanoseconds())/1000000.0).
+			Logger()
+
+		msg := "request"
+		if len(c.Errors) > 0 {
+			msg = c.Errors.String()
 		}
 
 		switch {
-		case status > 499:
-			entry.Error(c.Errors.String())
-		case status > 399:
-			entry.Warn(c.Errors.String())
+		case c.Writer.Status() >= http.StatusBadRequest && c.Writer.Status() < http.StatusInternalServerError:
+			log.Warn().Msg(msg)
+		case c.Writer.Status() >= http.StatusInternalServerError:
+			log.Error().Msg(msg)
 		default:
-			entry.Info(c.Errors.String())
+			log.Info().Msg(msg)
 		}
 	}
 }

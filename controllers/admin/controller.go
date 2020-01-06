@@ -4,15 +4,14 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/sirupsen/logrus"
-
 	"ginserver/global"
 	"ginserver/models/log"
-
 	"ginserver/pkg/e"
 	"ginserver/pkg/middlewares"
 
 	"github.com/gin-gonic/gin"
+	"github.com/rs/zerolog"
+	zlog "github.com/rs/zerolog/log"
 )
 
 type Controller struct {
@@ -89,13 +88,13 @@ func (p *Controller) RespErrNotFound() {
 }
 
 func (p *Controller) RespErrInternalServerError(err error) {
-	p.LogDB(log.TypeDBError, log.LevelError, p.Error(err).Error())
+	p.LogDB(log.TypeDBError, zerolog.ErrorLevel, p.Error(err).Error())
 
 	p.AbortWithStatusJSON(e.RespErrHttp(http.StatusInternalServerError))
 }
 
 func (p *Controller) RespErrDBError(err error) {
-	p.LogDB(log.TypeInternalServerError, log.LevelError, p.Error(err).Error())
+	p.LogDB(log.TypeInternalServerError, zerolog.ErrorLevel, p.Error(err).Error())
 
 	if gin.Mode() != gin.ReleaseMode {
 		p.AbortWithStatusJSON(http.StatusNotImplemented, e.RespErrCode(e.CodeDBErr, err))
@@ -127,7 +126,7 @@ func (p *Controller) Render(tpl string, value map[string]interface{}) {
 
 func (p *Controller) LogErr(err error) {
 	if err != nil {
-		logrus.Error(err)
+		zlog.Err(err)
 	}
 }
 
@@ -136,7 +135,7 @@ var logWithoutParamsPath = []string{
 	"/admin/change_pwd",
 }
 
-func (p *Controller) LogDB(lType log.Type, level log.Level, remark ...string) {
+func (p *Controller) LogDB(lType log.Type, level zerolog.Level, remark ...string) {
 	var (
 		params  string
 		lRemark string

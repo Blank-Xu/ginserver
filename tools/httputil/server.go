@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-type Server struct {
+type Option struct {
 	IP                  string `yaml:"IP"`
 	Port                int    `yaml:"Port"`
 	ReadTimeout         int    `yaml:"ReadTimeout"`
@@ -18,17 +18,17 @@ type Server struct {
 	MaxHeaderBytes      int    `yaml:"MaxHeaderBytes"`
 }
 
-func (p *Server) Init() {
+func (p *Option) Init() {
 	http.DefaultTransport.(*http.Transport).MaxConnsPerHost = p.MaxConnsPerHost
 	http.DefaultTransport.(*http.Transport).MaxIdleConns = p.MaxIdleConns
 	http.DefaultTransport.(*http.Transport).MaxIdleConnsPerHost = p.MaxIdleConnsPerHost
 }
 
-func (p *Server) Addr() string {
+func (p *Option) Addr() string {
 	return fmt.Sprintf("%s:%d", p.IP, p.Port)
 }
 
-func (p *Server) New(handler http.Handler) *http.Server {
+func (p *Option) New(handler http.Handler) *http.Server {
 	return &http.Server{
 		Addr:           p.Addr(),
 		Handler:        handler,

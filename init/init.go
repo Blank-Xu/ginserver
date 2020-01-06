@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 
+	zlog "github.com/rs/zerolog/log"
 	"github.com/spf13/viper"
 
 	"ginserver/global"
@@ -55,11 +56,17 @@ func Init() {
 
 	cfg.Fix.Init()
 
+	if err = cfg.Log.Init(); err != nil {
+		panic(err)
+	}
+
 	if err = db.SetDBS(cfg.DataBase); err != nil {
+		zlog.Err(err)
 		panic(err)
 	}
 
 	if err = casbin.Init(cfg.CasbinModelFile); err != nil {
+		zlog.Err(err)
 		panic(fmt.Sprintf("load casbin failed, err: %v", err))
 	}
 

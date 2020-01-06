@@ -1,6 +1,8 @@
 package admin
 
 import (
+	"github.com/rs/zerolog"
+
 	"ginserver/models/log"
 	"ginserver/models/system/user"
 	"ginserver/tools/utils"
@@ -50,6 +52,6 @@ func (p *ControllerChangePwd) Post(ctx *gin.Context) {
 		p.RespErrDBError(err)
 		return
 	}
-	p.LogDB(log.TypeChangePwd, log.LevelInfo)
+	p.LogDB(log.TypeChangePwd, zerolog.InfoLevel)
 	p.RespCreated(nil)
 }

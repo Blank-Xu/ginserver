@@ -1,27 +1,30 @@
 package db
 
 import (
-	"github.com/sirupsen/logrus"
+	"fmt"
+
+	"github.com/rs/zerolog"
 	"xorm.io/core"
 )
 
 type SimpleLogger struct {
-	entry   *logrus.Entry
+	logger  *zerolog.Logger
 	level   core.LogLevel
 	showSQL bool
 }
 
-func NewSimpleLogger(log *logrus.Logger, database string, logLevel core.LogLevel) *SimpleLogger {
+func NewSimpleLogger(logger *zerolog.Logger, database string, logLevel core.LogLevel) *SimpleLogger {
+	log := logger.With().Str("database", database).Logger()
 	return &SimpleLogger{
-		entry: log.WithField("database", database),
-		level: logLevel,
+		logger: &log,
+		level:  logLevel,
 	}
 }
 
 // Error implement core.ILogger
 func (s *SimpleLogger) Error(v ...interface{}) {
-	if s.level <= core.LOG_ERR {
-		s.entry.Error(v...)
+	if s.level <= core.LOG_ERR && len(v) > 0 {
+		s.logger.Error().Msg(fmt.Sprint(v...))
 	}
 	return
 }
@@ -29,7 +32,7 @@ func (s *SimpleLogger) Error(v ...interface{}) {
 // Errorf implement core.ILogger
 func (s *SimpleLogger) Errorf(format string, v ...interface{}) {
 	if s.level <= core.LOG_ERR {
-		s.entry.Errorf(format, v...)
+		s.logger.Error().Msg(fmt.Sprintf(format, v...))
 	}
 	return
 }
@@ -37,7 +40,7 @@ func (s *SimpleLogger) Errorf(format string, v ...interface{}) {
 // Debug implement core.ILogger
 func (s *SimpleLogger) Debug(v ...interface{}) {
 	if s.level <= core.LOG_DEBUG {
-		s.entry.Debug(v...)
+		s.logger.Debug().Msg(fmt.Sprint(v...))
 	}
 	return
 }
@@ -45,7 +48,7 @@ func (s *SimpleLogger) Debug(v ...interface{}) {
 // Debugf implement core.ILogger
 func (s *SimpleLogger) Debugf(format string, v ...interface{}) {
 	if s.level <= core.LOG_DEBUG {
-		s.entry.Debugf(format, v...)
+		s.logger.Debug().Msg(fmt.Sprintf(format, v...))
 	}
 	return
 }
@@ -53,7 +56,7 @@ func (s *SimpleLogger) Debugf(format string, v ...interface{}) {
 // Info implement core.ILogger
 func (s *SimpleLogger) Info(v ...interface{}) {
 	if s.level <= core.LOG_INFO {
-		s.entry.Info(v...)
+		s.logger.Info().Msg(fmt.Sprint(v...))
 	}
 	return
 }
@@ -61,7 +64,7 @@ func (s *SimpleLogger) Info(v ...interface{}) {
 // Infof implement core.ILogger
 func (s *SimpleLogger) Infof(format string, v ...interface{}) {
 	if s.level <= core.LOG_INFO {
-		s.entry.Infof(format, v...)
+		s.logger.Info().Msg(fmt.Sprintf(format, v...))
 	}
 	return
 }
@@ -69,7 +72,7 @@ func (s *SimpleLogger) Infof(format string, v ...interface{}) {
 // Warn implement core.ILogger
 func (s *SimpleLogger) Warn(v ...interface{}) {
 	if s.level <= core.LOG_WARNING {
-		s.entry.Warn(v...)
+		s.logger.Warn().Msg(fmt.Sprint(v...))
 	}
 	return
 }
@@ -77,7 +80,7 @@ func (s *SimpleLogger) Warn(v ...interface{}) {
 // Warnf implement core.ILogger
 func (s *SimpleLogger) Warnf(format string, v ...interface{}) {
 	if s.level <= core.LOG_WARNING {
-		s.entry.Warnf(format, v...)
+		s.logger.Warn().Msg(fmt.Sprintf(format, v...))
 	}
 	return
 }

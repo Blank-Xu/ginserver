@@ -1,6 +1,8 @@
 package admin
 
 import (
+	"github.com/rs/zerolog"
+
 	"ginserver/models/log"
 	"ginserver/models/system/user"
 
@@ -35,6 +37,6 @@ func (p *ControllerInfo) Post(ctx *gin.Context) {
 		p.RespErrInternalServerError(err)
 		return
 	}
-	p.LogDB(log.TypeOther, log.LevelInfo)
+	p.LogDB(log.TypeOther, zerolog.InfoLevel)
 	p.RespOk(nil)
 }

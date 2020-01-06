@@ -22,11 +22,14 @@ Fix:
     Name: UTC
     Offset: 8 # hour
 
-#Log: # logrus
-#  Path: logs
-#  FileName: ginserver.log
-#  Level: 5 # [0:panic, 1:fatal, 2:error, 3:warn, 4:info, 5:debug, 6:trace]
-#  ReportCaller: true # write log with runtime file and func
+Log: # zerolog
+  RecordFile: true
+  FileName: ./logs/httpserver_%Y_%m_%d_%H.log
+  LinkName: ./logs/httpserver.log
+  RotateHour: 1
+  ReportCaller: true # write log with runtime file and func
+  Level: -1 # [7:Disabled, 6:NoLevel, 5:panic, 4:fatal, 3:error, 2:warn, 1:info, 0:debug, -1:trace]
+  TimeLayout: 2006/01/02 15:04:05.000000
 
 DataBase: # xorm
   - DriverName: mysql

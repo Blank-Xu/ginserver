@@ -2,6 +2,7 @@ package global
 
 import (
 	"ginserver/pkg/db"
+	"ginserver/pkg/log"
 	"ginserver/tools/fix"
 	"ginserver/tools/httputil"
 	"ginserver/tools/redis"
@@ -16,10 +17,10 @@ type Config struct {
 	StaticDir       string           `yaml:"StaticDir"`
 	TemplateDir     string           `yaml:"TemplateDir"`
 	CasbinModelFile string           `yaml:"CasbinModelFile"`
-	Session         *session.Session `yaml:"Session"`
-	HttpServer      *httputil.Server `yaml:"HttpServer"`
+	Log             *log.Option      `yaml:"Log"`
+	Session         *session.Option  `yaml:"Session"`
+	HttpServer      *httputil.Option `yaml:"HttpServer"`
 	Fix             *fix.Fix         `yaml:"Fix"`
 	DataBase        []*db.Option     `yaml:"DataBase"`
 	Redis           []*redis.Client  `yaml:"Redis"`
-	// Log         *Log        `yaml:"Log"`
 }
