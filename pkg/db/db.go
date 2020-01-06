@@ -1,6 +1,8 @@
 package db
 
 import (
+	"errors"
+
 	"github.com/go-xorm/xorm"
 )
 
@@ -21,11 +23,23 @@ func SetDefaultDBByIndex(index uint) {
 	defaultDB = GetDBByIndex(index)
 }
 
-func SetDBs(engines []*xorm.Engine) {
-	dbs = engines
-	if len(engines) > 0 {
-		defaultDB = engines[0]
+func SetDBS(options []*Option) error {
+	if len(options) == 0 {
+		return errors.New("engine options is null")
 	}
+
+	for idx := range options {
+		engine, err := options[idx].NewEngine()
+		if err != nil {
+			return err
+		}
+
+		dbs = append(dbs, engine)
+	}
+
+	defaultDB = dbs[0]
+
+	return nil
 }
 
 func GetDBByIndex(index uint) *xorm.Engine {

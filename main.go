@@ -10,8 +10,7 @@ import (
 	"time"
 
 	_ "ginserver/docs"
-	"ginserver/pkg/config"
-
+	"ginserver/global"
 	defaultInit "ginserver/init"
 	"ginserver/routers"
 )
@@ -75,8 +74,8 @@ func main() {
 	defaultInit.Init()
 	routers.Register()
 
-	server := config.Default.HttpServer.New(nil)
-	log.Printf("server pid[%d] start success.", pid)
+	server := global.DefaultConfig.HttpServer.New(routers.GetRouter())
+	log.Printf("server pid[%d] start success, addr: %s.", pid, server.Addr)
 
 	go func() {
 		if err := server.ListenAndServe(); err != nil && err != http.ErrServerClosed {

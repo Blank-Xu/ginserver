@@ -21,13 +21,13 @@ type Jwt struct {
 	Subject      string `yaml:"Subject"`
 	ExpireSecond int64  `yaml:"ExpireSecond"`
 
-	SignKey       string            `yaml:"sign_key"`
+	SignKey       string            `yaml:"SignKey"`
 	signKey       []byte            `yaml:"-"`
-	SigningMethod string            `yaml:"signing_method"`
+	SigningMethod string            `yaml:"SigningMethod"`
 	signingMethod jwt.SigningMethod `yaml:"-"`
 
-	Username string `yaml:"username"`
-	Password string `yaml:"password"`
+	Username string `yaml:"Username"`
+	Password string `yaml:"Password"`
 }
 
 func (p *Jwt) Init() error {

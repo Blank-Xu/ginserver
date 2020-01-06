@@ -11,7 +11,7 @@ type Fix struct {
 	} `yaml:"TimeZone"`
 }
 
-func (p *Fix) Set() {
+func (p *Fix) Init() {
 	// fix timezone
 	time.Local = time.FixedZone(p.TimeZone.Name, p.TimeZone.Offset*3600)
 }

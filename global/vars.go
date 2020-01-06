@@ -5,10 +5,10 @@ import (
 )
 
 var (
-	AppName string
-	RunMode string
+	AppName string = "server"
+	RunMode string = "debug"
 )
 
 var (
-	Config viper.Viper
+	Viper *viper.Viper
 )

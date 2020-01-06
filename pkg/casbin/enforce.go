@@ -8,25 +8,31 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-var Default *casbin.Enforcer
+var defaultEnforcer *casbin.Enforcer
 
 func Init(file string) error {
-	Default, err := casbin.NewEnforcer(file, false)
+	enforcer, err := casbin.NewEnforcer(file, false)
 	if err != nil {
 		return fmt.Errorf("create casbin enforcer failed, err: " + err.Error())
 	}
 
 	// load rules
-	if err := addAllPermissionForUser(Default); err != nil {
+	if err := addAllPermissionForUser(enforcer); err != nil {
 		return fmt.Errorf("load casbin role menu policy failed, err: %v", err)
 	}
-	if err := addRoleForUser(Default); err != nil {
+	if err := addRoleForUser(enforcer); err != nil {
 		return fmt.Errorf("load casbin user role policy failed, err: %v", err)
 	}
+
+	defaultEnforcer = enforcer
 
 	return nil
 }
 
+func GetEnforcer() *casbin.Enforcer {
+	return defaultEnforcer
+}
+
 func Enforce(context *gin.Context, userId int) (bool, error) {
-	return Default.Enforce(strconv.Itoa(userId), context.Request.URL.Path, context.Request.Method)
+	return defaultEnforcer.Enforce(strconv.Itoa(userId), context.Request.URL.Path, context.Request.Method)
 }

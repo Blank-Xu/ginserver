@@ -3,84 +3,67 @@ package init
 import (
 	"flag"
 	"fmt"
-	"io/ioutil"
 	"log"
-	"os"
-	"time"
 
-	"gopkg.in/yaml.v3"
+	"github.com/spf13/viper"
 
 	"ginserver/global"
+	"ginserver/pkg/casbin"
+	"ginserver/pkg/db"
 )
 
 var (
-	configFile = flag.String("config", "configs/app_debug.yaml", "config file")
-)
+	// for local config
+	configFile = flag.String("c", "configs/app_debug.yaml", "config file")
 
-const (
-	ConfigDir  = "configs"
-	ServerName = "webserver"
-	Version    = "0.1.0"
-)
-
-const (
-	remoteConfigRefreshTime = time.Second * 5
-)
-
-var (
-	runMode = flag.String("m", "debug", "run mode")
-
-	// for remote config setting
+	// for remote config
 	remote        = flag.Bool("r", false, "remote")
+	configType    = flag.String("t", "yaml", "configType")
 	provider      = flag.String("P", "etcd", "provider")
 	endpoint      = flag.String("h", "http://127.0.0.1:4001", "endpoint")
-	wpath         = flag.String("p", ServerName, "path")
-	secretkeyring = flag.String("s", ServerName, "secretkeyring")
-	configType    = flag.String("t", "yaml", "configType")
+	path          = flag.String("p", "path", "path")
+	secretkeyring = flag.String("s", "secretkeyring", "secretkeyring")
 )
-
-// type config struct {
-// 	Fix    *fix.Fix               `json:"fix" yaml:"fix"`
-// 	Server *httpserver.HttpServer `json:"server" yaml:"server"`
-// 	Jwt    []*jwt.Jwt             `json:"jwt" yaml:"jwt"`
-// 	Log    *wlog.Log              `json:"log" yaml:"log"`
-// }
-
-// func Init() {
-// 	flag.Parse()
-// 	log.Printf("server version: %s, start args: %v\n", Version, flag.Args())
-//
-// 	if *remote {
-// 		parseRemoteConfig(loadConfig)
-// 	} else {
-// 		parseLocalConfig(loadConfig)
-// 	}
-//
-// 	log.SetOutput(io.MultiWriter(os.Stdout))
-//
-// 	if err := casbin.Init(config.Default.CasbinModelFile); err != nil {
-// 		panic(err)
-// 	}
-// }
 
 func Init() {
 	if !flag.Parsed() {
 		flag.Parse()
 	}
 
-	filename := *configFile
+	log.Printf("server starting ...\n -- version: [%s]\n -- args: %v", global.Version, flag.Args())
 
-	log.Printf("Server Starting ... \n - version: [%s]  \n - args: %s\n", global.Version, os.Args)
-	log.Printf("Read Config File ... \n - filename: [%s]\n", filename)
-	log.Println(" - you can use [-config file] command to set config file when server start.")
-
-	byt, err := ioutil.ReadFile(filename)
+	defaultViper := viper.GetViper()
+	var err error
+	if *remote {
+		err = parseRemoteConfig(defaultViper, *configType, *provider, *endpoint, *path, *secretkeyring, loadConfig)
+	} else {
+		err = parseLocalConfig(defaultViper, *configFile, loadConfig)
+	}
 	if err != nil {
-		panic(fmt.Sprintf("load config error, file: [%s], err: [%v]", filename, err))
+		panic(fmt.Sprintf("parse config failed, err: %v", err))
 	}
 
-	if err = yaml.Unmarshal(byt, nil); err != nil {
-		panic(fmt.Sprintf("read config error, file: [%s], err: [%v]", filename, err))
+	global.Viper = defaultViper
+
+	var cfg global.Config
+	if err = defaultViper.Unmarshal(&cfg); err != nil {
+		panic(fmt.Sprintf("Unmarshal config failed, err: %v", err))
+	}
+	global.DefaultConfig = &cfg
+	global.AppName = cfg.AppName
+	global.RunMode = cfg.RunMode
+
+	cfg.Fix.Init()
+
+	if err = db.SetDBS(cfg.DataBase); err != nil {
+		panic(err)
 	}
 
+	if err = casbin.Init(cfg.CasbinModelFile); err != nil {
+		panic(fmt.Sprintf("load casbin failed, err: %v", err))
+	}
+
+	cfg.HttpServer.Init()
+
+	// log.SetOutput(io.MultiWriter(os.Stdout))
 }

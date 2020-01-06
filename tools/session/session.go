@@ -1,7 +1,6 @@
 package session
 
 import (
-	"errors"
 	"fmt"
 
 	"github.com/gin-contrib/sessions"
@@ -29,18 +28,20 @@ func (p *Session) NewStore() (store sessions.Store, err error) {
 	case "memstore":
 		store = memstore.NewStore([]byte(p.Secret))
 	default:
-		return nil, errors.New("not support this session")
+		return nil, fmt.Errorf("session not support provider: %s", p.Provider)
 	}
 
 	if len(p.Path) == 0 {
 		p.Path = "/"
 	}
 
-	store.Options(sessions.Options{
-		Path:     p.Path,
-		MaxAge:   p.MaxAge,
-		HttpOnly: p.HttpOnly,
-	})
+	store.Options(
+		sessions.Options{
+			Path:     p.Path,
+			MaxAge:   p.MaxAge,
+			HttpOnly: p.HttpOnly,
+		},
+	)
 
 	return
 }

@@ -6,8 +6,8 @@ require (
 	cloud.google.com/go v0.50.0 // indirect
 	github.com/casbin/casbin/v2 v2.1.2
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
+	github.com/fsnotify/fsnotify v1.4.7
 	github.com/gin-contrib/cors v1.3.0
-	github.com/gin-contrib/multitemplate v0.0.0-20191128031210-95dee0dedf35
 	github.com/gin-contrib/pprof v1.2.1
 	github.com/gin-contrib/sessions v0.0.3
 	github.com/gin-gonic/gin v1.5.0
@@ -25,6 +25,5 @@ require (
 	golang.org/x/sys v0.0.0-20191224085550-c709ea063b76 // indirect
 	gopkg.in/ini.v1 v1.51.1 // indirect
 	gopkg.in/yaml.v2 v2.2.7 // indirect
-	gopkg.in/yaml.v3 v3.0.0-20191120175047-4206685974f2
 	xorm.io/core v0.7.2
 )

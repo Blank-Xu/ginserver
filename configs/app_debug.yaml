@@ -7,9 +7,15 @@ TemplateDir: web/template
 CasbinModelFile: configs/rbac_model.conf # casbin policy config
 
 HttpServer:
-  HttpPort: 8080
+  IP:
+  Port: 8080
   ReadTimeout: 10 # second
   WriteTimeout: 10 # second
+  IdleTimeout: 20
+  MaxConnsPerHost: 1000
+  MaxIdleConns: 100
+  MaxIdleConnsPerHost: 10
+  MaxHeaderBytes: 4096
 
 Fix:
   TimeZone:
@@ -37,8 +43,6 @@ DataBase: # xorm
     ShowSql: true
     ShowExecTime: true
     Connect: true # need to connect database when server start?
-#  - DriverName: mysql
-#    Connect: false
 
 Session: # Provider support [memstore, redis], you can use other types by site support [https://github.com/gin-contrib/sessions]
   Provider: memstore # if you chose [redis], you must set Redis connect information

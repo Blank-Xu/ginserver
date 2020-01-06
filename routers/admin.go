@@ -12,8 +12,6 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-var cookieName = "ginserver"
-
 func registerAdminRouter(router *gin.Engine) {
 	// var cfg = config.GetConfig()
 	// if len(cfg.AppName) > 0 {
@@ -29,9 +27,11 @@ func registerAdminRouter(router *gin.Engine) {
 
 	groupAdmin := router.Group("admin")
 	// use session middleware
-	global.Config.Get("session")
-	// sessionStore :=
-	groupAdmin.Use(sessions.Sessions(cookieName, newSessionStore()))
+	sessionStore, err := global.DefaultConfig.Session.NewStore()
+	if err != nil {
+		panic(err)
+	}
+	groupAdmin.Use(sessions.Sessions(global.AppName, sessionStore))
 	{
 		// register /admin/login router
 		groupAdmin.GET("login", new(admin.ControllerLogin).Get)

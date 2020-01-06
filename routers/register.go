@@ -18,7 +18,7 @@ import (
 
 var defaultRouter = gin.New()
 
-func GetDefaultRouter() *gin.Engine {
+func GetRouter() *gin.Engine {
 	return defaultRouter
 }
 
@@ -39,6 +39,7 @@ func register(router *gin.Engine) {
 	}
 	// set global middleware
 	router.Use(gin.Recovery())
+
 	// cors middleware
 	router.Use(cors.New(cors.Config{
 		AllowOrigins:     []string{"*"},
@@ -46,7 +47,7 @@ func register(router *gin.Engine) {
 		AllowHeaders:     []string{"*"},
 		ExposeHeaders:    []string{"Content-Length"},
 		AllowCredentials: true,
-		MaxAge:           12 * time.Hour,
+		MaxAge:           time.Hour * 12,
 	}))
 
 	router.NoRoute(func(c *gin.Context) {
@@ -62,6 +63,6 @@ func register(router *gin.Engine) {
 	// home page
 	router.GET("/", new(controllers.ControllerIndex).Get)
 
-	registerAdminRouter(router)
+	// registerAdminRouter(router)
 	registerApiRouter(router)
 }
