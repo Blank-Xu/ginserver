@@ -3,7 +3,7 @@ package routers
 import (
 	"net/http"
 
-	"ginserver/controllers/api/v1/users"
+	"ginserver/controllers/v1/system"
 	"ginserver/pkg/casbin"
 	"ginserver/pkg/middlewares"
 
@@ -12,7 +12,7 @@ import (
 	"github.com/swaggo/gin-swagger/swaggerFiles"
 )
 
-func registerApiRouter(router *gin.Engine) {
+func registerApi(router *gin.Engine) {
 	// register swagger doc router
 	router.GET("swagger/*any", swagger.WrapHandler(swaggerFiles.Handler))
 
@@ -26,10 +26,12 @@ func registerApiRouter(router *gin.Engine) {
 		apiV1.Use(middlewares.JwtAuth())
 
 		apiV1.Use(middlewares.CasbinEnforce(casbin.GetEnforcer()))
-		apiV1.GET("users/:id", new(users.ControllerUsers).GetOne)
-		apiV1.GET("users", new(users.ControllerUsers).Get)
-		apiV1.POST("users", new(users.ControllerUsers).Post)
-		apiV1.PUT("users/:id", new(users.ControllerUsers).Put)
-		apiV1.DELETE("users/:id", new(users.ControllerUsers).Delete)
+
+		user := new(system.UserController)
+		apiV1.GET("users/:id", user.GetOne)
+		apiV1.GET("users", user.Get)
+		apiV1.POST("users", user.Post)
+		apiV1.PUT("users/:id", user.Put)
+		apiV1.DELETE("users/:id", user.Delete)
 	}
 }

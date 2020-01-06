@@ -6,8 +6,8 @@ import (
 
 	"ginserver/global"
 	"ginserver/models/log"
-	"ginserver/pkg/e"
 	"ginserver/pkg/middlewares"
+	"ginserver/pkg/resp"
 
 	"github.com/gin-gonic/gin"
 	"github.com/rs/zerolog"
@@ -76,30 +76,30 @@ func (p *Controller) RespRedirect302(location string) {
 }
 
 func (p *Controller) RespErrInvalidParams(err ...interface{}) {
-	p.AbortWithStatusJSON(http.StatusBadRequest, e.RespErrCode(e.CodeInvalidParams, err...))
+	p.AbortWithStatusJSON(http.StatusBadRequest, resp.RespErrCode(resp.CodeInvalidParams, err...))
 }
 
 func (p *Controller) RespErrForbidden() {
-	p.AbortWithStatusJSON(e.RespErrHttp(http.StatusForbidden))
+	p.AbortWithStatusJSON(resp.RespErrHttp(http.StatusForbidden))
 }
 
 func (p *Controller) RespErrNotFound() {
-	p.AbortWithStatusJSON(e.RespErrHttp(http.StatusNotFound))
+	p.AbortWithStatusJSON(resp.RespErrHttp(http.StatusNotFound))
 }
 
 func (p *Controller) RespErrInternalServerError(err error) {
 	p.LogDB(log.TypeDBError, zerolog.ErrorLevel, p.Error(err).Error())
 
-	p.AbortWithStatusJSON(e.RespErrHttp(http.StatusInternalServerError))
+	p.AbortWithStatusJSON(resp.RespErrHttp(http.StatusInternalServerError))
 }
 
 func (p *Controller) RespErrDBError(err error) {
 	p.LogDB(log.TypeInternalServerError, zerolog.ErrorLevel, p.Error(err).Error())
 
 	if gin.Mode() != gin.ReleaseMode {
-		p.AbortWithStatusJSON(http.StatusNotImplemented, e.RespErrCode(e.CodeDBErr, err))
+		p.AbortWithStatusJSON(http.StatusNotImplemented, resp.RespErrCode(resp.CodeDBErr, err))
 	} else {
-		p.AbortWithStatusJSON(http.StatusNotImplemented, e.RespErrCode(e.CodeDBErr))
+		p.AbortWithStatusJSON(http.StatusNotImplemented, resp.RespErrCode(resp.CodeDBErr))
 	}
 }
 

@@ -10,44 +10,51 @@ import (
 
 var errSessionNil = errors.New("session is nil")
 
-func SessionCreate(context *gin.Context, userId, roleId int) error {
-	if session := sessions.Default(context); session != nil {
-		session.Set(KeyUserId, userId)
-		session.Set(KeyRoleId, roleId)
-		if err := session.Save(); err != nil {
-			return err
-		}
-		return nil
+func SessionCreate(ctx *gin.Context, userId, roleId int) error {
+	session := sessions.Default(ctx)
+	if session == nil {
+		return errSessionNil
 	}
-	return errSessionNil
+
+	session.Set(KeyUserId, userId)
+	session.Set(KeyRoleId, roleId)
+	if err := session.Save(); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func SessionDestroy() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		if session := sessions.Default(c); session != nil {
-			session.Clear()
-			if err := session.Save(); err != nil {
-				c.Error(err)
-			}
+	return func(ctx *gin.Context) {
+		session := sessions.Default(ctx)
+		if session == nil {
+			return
+		}
+
+		session.Clear()
+		if err := session.Save(); err != nil {
+			ctx.Error(err)
 		}
 	}
 }
 
 func SessionAuth(redirectLocation string) gin.HandlerFunc {
-	return func(c *gin.Context) {
-		if session := sessions.Default(c); session != nil {
+	return func(ctx *gin.Context) {
+		if session := sessions.Default(ctx); session != nil {
 			// login session check
 			if userId, ok := session.Get(KeyUserId).(int); ok {
 				if roleId, ok := session.Get(KeyRoleId).(int); ok {
 					if userId > 0 && roleId > 0 {
-						c.Set(KeyUserId, userId)
-						c.Set(KeyRoleId, roleId)
+						ctx.Set(KeyUserId, userId)
+						ctx.Set(KeyRoleId, roleId)
 						return
 					}
 				}
 			}
 		}
-		c.Redirect(http.StatusFound, redirectLocation)
-		c.Abort()
+
+		ctx.Redirect(http.StatusFound, redirectLocation)
+		ctx.Abort()
 	}
 }

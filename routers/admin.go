@@ -42,9 +42,9 @@ func registerAdminRouter(router *gin.Engine) {
 		groupAdmin.GET("logout", new(admin.ControllerLogout).Get, middlewares.SessionDestroy())
 		// register /admin router
 		groupAdmin.GET("/", new(admin.ControllerAdmin).Get)
-		groupAdmin.GET("404", new(admin.Controller404).Get)
-		groupAdmin.GET("500", new(admin.Controller500).Get)
-		groupAdmin.GET("about", new(admin.ControllerAbout).Get)
+		// groupAdmin.GET("404", new(admin.Controller404).Get)
+		// groupAdmin.GET("500", new(admin.Controller500).Get)
+		// groupAdmin.GET("about", new(admin.ControllerAbout).Get)
 		groupAdmin.GET("info", new(admin.ControllerInfo).Get)
 		groupAdmin.POST("info", new(admin.ControllerInfo).Post)
 		groupAdmin.GET("change_pwd", new(admin.ControllerChangePwd).Get)

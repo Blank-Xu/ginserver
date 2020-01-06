@@ -28,7 +28,7 @@ import (
 // @license.url https://github.com/Blank-Xu/ginserver/blob/master/LICENSE
 
 // @host localhost:8080
-// @BasePath /api/v1
+// @BasePath /v1
 
 // @securityDefinitions.basic JWT Auth
 
@@ -72,9 +72,8 @@ func main() {
 	}()
 
 	defaultInit.Init()
-	routers.Register()
 
-	server := global.DefaultConfig.HttpServer.New(routers.GetRouter())
+	server := global.DefaultConfig.HttpServer.New(routers.Init())
 	log.Printf("server pid[%d] start success, addr: %s.", pid, server.Addr)
 
 	go func() {

@@ -1,20 +1,19 @@
-package users
+package system
 
 import (
+	"net/http"
 	"strconv"
 
-	"ginserver/controllers/api"
 	"ginserver/models/system/user"
 	"ginserver/pkg/db"
+	"ginserver/pkg/resp"
 	"ginserver/tools/utils"
 
 	"github.com/gin-gonic/gin"
 	"github.com/rs/zerolog/log"
 )
 
-type ControllerUsers struct {
-	api.Controller
-}
+type UserController struct{}
 
 // GetOne godoc
 // @Summary get an user record
@@ -28,11 +27,10 @@ type ControllerUsers struct {
 // @Failure 404 {object} e.ResponseErr
 // @Failure 501 {object} e.ResponseErr
 // @Router /users/{id} [get]
-func (p *ControllerUsers) GetOne(ctx *gin.Context) {
-	p.New(ctx)
+func (p *UserController) GetOne(ctx *gin.Context) {
 	id, _ := strconv.Atoi(ctx.Param("id"))
 	if id < 1 {
-		p.RespErrInvalidParams()
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, resp.RespErrCode(resp.CodeInvalidParams))
 		return
 	}
 	cols, _ := ctx.GetQueryArray("cols")
@@ -50,7 +48,7 @@ func (p *ControllerUsers) GetOne(ctx *gin.Context) {
 	p.RespOk(record)
 }
 
-func (p *ControllerUsers) Get(ctx *gin.Context) {
+func (p *UserController) Get(ctx *gin.Context) {
 	p.New(ctx)
 	var err error
 	orderBy := db.NewOrderBy(ctx)
@@ -71,7 +69,7 @@ func (p *ControllerUsers) Get(ctx *gin.Context) {
 	p.RespOk(&records)
 }
 
-func (p *ControllerUsers) Post(ctx *gin.Context) {
+func (p *UserController) Post(ctx *gin.Context) {
 	p.New(ctx)
 	var record user.Insert
 	if err := ctx.BindJSON(record); err != nil {
@@ -93,7 +91,7 @@ func (p *ControllerUsers) Post(ctx *gin.Context) {
 	p.RespCreated(nil)
 }
 
-func (p *ControllerUsers) Put(ctx *gin.Context) {
+func (p *UserController) Put(ctx *gin.Context) {
 	p.New(ctx)
 	id, _ := strconv.Atoi(ctx.Param("id"))
 	if id < 1 {
@@ -127,7 +125,7 @@ func (p *ControllerUsers) Put(ctx *gin.Context) {
 	p.RespOk(nil)
 }
 
-func (p *ControllerUsers) Delete(ctx *gin.Context) {
+func (p *UserController) Delete(ctx *gin.Context) {
 	p.New(ctx)
 	id, _ := strconv.Atoi(ctx.Param("id"))
 	if id < 1 {

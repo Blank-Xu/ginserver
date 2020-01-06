@@ -1,4 +1,4 @@
-package e
+package resp
 
 // code 5000-5999
 const (

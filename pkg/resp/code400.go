@@ -1,4 +1,4 @@
-package e
+package resp
 
 // code 4000-4999
 const (

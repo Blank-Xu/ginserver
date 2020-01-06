@@ -1,11 +1,11 @@
-package api
+package controllers
 
 import (
 	"net/http"
 
-	"ginserver/pkg/e"
-
 	"github.com/gin-gonic/gin"
+
+	"ginserver/pkg/resp"
 )
 
 type Controller struct {
@@ -49,37 +49,37 @@ func (p *Controller) RespNoContent() {
 }
 
 func (p *Controller) RespErrInvalidParams(err ...interface{}) {
-	p.AbortWithStatusJSON(http.StatusBadRequest, e.RespErrCode(e.CodeInvalidParams, err...))
+	p.AbortWithStatusJSON(http.StatusBadRequest, resp.RespErrCode(resp.CodeInvalidParams, err...))
 }
 
 func (p *Controller) RespErrForbidden() {
-	p.AbortWithStatusJSON(e.RespErrHttp(http.StatusForbidden))
+	p.AbortWithStatusJSON(resp.RespErrHttp(http.StatusForbidden))
 }
 
 func (p *Controller) RespErrNotFound() {
-	p.AbortWithStatusJSON(e.RespErrHttp(http.StatusNotFound))
+	p.AbortWithStatusJSON(resp.RespErrHttp(http.StatusNotFound))
 }
 
 func (p *Controller) RespErrInternalServerError(err error) {
 	p.Error(err)
-	p.AbortWithStatusJSON(e.RespErrHttp(http.StatusInternalServerError))
+	p.AbortWithStatusJSON(resp.RespErrHttp(http.StatusInternalServerError))
 }
 
 func (p *Controller) RespErrDBError(err error) {
 	p.Error(err)
 	if gin.Mode() != gin.ReleaseMode {
-		p.AbortWithStatusJSON(http.StatusNotImplemented, e.RespErrCode(e.CodeDBErr, err))
+		p.AbortWithStatusJSON(http.StatusNotImplemented, resp.RespErrCode(resp.CodeDBErr, err))
 	} else {
-		p.AbortWithStatusJSON(http.StatusNotImplemented, e.RespErrCode(e.CodeDBErr))
+		p.AbortWithStatusJSON(http.StatusNotImplemented, resp.RespErrCode(resp.CodeDBErr))
 	}
 }
 
 // RespErrCode return http code, server code and msg struct
-func (p *Controller) RespErrCode(code int, err ...interface{}) *e.ResponseErr {
-	return e.NewResponseErr(e.ErrorMsg(code, err...))
+func (p *Controller) RespErrCode(code int, err ...interface{}) *resp.ResponseErr {
+	return resp.NewResponseErr(resp.ErrorMsg(code, err...))
 }
 
 //  RespErrHttp return http code and msg struct
-func (p *Controller) RespErrHttp(httpCode int) (int, *e.ResponseErr) {
-	return httpCode, e.NewResponseErr(httpCode, http.StatusText(httpCode))
+func (p *Controller) RespErrHttp(httpCode int) (int, *resp.ResponseErr) {
+	return httpCode, resp.NewResponseErr(httpCode, http.StatusText(httpCode))
 }

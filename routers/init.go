@@ -2,32 +2,32 @@ package routers
 
 import (
 	"net/http"
-	"strings"
 	"time"
 
 	"github.com/rs/zerolog/log"
 
 	"ginserver/controllers"
 	"ginserver/global"
-	"ginserver/pkg/e"
 	"ginserver/pkg/middlewares"
+	"ginserver/pkg/resp"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-contrib/pprof"
 	"github.com/gin-gonic/gin"
 )
 
-var defaultRouter = gin.New()
+func Init() *gin.Engine {
+	defaultRouter := gin.New()
 
-func GetRouter() *gin.Engine {
+	registerDefault(defaultRouter)
+
+	// registerAdminRouter(router)
+	registerApi(defaultRouter)
+
 	return defaultRouter
 }
 
-func Register() {
-	register(defaultRouter)
-}
-
-func register(router *gin.Engine) {
+func registerDefault(router *gin.Engine) {
 	// set global setting
 	gin.SetMode(global.RunMode)
 	if global.RunMode != gin.DebugMode {
@@ -52,18 +52,13 @@ func register(router *gin.Engine) {
 	}))
 
 	router.NoRoute(func(c *gin.Context) {
-		if strings.HasPrefix(c.Request.URL.Path, "/api") {
-			c.AbortWithStatusJSON(e.RespErrHttp(http.StatusNotFound))
-		} else {
-			c.Redirect(http.StatusFound, "/admin/404")
-		}
+		c.AbortWithStatusJSON(resp.RespErrHttp(http.StatusNotFound))
 	})
 	router.NoMethod(func(c *gin.Context) {
-		c.AbortWithStatusJSON(e.RespErrHttp(http.StatusMethodNotAllowed))
+		c.AbortWithStatusJSON(resp.RespErrHttp(http.StatusMethodNotAllowed))
 	})
-	// home page
-	router.GET("/", new(controllers.ControllerIndex).Get)
 
-	// registerAdminRouter(router)
-	registerApiRouter(router)
+	// home index
+	router.GET("/", controllers.Index)
+	router.POST("/", controllers.Index)
 }

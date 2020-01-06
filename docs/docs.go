@@ -29,7 +29,7 @@ var doc = `{
         "version": "0.1"
     },
     "host": "localhost:8080",
-    "basePath": "/api/v1",
+    "basePath": "/v1",
     "paths": {
         "/users/{id}": {
             "get": {
