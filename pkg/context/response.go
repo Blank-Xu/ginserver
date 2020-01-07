@@ -5,18 +5,18 @@ import (
 )
 
 type Response struct {
-	Code   int          `json:"code,omitempty" example:"400"`
-	Msg    string       `json:"msg,omitempty" example:"status bad request"`
-	Errors []*gin.Error `json:"errors,omitempty" example:"{array}"`
+	Code   int          `json:"code,omitempty" example:"4000"`
+	Msg    string       `json:"msg,omitempty" example:"Invalid Params"`
+	Errors []*gin.Error `json:"errors,omitempty" example:"[{\"error\":\"Invalid Params\",\"meta\":\"Invalid Params\"}]"`
 }
 
 // type ResponseData struct {
-// 	Data interface{} `json:"data,omitempty" example:"{}"`
+// 	Data interface{} `json:"data,omitempty"`
 // }
 
 type ResponsePaging struct {
-	Paging  Paging      `json:"paging" example:"{array}"`
-	Records interface{} `json:"records" example:"{array}"`
+	Paging  Paging      `json:"paging"`
+	Records interface{} `json:"records"`
 }
 
 type Paging struct {

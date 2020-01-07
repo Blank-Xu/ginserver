@@ -148,15 +148,15 @@
             "properties": {
                 "code": {
                     "type": "integer",
-                    "example": 400
+                    "example": 4000
                 },
                 "errors": {
                     "type": "string",
-                    "example": "{array}"
+                    "example": "[{\"error\":\"Invalid Params\",\"meta\":\"Invalid Params\"}]"
                 },
                 "msg": {
                     "type": "string",
-                    "example": "status bad request"
+                    "example": "Invalid Params"
                 }
             }
         },

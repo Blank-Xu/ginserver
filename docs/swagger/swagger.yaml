@@ -15,13 +15,13 @@ definitions:
   context.Response:
     properties:
       code:
-        example: 400
+        example: 4000
         type: integer
       errors:
-        example: '{array}'
+        example: '[{"error":"Invalid Params","meta":"Invalid Params"}]'
         type: string
       msg:
-        example: status bad request
+        example: Invalid Params
         type: string
     type: object
   system.UsersGetResponse:
