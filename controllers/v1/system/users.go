@@ -58,11 +58,10 @@ func (p *UserController) GetOne(c *gin.Context) {
 // @Description get user records
 // @Accept  json
 // @Produce  json
-// @Param id path int true "user id"
 // @Param cols path string false "cols"
 // @Param page path int false "page"
 // @Param page_size path int false "page_size"
-// @Success 200 {object} usersGetResponse
+// @Success 200 {object} system.UsersGetResponse
 // @Failure 501 {object} context.Response
 // @Router /users [get]
 func (p *UserController) Get(c *gin.Context) {
@@ -91,9 +90,9 @@ func (p *UserController) Get(c *gin.Context) {
 	ctx.ResponsePagingOK(page, len(records), totalCount, records)
 }
 
-type usersGetResponse struct {
-	context.Paging
-	Records []*user.User `json:"records"`
+type UsersGetResponse struct {
+	Paging  context.Paging `json:"paging"`
+	Records []*user.User   `json:"records"`
 }
 
 func (p *UserController) Post(c *gin.Context) {

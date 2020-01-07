@@ -20,6 +20,7 @@ require (
 	github.com/lestrrat-go/strftime v1.0.1 // indirect
 	github.com/rs/zerolog v1.17.2
 	github.com/spf13/viper v1.6.1
+	github.com/swaggo/files v0.0.0-20190704085106-630677cd5c14
 	github.com/swaggo/gin-swagger v1.2.0
 	github.com/swaggo/swag v1.6.4
 	github.com/tebeka/strftime v0.1.3 // indirect

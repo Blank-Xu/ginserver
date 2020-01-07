@@ -15,7 +15,7 @@ type Response struct {
 // }
 
 type ResponsePaging struct {
-	Paging
+	Paging  Paging      `json:"paging" example:"{array}"`
 	Records interface{} `json:"records" example:"{array}"`
 }
 

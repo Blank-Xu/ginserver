@@ -4,15 +4,15 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	swagger "github.com/swaggo/gin-swagger"
-	"github.com/swaggo/gin-swagger/swaggerFiles"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 
 	"ginserver/controllers/v1/system"
 )
 
 func registerApi(router *gin.Engine) {
 	// register swagger doc router
-	router.GET("swagger/*any", swagger.WrapHandler(swaggerFiles.Handler))
+	router.GET("swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	groupApi := router.Group("api")
 	groupApi.GET("/", func(ctx *gin.Context) {

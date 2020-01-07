@@ -28,7 +28,7 @@ import (
 // @license.url https://github.com/Blank-Xu/ginserver/blob/master/LICENSE
 
 // @host localhost:8080
-// @BasePath /v1
+// @BasePath /api/v1
 
 // @securityDefinitions.basic JWT Auth
 

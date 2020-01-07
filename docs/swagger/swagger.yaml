@@ -1,5 +1,17 @@
-basePath: /v1
+basePath: /api/v1
 definitions:
+  context.Paging:
+    properties:
+      page:
+        example: 1
+        type: integer
+      page_size:
+        example: 5
+        type: integer
+      total_count:
+        example: 100
+        type: integer
+    type: object
   context.Response:
     properties:
       code:
@@ -11,6 +23,16 @@ definitions:
       msg:
         example: status bad request
         type: string
+    type: object
+  system.UsersGetResponse:
+    properties:
+      paging:
+        $ref: '#/definitions/context.Paging'
+        type: object
+      records:
+        items:
+          $ref: '#/definitions/user.User'
+        type: array
     type: object
   user.User:
     properties:
@@ -61,11 +83,6 @@ paths:
       - application/json
       description: get user records
       parameters:
-      - description: user id
-        in: path
-        name: id
-        required: true
-        type: integer
       - description: cols
         in: path
         name: cols
@@ -84,7 +101,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/usersGetResponse'
+            $ref: '#/definitions/system.UsersGetResponse'
             type: object
         "501":
           description: Not Implemented

@@ -16,7 +16,7 @@
         "version": "0.1"
     },
     "host": "localhost:8080",
-    "basePath": "/v1",
+    "basePath": "/api/v1",
     "paths": {
         "/users": {
             "get": {
@@ -29,13 +29,6 @@
                 ],
                 "summary": "get user records",
                 "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "user id",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    },
                     {
                         "type": "string",
                         "description": "cols",
@@ -60,7 +53,7 @@
                         "description": "OK",
                         "schema": {
                             "type": "object",
-                            "$ref": "#/definitions/usersGetResponse"
+                            "$ref": "#/definitions/system.UsersGetResponse"
                         }
                     },
                     "501": {
@@ -133,6 +126,23 @@
         }
     },
     "definitions": {
+        "context.Paging": {
+            "type": "object",
+            "properties": {
+                "page": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "page_size": {
+                    "type": "integer",
+                    "example": 5
+                },
+                "total_count": {
+                    "type": "integer",
+                    "example": 100
+                }
+            }
+        },
         "context.Response": {
             "type": "object",
             "properties": {
@@ -147,6 +157,21 @@
                 "msg": {
                     "type": "string",
                     "example": "status bad request"
+                }
+            }
+        },
+        "system.UsersGetResponse": {
+            "type": "object",
+            "properties": {
+                "paging": {
+                    "type": "object",
+                    "$ref": "#/definitions/context.Paging"
+                },
+                "records": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/user.User"
+                    }
                 }
             }
         },
