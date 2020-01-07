@@ -20,7 +20,7 @@ HttpServer:
 Fix:
   TimeZone:
     Name: UTC
-    Offset: 8 # hour
+    OffsetHour: 8 # hour
 
 Log: # zerolog
   RecordFile: true

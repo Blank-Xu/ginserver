@@ -1,12 +1,10 @@
 package system
 
 import (
-	"net/http"
 	"strconv"
 
 	"ginserver/models/system/user"
-	"ginserver/pkg/db"
-	"ginserver/pkg/resp"
+	"ginserver/pkg/context"
 	"ginserver/tools/utils"
 
 	"github.com/gin-gonic/gin"
@@ -22,59 +20,90 @@ type UserController struct{}
 // @Accept  json
 // @Produce  json
 // @Param id path int true "user id"
-// @Success 200 {object} s_user.User
-// @Failure 400 {object} e.ResponseErr
-// @Failure 404 {object} e.ResponseErr
-// @Failure 501 {object} e.ResponseErr
+// @Param cols path string false "cols"
+// @Success 200 {object} user.User
+// @Failure 400 {object} context.Response
+// @Failure 404 {object} context.Response
+// @Failure 501 {object} context.Response
 // @Router /users/{id} [get]
-func (p *UserController) GetOne(ctx *gin.Context) {
+func (p *UserController) GetOne(c *gin.Context) {
+	ctx := context.New(c)
+
 	id, _ := strconv.Atoi(ctx.Param("id"))
 	if id < 1 {
-		ctx.AbortWithStatusJSON(http.StatusBadRequest, resp.RespErrCode(resp.CodeInvalidParams))
+		ctx.AbortResponseInvalidParams()
 		return
 	}
+
 	cols, _ := ctx.GetQueryArray("cols")
 	record := user.User{Id: id}
 	has, err := record.SelectOne(&record, cols...)
 	if err != nil {
-		p.RespErrDBError(err)
 		log.Err(err)
+
+		ctx.AbortResponseDatabaseErr(err)
 		return
 	}
+
 	if !has {
-		p.RespErrNotFound()
+		ctx.AbortResponseNotFound()
 		return
 	}
-	p.RespOk(record)
+
+	ctx.ResponseDataOK(record)
 }
 
-func (p *UserController) Get(ctx *gin.Context) {
-	p.New(ctx)
-	var err error
-	orderBy := db.NewOrderBy(ctx)
-	if err = orderBy.Parse(); err != nil {
-		p.RespErrInvalidParams(err)
-		return
-	}
-	var (
-		cols    = ctx.GetStringSlice("cols")
-		record  user.User
-		records []*user.User
-	)
-	if err = record.SelectCond(&record, &records, nil, orderBy.String(), db.NewPaging(ctx), cols...); err != nil {
-		p.RespErrDBError(err)
+// Get godoc
+// @Summary get user records
+// @Description get user records
+// @Accept  json
+// @Produce  json
+// @Param id path int true "user id"
+// @Param cols path string false "cols"
+// @Param page path int false "page"
+// @Param page_size path int false "page_size"
+// @Success 200 {object} usersGetResponse
+// @Failure 501 {object} context.Response
+// @Router /users [get]
+func (p *UserController) Get(c *gin.Context) {
+	ctx := context.New(c)
+
+	page, pageSize := ctx.GetPage()
+	cols := ctx.GetStringSlice("cols")
+
+	var record user.User
+	records := make([]*user.User, 0, pageSize)
+	if err := record.Select(&record, &records, page, pageSize, cols...); err != nil {
 		log.Err(err)
+
+		ctx.AbortResponseDatabaseErr(err)
 		return
 	}
-	p.RespOk(&records)
+
+	totalCount, err := record.Count(&record)
+	if err != nil {
+		log.Err(err)
+
+		ctx.AbortResponseDatabaseErr(err)
+		return
+	}
+
+	ctx.ResponsePagingOK(page, len(records), totalCount, records)
 }
 
-func (p *UserController) Post(ctx *gin.Context) {
-	p.New(ctx)
+type usersGetResponse struct {
+	context.Paging
+	Records []*user.User `json:"records"`
+}
+
+func (p *UserController) Post(c *gin.Context) {
+	ctx := context.New(c)
+
 	var record user.Insert
 	if err := ctx.BindJSON(record); err != nil {
-		p.RespErrInvalidParams(err)
 		log.Err(err)
+
+		ctx.AbortResponseInvalidParams(err)
 		return
 	}
 
@@ -84,60 +113,67 @@ func (p *UserController) Post(ctx *gin.Context) {
 
 	_, err := record.InsertOne(&record)
 	if err != nil {
-		p.RespErrDBError(err)
 		log.Err(err)
+
+		ctx.AbortResponseDatabaseErr(err)
 		return
 	}
-	p.RespCreated(nil)
+
+	ctx.ResponseDataCreated(nil)
 }
 
-func (p *UserController) Put(ctx *gin.Context) {
-	p.New(ctx)
+func (p *UserController) Put(c *gin.Context) {
+	ctx := context.New(c)
+
 	id, _ := strconv.Atoi(ctx.Param("id"))
 	if id < 1 {
-		p.RespErrInvalidParams(ctx)
+		ctx.AbortResponseInvalidParams()
 		return
 	}
 
 	record := user.Update{Id: id}
 	has, err := record.IsExists(&record)
 	if err != nil {
-		p.RespErrDBError(err)
 		log.Err(err)
+		ctx.AbortResponseDatabaseErr(err)
 		return
 	}
 	if !has {
-		p.RespErrNotFound()
+		ctx.AbortResponseNotFound()
 		return
 	}
 
 	if err := ctx.BindJSON(&record); err != nil {
-		p.RespErrInvalidParams(err)
+		ctx.AbortResponseInvalidParams(err)
 		return
 	}
+
 	record.Salt = utils.GenSalt()
 	record.Password = utils.Md5(record.Password + record.Salt)
 	if _, err = record.Update(&record, record.Id); err != nil {
-		p.RespErrDBError(err)
 		log.Err(err)
+
+		ctx.AbortResponseDatabaseErr(err)
 		return
 	}
-	p.RespOk(nil)
+	ctx.ResponseDataOK(nil)
 }
 
-func (p *UserController) Delete(ctx *gin.Context) {
-	p.New(ctx)
+func (p *UserController) Delete(c *gin.Context) {
+	ctx := context.New(c)
+
 	id, _ := strconv.Atoi(ctx.Param("id"))
 	if id < 1 {
-		p.RespErrInvalidParams(ctx)
+		ctx.AbortResponseInvalidParams()
 		return
 	}
 
-	var record = user.User{Id: id}
+	record := user.User{Id: id}
 	if _, err := record.Delete(&record); err != nil {
-		p.RespErrDBError(err)
 		log.Err(err)
+		ctx.AbortResponseDatabaseErr(err)
 		return
 	}
-	p.RespOk(nil)
+
+	ctx.ResponseDataOK(nil)
 }

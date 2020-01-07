@@ -2,6 +2,7 @@ package log
 
 import (
 	"os"
+	"path/filepath"
 	"time"
 
 	rotatelogs "github.com/lestrrat-go/file-rotatelogs"
@@ -25,10 +26,25 @@ func (p *Option) Init() error {
 
 	var ctx zerolog.Context
 	if p.RecordFile {
+		logDir := filepath.Dir(p.FileName)
+		if err := os.MkdirAll(logDir, 0766); err != nil {
+			return err
+		}
+
+		linkDir := filepath.Dir(p.LinkName)
+		if err := os.MkdirAll(linkDir, 0766); err != nil {
+			return err
+		}
+
+		linkName, err := filepath.Abs(p.LinkName)
+		if err != nil {
+			return err
+		}
+
 		rotate, err := rotatelogs.New(
 			p.FileName,
 			// WithLinkName为最新的日志建立软连接
-			rotatelogs.WithLinkName(p.LinkName),
+			rotatelogs.WithLinkName(linkName),
 			// WithRotationTime设置日志分割的时间
 			rotatelogs.WithRotationTime(time.Hour*time.Duration(p.RotateHour)),
 		)
@@ -40,9 +56,11 @@ func (p *Option) Init() error {
 	} else {
 		ctx = zerolog.New(os.Stdout).With().Timestamp()
 	}
+
 	if p.ReportCaller {
 		ctx = ctx.Caller()
 	}
+
 	log.Logger = ctx.Logger()
 
 	log.Info().Msg("log load success")

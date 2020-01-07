@@ -1,29 +1,30 @@
 package user
 
 import (
+	"time"
+
 	"ginserver/pkg/db"
-	"ginserver/tools/timeutil"
 )
 
 type User struct {
 	*db.Model  `xorm:"-" json:"-"`
-	Id         int               `xorm:"pk autoincr" json:"id"`
-	Username   string            `xorm:"unique" json:"username"`
-	Password   string            `json:"-"`
-	Salt       string            `json:"-"`
-	State      bool              `json:"state"`
-	Nickname   string            `json:"nickname"`
-	Icon       string            `json:"icon"`
-	Email      string            `json:"email"`
-	Phone      string            `json:"phone"`
-	Remark     string            `json:"remark"`
-	Created    timeutil.JSONTime `json:"created" swaggertype:"primitive,string"`
-	Updater    int               `json:"updater"`
-	Updated    timeutil.JSONTime `json:"updated" swaggertype:"primitive,string"`
-	Deleted    timeutil.JSONTime `json:"-"`
-	RegisterIp string            `json:"-"`
-	LoginTime  timeutil.JSONTime `json:"login_time" swaggertype:"primitive,string"`
-	LoginIp    string            `json:"login_ip"`
+	Id         int       `xorm:"pk autoincr" json:"id"`
+	Username   string    `xorm:"unique" json:"username"`
+	Password   string    `json:"-"`
+	Salt       string    `json:"-"`
+	State      bool      `json:"state"`
+	Nickname   string    `json:"nickname"`
+	Icon       string    `json:"icon"`
+	Email      string    `json:"email"`
+	Phone      string    `json:"phone"`
+	Remark     string    `json:"remark"`
+	Created    time.Time `json:"created" swaggertype:"primitive,string"`
+	Updater    int       `json:"updater"`
+	Updated    time.Time `json:"updated" swaggertype:"primitive,string"`
+	Deleted    time.Time `json:"-"`
+	RegisterIp string    `json:"-"`
+	LoginTime  time.Time `json:"login_time" swaggertype:"primitive,string"`
+	LoginIp    string    `json:"login_ip"`
 }
 
 func (p *User) TableName() string {
@@ -32,18 +33,18 @@ func (p *User) TableName() string {
 
 type Insert struct {
 	*db.Model  `xorm:"-" json:"-"`
-	Username   string            `xorm:"unique" json:"username" binding:"required"`
-	Password   string            `json:"password" binding:"required"`
-	Salt       string            `json:"-"`
-	State      bool              `json:"state"`
-	Nickname   string            `json:"nickname"`
-	Email      string            `json:"email"`
-	Phone      string            `json:"phone"`
-	Remark     string            `json:"remark"`
-	RegisterIp string            `json:"-"`
-	Created    timeutil.JSONTime `xorm:"created" json:"-"`
+	Username   string    `xorm:"unique" json:"username" binding:"required"`
+	Password   string    `json:"password" binding:"required"`
+	Salt       string    `json:"-"`
+	State      bool      `json:"state"`
+	Nickname   string    `json:"nickname"`
+	Email      string    `json:"email"`
+	Phone      string    `json:"phone"`
+	Remark     string    `json:"remark"`
+	RegisterIp string    `json:"-"`
+	Created    time.Time `xorm:"created" json:"-"`
 	Updater    int
-	Updated    timeutil.JSONTime `xorm:"updated" json:"-"`
+	Updated    time.Time `xorm:"updated" json:"-"`
 }
 
 func (p *Insert) TableName() string {
@@ -52,16 +53,16 @@ func (p *Insert) TableName() string {
 
 type Update struct {
 	*db.Model `xorm:"-" json:"-"`
-	Id        int               `xorm:"pk autoincr" json:"-"`
-	Password  string            `json:"-"`
-	Salt      string            `json:"-"`
-	State     bool              `json:"state"`
-	Nickname  string            `json:"nickname"`
-	Email     string            `json:"email"`
-	Phone     string            `json:"phone"`
-	Remark    string            `json:"remark"`
-	Updater   int               `json:"-"`
-	Updated   timeutil.JSONTime `xorm:"updated" json:"-"`
+	Id        int       `xorm:"pk autoincr" json:"-"`
+	Password  string    `json:"-"`
+	Salt      string    `json:"-"`
+	State     bool      `json:"state"`
+	Nickname  string    `json:"nickname"`
+	Email     string    `json:"email"`
+	Phone     string    `json:"phone"`
+	Remark    string    `json:"remark"`
+	Updater   int       `json:"-"`
+	Updated   time.Time `xorm:"updated" json:"-"`
 }
 
 func (p *Update) TableName() string {
@@ -89,7 +90,7 @@ type InfoUpdate struct {
 	Email     string `form:"email" json:"email"`
 	Phone     string `form:"phone" json:"phone"`
 	Updater   int
-	Updated   timeutil.JSONTime `xorm:"updated" json:"-"`
+	Updated   time.Time `xorm:"updated" json:"-"`
 }
 
 func (p *InfoUpdate) TableName() string {

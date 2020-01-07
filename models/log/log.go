@@ -1,10 +1,11 @@
 package log
 
 import (
+	"time"
+
 	"github.com/rs/zerolog"
 
 	"ginserver/pkg/db"
-	"ginserver/tools/timeutil"
 )
 
 type Log struct {
@@ -19,7 +20,7 @@ type Log struct {
 	Params    string
 	Ip        string
 	Remark    string
-	Created   timeutil.JSONTime `xorm:"created"`
+	Created   time.Time `xorm:"created"`
 }
 
 func (p *Log) TableName() string {

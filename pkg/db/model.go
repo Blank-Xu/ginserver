@@ -62,12 +62,20 @@ func (p *Model) SelectSql(modelsPtr, sql interface{}, args ...interface{}) error
 	return defaultDB.SQL(sql, args...).Find(modelsPtr)
 }
 
-// SelectCond select table records with condition
+// Select select table records with modelPtr condition
 // param: modelPtr is a pointer struct like *Model
 // param: modelsPtr is a pointer slice struct like *[]*Model
 // param: cond is xorm builder condition
-func (p *Model) SelectCond(modelPtr, modelsPtr, cond interface{}, orderBy string, paging *Paging, cols ...string) error {
-	return defaultDB.Cols(cols...).Where(cond).OrderBy(orderBy).Limit(paging.LimitOffset()).Find(modelsPtr, modelPtr)
+func (p *Model) Select(modelPtr, modelsPtr interface{}, page, pageSize int, cols ...string) error {
+	return defaultDB.Cols(cols...).Limit(pageSize, (page-1)*pageSize).Find(modelsPtr, modelPtr)
+}
+
+// SelectCond select table records with condition and modelPtr
+// param: modelPtr is a pointer struct like *Model
+// param: modelsPtr is a pointer slice struct like *[]*Model
+// param: cond is xorm builder condition
+func (p *Model) SelectCond(modelPtr, modelsPtr, condition interface{}, page, pageSize int, cols ...string) error {
+	return defaultDB.Cols(cols...).Where(condition).Limit(pageSize, (page-1)*pageSize).Find(modelsPtr, modelPtr)
 }
 
 // Count select table count

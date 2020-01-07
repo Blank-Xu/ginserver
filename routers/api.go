@@ -3,13 +3,11 @@ package routers
 import (
 	"net/http"
 
-	"ginserver/controllers/v1/system"
-	"ginserver/pkg/casbin"
-	"ginserver/pkg/middlewares"
-
 	"github.com/gin-gonic/gin"
 	swagger "github.com/swaggo/gin-swagger"
 	"github.com/swaggo/gin-swagger/swaggerFiles"
+
+	"ginserver/controllers/v1/system"
 )
 
 func registerApi(router *gin.Engine) {
@@ -23,9 +21,9 @@ func registerApi(router *gin.Engine) {
 
 	apiV1 := groupApi.Group("v1")
 	{
-		apiV1.Use(middlewares.JwtAuth())
+		// apiV1.Use(middlewares.JwtAuth())
 
-		apiV1.Use(middlewares.CasbinEnforce(casbin.GetEnforcer()))
+		// apiV1.Use(middlewares.CasbinEnforce(casbin.GetEnforcer()))
 
 		user := new(system.UserController)
 		apiV1.GET("users/:id", user.GetOne)

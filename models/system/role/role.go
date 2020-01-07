@@ -2,7 +2,7 @@ package role
 
 import (
 	"ginserver/pkg/db"
-	"ginserver/tools/timeutil"
+	"time"
 )
 
 type Role struct {
@@ -11,9 +11,9 @@ type Role struct {
 	Name      string `xorm:"unique"`
 	State     bool
 	Remark    string
-	Created   timeutil.JSONTime `xorm:"created"`
+	Created   time.Time `xorm:"created"`
 	Updater   int
-	Updated   timeutil.JSONTime `xorm:"updated"`
+	Updated   time.Time `xorm:"updated"`
 }
 
 func (p *Role) TableName() string {

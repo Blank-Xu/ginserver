@@ -1,15 +1,14 @@
 package routers
 
 import (
-	"net/http"
 	"time"
 
 	"github.com/rs/zerolog/log"
 
 	"ginserver/controllers"
 	"ginserver/global"
+	"ginserver/pkg/context"
 	"ginserver/pkg/middlewares"
-	"ginserver/pkg/resp"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-contrib/pprof"
@@ -52,10 +51,12 @@ func registerDefault(router *gin.Engine) {
 	}))
 
 	router.NoRoute(func(c *gin.Context) {
-		c.AbortWithStatusJSON(resp.RespErrHttp(http.StatusNotFound))
+		ctx := context.New(c)
+		ctx.AbortResponseNotFound()
 	})
 	router.NoMethod(func(c *gin.Context) {
-		c.AbortWithStatusJSON(resp.RespErrHttp(http.StatusMethodNotAllowed))
+		ctx := context.New(c)
+		ctx.AbortResponseMethodNotAllowed()
 	})
 
 	// home index

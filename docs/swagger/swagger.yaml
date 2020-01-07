@@ -1,15 +1,18 @@
 basePath: /v1
 definitions:
-  e.ResponseErr:
+  context.Response:
     properties:
       code:
         example: 400
         type: integer
+      errors:
+        example: '{array}'
+        type: string
       msg:
         example: status bad request
         type: string
     type: object
-  s_user.User:
+  user.User:
     properties:
       created:
         type: string
@@ -52,6 +55,43 @@ info:
   title: ginserver Swagger API
   version: "0.1"
 paths:
+  /users:
+    get:
+      consumes:
+      - application/json
+      description: get user records
+      parameters:
+      - description: user id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: cols
+        in: path
+        name: cols
+        type: string
+      - description: page
+        in: path
+        name: page
+        type: integer
+      - description: page_size
+        in: path
+        name: page_size
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/usersGetResponse'
+            type: object
+        "501":
+          description: Not Implemented
+          schema:
+            $ref: '#/definitions/context.Response'
+            type: object
+      summary: get user records
   /users/{id}:
     get:
       consumes:
@@ -64,6 +104,10 @@ paths:
         name: id
         required: true
         type: integer
+      - description: cols
+        in: path
+        name: cols
+        type: string
       produces:
       - application/json
       responses:
@@ -75,17 +119,17 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/e.ResponseErr'
+            $ref: '#/definitions/context.Response'
             type: object
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/e.ResponseErr'
+            $ref: '#/definitions/context.Response'
             type: object
         "501":
           description: Not Implemented
           schema:
-            $ref: '#/definitions/e.ResponseErr'
+            $ref: '#/definitions/context.Response'
             type: object
       summary: get an user record
 securityDefinitions:

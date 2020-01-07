@@ -2,7 +2,7 @@ package s_menu
 
 import (
 	"ginserver/pkg/db"
-	"ginserver/tools/timeutil"
+	"time"
 )
 
 type SMenu struct {
@@ -17,9 +17,9 @@ type SMenu struct {
 	OrderNo   int
 	State     bool
 	ParentId  int
-	Created   timeutil.JSONTime `xorm:"created"`
+	Created   time.Time `xorm:"created"`
 	Updater   int
-	Updated   timeutil.JSONTime `xorm:"updated"`
+	Updated   time.Time `xorm:"updated"`
 }
 
 func (p *SMenu) TableName() string {
