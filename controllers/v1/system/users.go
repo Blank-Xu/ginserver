@@ -155,7 +155,8 @@ func (p *UserController) Put(c *gin.Context) {
 		ctx.AbortResponseDatabaseErr(err)
 		return
 	}
-	ctx.ResponseDataOK(nil)
+
+	ctx.ResponseNoContent()
 }
 
 func (p *UserController) Delete(c *gin.Context) {
@@ -174,5 +175,5 @@ func (p *UserController) Delete(c *gin.Context) {
 		return
 	}
 
-	ctx.ResponseDataOK(nil)
+	ctx.ResponseNoContent()
 }

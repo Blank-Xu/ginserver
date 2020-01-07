@@ -74,6 +74,10 @@ func (p *Context) AbortResponseDataAccepted(data interface{}) {
 	)
 }
 
+func (p *Context) ResponseNoContent() {
+	p.Status(http.StatusNoContent)
+}
+
 func (p *Context) AbortResponseNoContent() {
 	p.AbortWithStatus(http.StatusNoContent)
 }
