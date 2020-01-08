@@ -63,7 +63,7 @@ func (p *Option) Init() error {
 
 	log.Logger = ctx.Logger()
 
-	log.Info().Msg("log load success")
+	log.Info().Msg("log start")
 
 	return nil
 }

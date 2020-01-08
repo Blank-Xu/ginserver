@@ -34,7 +34,7 @@ func (p *Option) NewEngine() (*xorm.Engine, error) {
 
 	engine, err := xorm.NewEngine(p.DriverName, dataSourceName)
 	if err != nil {
-		return nil, fmt.Errorf("engine create failed, database: [%s], source: [%s], err: %v", p.DataBase, dataSourceName, err)
+		return nil, fmt.Errorf("xorm engine create failed, database: [%s], source: [%s], err: %v", p.DataBase, dataSourceName, err)
 	}
 
 	engine.SetLogger(NewSimpleLogger(&log.Logger, p.DataBase, core.LogLevel(p.LogLevel)))
@@ -42,7 +42,7 @@ func (p *Option) NewEngine() (*xorm.Engine, error) {
 	// check connection
 	if p.Connect {
 		if err = engine.Ping(); err != nil {
-			return nil, fmt.Errorf("engine Ping failed, database: [%s], err: %v", p.DataBase, err)
+			return nil, fmt.Errorf("xorm engine Ping failed, database: [%s], err: %v", p.DataBase, err)
 		}
 	}
 

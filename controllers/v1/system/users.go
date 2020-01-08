@@ -39,7 +39,7 @@ func (p *UserController) GetOne(c *gin.Context) {
 	record := user.User{Id: id}
 	has, err := record.SelectOne(&record, cols...)
 	if err != nil {
-		log.Err(err)
+		log.Err(err).Msg("select user failed")
 
 		ctx.AbortResponseDatabaseErr(err)
 		return
@@ -72,8 +72,8 @@ func (p *UserController) Get(c *gin.Context) {
 
 	var record user.User
 	records := make([]*user.User, 0, pageSize)
-	if err := record.Select(&record, &records, page, pageSize, cols...); err != nil {
-		log.Err(err)
+	if err := record.Select(&record, &records, nil, page, pageSize, cols...); err != nil {
+		log.Err(err).Msg("select user failed")
 
 		ctx.AbortResponseDatabaseErr(err)
 		return
@@ -81,7 +81,7 @@ func (p *UserController) Get(c *gin.Context) {
 
 	totalCount, err := record.Count(&record)
 	if err != nil {
-		log.Err(err)
+		log.Err(err).Msg("select user count failed")
 
 		ctx.AbortResponseDatabaseErr(err)
 		return
@@ -100,8 +100,6 @@ func (p *UserController) Post(c *gin.Context) {
 
 	var record user.Insert
 	if err := ctx.BindJSON(record); err != nil {
-		log.Err(err)
-
 		ctx.AbortResponseInvalidParams(err)
 		return
 	}
@@ -112,7 +110,7 @@ func (p *UserController) Post(c *gin.Context) {
 
 	_, err := record.InsertOne(&record)
 	if err != nil {
-		log.Err(err)
+		log.Err(err).Msg("insert user failed")
 
 		ctx.AbortResponseDatabaseErr(err)
 		return
@@ -133,7 +131,7 @@ func (p *UserController) Put(c *gin.Context) {
 	record := user.Update{Id: id}
 	has, err := record.IsExists(&record)
 	if err != nil {
-		log.Err(err)
+		log.Err(err).Msg("check user exist failed")
 		ctx.AbortResponseDatabaseErr(err)
 		return
 	}
@@ -150,8 +148,7 @@ func (p *UserController) Put(c *gin.Context) {
 	record.Salt = utils.GenSalt()
 	record.Password = utils.Md5(record.Password + record.Salt)
 	if _, err = record.Update(&record, record.Id); err != nil {
-		log.Err(err)
-
+		log.Err(err).Msg("update user failed")
 		ctx.AbortResponseDatabaseErr(err)
 		return
 	}
@@ -170,7 +167,7 @@ func (p *UserController) Delete(c *gin.Context) {
 
 	record := user.User{Id: id}
 	if _, err := record.Delete(&record); err != nil {
-		log.Err(err)
+		log.Err(err).Msg("delete user failed")
 		ctx.AbortResponseDatabaseErr(err)
 		return
 	}

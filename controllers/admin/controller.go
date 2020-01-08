@@ -10,7 +10,6 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/rs/zerolog"
-	zlog "github.com/rs/zerolog/log"
 )
 
 type Controller struct {
@@ -123,12 +122,6 @@ func (p *Controller) Render(tpl string, value map[string]interface{}) {
 	p.HTML(http.StatusOK, tpl, value)
 }
 
-func (p *Controller) LogErr(err error) {
-	if err != nil {
-		zlog.Err(err)
-	}
-}
-
 var logWithoutParamsPath = []string{
 	"/admin/login",
 	"/admin/change_pwd",
@@ -158,7 +151,6 @@ func (p *Controller) LogDB(lType log.Type, level zerolog.Level, remark ...string
 		lRemark = remark[0]
 	}
 
-	p.LogErr(
-		log.Insert(level, lType, p.userId, p.roleId, p.Request.Method, p.Request.URL.Path,
-			params, p.ClientIP(), lRemark))
+	log.Insert(level, lType, p.userId, p.roleId, p.Request.Method, p.Request.URL.Path,
+		params, p.ClientIP(), lRemark)
 }

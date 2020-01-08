@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"log"
 	"net/http"
 	"os"
 	"os/signal"
@@ -13,6 +12,8 @@ import (
 	"ginserver/global"
 	defaultInit "ginserver/init"
 	"ginserver/routers"
+
+	"github.com/rs/zerolog/log"
 )
 
 // @title ginserver Swagger API
@@ -57,42 +58,41 @@ import (
 // @authorizationurl https://example.com/oauth/authorize
 // @scope.admin Grants read and write access to administrative information
 
-func init() {
-	log.SetFlags(log.Ldate | log.Ltime | log.Lshortfile)
-}
+// func init() {
+// 	log.SetFlags(log.Ldate | log.Ltime | log.Lshortfile)
+// }
 
 func main() {
 	pid := os.Getpid()
 
 	defer func() {
 		if err := recover(); err != nil {
-			log.Printf("server pid[%d] crashed with error: %v", pid, err)
-			panic(err)
+			log.Panic().Msgf("server pid[%d] crashed with error: %v", pid, err)
 		}
 	}()
 
 	defaultInit.Init()
 
 	server := global.DefaultConfig.HttpServer.New(routers.Init())
-	log.Printf("server pid[%d] start success, addr: %s.", pid, server.Addr)
+	log.Info().Msgf("server pid[%d] start success, addr: %s.", pid, server.Addr)
 
 	go func() {
 		if err := server.ListenAndServe(); err != nil && err != http.ErrServerClosed {
-			log.Printf("server pid[%d] exit with err: %v", pid, err)
+			log.Error().Msgf("server pid[%d] exit with err: %v", pid, err)
 		}
 	}()
 
 	quitSignal := make(chan os.Signal)
 	signal.Notify(quitSignal, syscall.SIGHUP, syscall.SIGINT, syscall.SIGQUIT, syscall.SIGKILL, syscall.SIGTERM)
 
-	log.Printf("server pid[%d] receive shutdown signal: [%v]", pid, <-quitSignal)
+	log.Warn().Msgf("server pid[%d] receive shutdown signal: [%v]", pid, <-quitSignal)
 
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*5)
 	defer cancel()
 
 	if err := server.Shutdown(ctx); err != nil {
-		log.Printf("server pid[%d] shutdown failed, err: %v", pid, err)
+		log.Error().Msgf("server pid[%d] shutdown failed, err: %v", pid, err)
 	}
 
-	log.Printf("server pid[%d] stoped", pid)
+	log.Warn().Msgf("server pid[%d] stopped", pid)
 }

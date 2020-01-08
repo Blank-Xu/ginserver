@@ -2,10 +2,8 @@ package init
 
 import (
 	"flag"
-	"fmt"
-	"log"
 
-	zlog "github.com/rs/zerolog/log"
+	"github.com/rs/zerolog/log"
 	"github.com/spf13/viper"
 
 	"ginserver/global"
@@ -31,7 +29,7 @@ func Init() {
 		flag.Parse()
 	}
 
-	log.Printf("server starting ...\n -- version: [%s]\n -- args: %v", global.Version, flag.Args())
+	log.Info().Msgf("server starting, version: [%s], args: %v", global.Version, flag.Args())
 
 	defaultViper := viper.GetViper()
 	var err error
@@ -41,14 +39,14 @@ func Init() {
 		err = parseLocalConfig(defaultViper, *configFile, loadConfig)
 	}
 	if err != nil {
-		panic(fmt.Sprintf("parse config failed, err: %v", err))
+		log.Panic().Msg("parse config failed")
 	}
 
 	global.Viper = defaultViper
 
 	var cfg global.Config
 	if err = defaultViper.Unmarshal(&cfg); err != nil {
-		panic(fmt.Sprintf("Unmarshal config failed, err: %v", err))
+		log.Panic().Msg("Unmarshal config failed")
 	}
 	global.DefaultConfig = &cfg
 	global.AppName = cfg.AppName
@@ -57,20 +55,16 @@ func Init() {
 	cfg.Fix.Init()
 
 	if err = cfg.Log.Init(); err != nil {
-		panic(err)
+		log.Panic().Err(err).Msgf("zerolog init failed")
 	}
 
 	if err = db.SetDBS(cfg.DataBase); err != nil {
-		zlog.Err(err)
-		panic(err)
+		log.Panic().Err(err).Msg("connect database failed")
 	}
 
 	if err = casbin.Init(cfg.CasbinModelFile); err != nil {
-		zlog.Err(err)
-		panic(fmt.Sprintf("load casbin failed, err: %v", err))
+		log.Panic().Err(err).Msg("casbin load failed")
 	}
 
 	cfg.HttpServer.Init()
-
-	// log.SetOutput(io.MultiWriter(os.Stdout))
 }
