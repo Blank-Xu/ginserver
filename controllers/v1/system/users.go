@@ -2,6 +2,7 @@ package system
 
 import (
 	"strconv"
+	"time"
 
 	"ginserver/models/system/user"
 	"ginserver/pkg/context"
@@ -14,8 +15,8 @@ import (
 type UserController struct{}
 
 // GetOne godoc
-// @Summary get an user record
-// @Description get string by ID
+// @Summary get user record
+// @Description get user record by id
 // @ID get-string-by-int
 // @Accept  json
 // @Produce  json
@@ -55,8 +56,8 @@ func (p *UserController) GetOne(c *gin.Context) {
 
 // Get godoc
 // @Summary get user records
-// @Description get user records
-// @Accept  json
+// @Description get paging user records by condition
+// @Accept  application/x-www-form-urlencoded
 // @Produce  json
 // @Param cols path string false "cols"
 // @Param page path int false "page"
@@ -71,10 +72,14 @@ func (p *UserController) Get(c *gin.Context) {
 	cols := ctx.GetStringSlice("cols")
 
 	var record user.User
+	if err := ctx.Bind(&record); err != nil {
+		ctx.AbortResponseInvalidParams(err)
+		return
+	}
+
 	records := make([]*user.User, 0, pageSize)
 	if err := record.Select(&record, &records, nil, page, pageSize, cols...); err != nil {
 		log.Err(err).Msg("select user failed")
-
 		ctx.AbortResponseDatabaseErr(err)
 		return
 	}
@@ -82,12 +87,30 @@ func (p *UserController) Get(c *gin.Context) {
 	totalCount, err := record.Count(&record)
 	if err != nil {
 		log.Err(err).Msg("select user count failed")
-
 		ctx.AbortResponseDatabaseErr(err)
 		return
 	}
 
-	ctx.ResponsePagingOK(page, len(records), totalCount, records)
+	ctx.ResponsePagingOK(page, pageSize, totalCount, records)
+}
+
+type UsersGetRequest struct {
+	Username     string    `form:"username" json:"username"`
+	State        int       `form:"state" json:"state"`
+	Nickname     string    `form:"nickname" json:"nickname"`
+	Email        string    `form:"email" json:"email"`
+	Phone        string    `form:"phone" json:"phone"`
+	Remark       string    `form:"remark" json:"remark"`
+	CreatedStart time.Time `form:"created_start" json:"created_start"`
+	CreatedEnd   time.Time `form:"created_end" json:"created_end"`
+	UpdatedStart time.Time `form:"updated_start" json:"updated_start"`
+	UpdatedEnd   time.Time `form:"updated_end" json:"updated_end"`
+	DeletedStart time.Time `form:"deleted_start" json:"deleted_start"`
+	DeletedEnd   time.Time `form:"deleted_end" json:"deleted_end"`
+	RegisterIp   string    `form:"register_ip" json:"register_ip"`
+	// LoginTimeStart time.Time `form:"login_time_start" json:"login_time_start"`
+	// LoginTimeEnd   time.Time `form:"login_time_end" json:"login_time_end"`
+	// LoginIp        string    `json:"login_ip"`
 }
 
 type UsersGetResponse struct {
@@ -95,6 +118,15 @@ type UsersGetResponse struct {
 	Records []*user.User   `json:"records"`
 }
 
+// Post godoc
+// @Summary post user
+// @Description post user record
+// @Accept  json
+// @Produce  json
+// @Param cols path string false "cols"
+// @Success 201 {object} system.UsersGetResponse
+// @Failure 501 {object} context.Response
+// @Router /users [post]
 func (p *UserController) Post(c *gin.Context) {
 	ctx := context.New(c)
 
@@ -111,7 +143,6 @@ func (p *UserController) Post(c *gin.Context) {
 	_, err := record.InsertOne(&record)
 	if err != nil {
 		log.Err(err).Msg("insert user failed")
-
 		ctx.AbortResponseDatabaseErr(err)
 		return
 	}
@@ -119,6 +150,19 @@ func (p *UserController) Post(c *gin.Context) {
 	ctx.ResponseDataCreated(nil)
 }
 
+// Put godoc
+// @Summary put user
+// @Description put user record
+// @ID get-string-by-int
+// @Accept  json
+// @Produce  json
+// @Param id path int true "user id"
+// @Param cols path string false "cols"
+// @Success 204 ""
+// @Failure 400 {object} context.Response
+// @Failure 404 {object} context.Response
+// @Failure 501 {object} context.Response
+// @Router /users [put]
 func (p *UserController) Put(c *gin.Context) {
 	ctx := context.New(c)
 
@@ -140,7 +184,7 @@ func (p *UserController) Put(c *gin.Context) {
 		return
 	}
 
-	if err := ctx.BindJSON(&record); err != nil {
+	if err := ctx.Bind(&record); err != nil {
 		ctx.AbortResponseInvalidParams(err)
 		return
 	}
@@ -156,6 +200,18 @@ func (p *UserController) Put(c *gin.Context) {
 	ctx.ResponseNoContent()
 }
 
+// Delete godoc
+// @Summary delete user
+// @Description delete user by id
+// @ID get-string-by-int
+// @Accept  json
+// @Produce  json
+// @Param id path int true "user id"
+// @Success 204 ""
+// @Failure 400 {object} context.Response
+// @Failure 404 {object} context.Response
+// @Failure 501 {object} context.Response
+// @Router /users/{id} [delete]
 func (p *UserController) Delete(c *gin.Context) {
 	ctx := context.New(c)
 
@@ -166,9 +222,14 @@ func (p *UserController) Delete(c *gin.Context) {
 	}
 
 	record := user.User{Id: id}
-	if _, err := record.Delete(&record); err != nil {
+	count, err := record.Delete(&record)
+	if err != nil {
 		log.Err(err).Msg("delete user failed")
 		ctx.AbortResponseDatabaseErr(err)
+		return
+	}
+	if count == 0 {
+		ctx.AbortResponseNotFound()
 		return
 	}
 

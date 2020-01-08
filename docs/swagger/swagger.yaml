@@ -80,8 +80,8 @@ paths:
   /users:
     get:
       consumes:
-      - application/json
-      description: get user records
+      - application/x-www-form-urlencoded
+      description: get paging user records by condition
       parameters:
       - description: cols
         in: path
@@ -109,11 +109,100 @@ paths:
             $ref: '#/definitions/context.Response'
             type: object
       summary: get user records
+    post:
+      consumes:
+      - application/json
+      description: post user record
+      parameters:
+      - description: cols
+        in: path
+        name: cols
+        type: string
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/system.UsersGetResponse'
+            type: object
+        "501":
+          description: Not Implemented
+          schema:
+            $ref: '#/definitions/context.Response'
+            type: object
+      summary: post user
+    put:
+      consumes:
+      - application/json
+      description: put user record
+      operationId: get-string-by-int
+      parameters:
+      - description: user id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: cols
+        in: path
+        name: cols
+        type: string
+      produces:
+      - application/json
+      responses:
+        "204": {}
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/context.Response'
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/context.Response'
+            type: object
+        "501":
+          description: Not Implemented
+          schema:
+            $ref: '#/definitions/context.Response'
+            type: object
+      summary: put user
   /users/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: delete user by id
+      operationId: get-string-by-int
+      parameters:
+      - description: user id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "204": {}
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/context.Response'
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/context.Response'
+            type: object
+        "501":
+          description: Not Implemented
+          schema:
+            $ref: '#/definitions/context.Response'
+            type: object
+      summary: delete user
     get:
       consumes:
       - application/json
-      description: get string by ID
+      description: get user record by id
       operationId: get-string-by-int
       parameters:
       - description: user id
@@ -148,7 +237,7 @@ paths:
           schema:
             $ref: '#/definitions/context.Response'
             type: object
-      summary: get an user record
+      summary: get user record
 securityDefinitions:
   ApiKeyAuth:
     in: header

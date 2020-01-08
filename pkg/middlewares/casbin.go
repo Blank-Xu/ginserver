@@ -23,6 +23,5 @@ func CasbinEnforce(enforcer *casbin.Enforcer) gin.HandlerFunc {
 			ctx.AbortResponseForbidden()
 			return
 		}
-
 	}
 }

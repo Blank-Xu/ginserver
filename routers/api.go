@@ -11,13 +11,16 @@ import (
 )
 
 func registerApi(router *gin.Engine) {
-	// register swagger doc router
-	router.GET("swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
-
 	groupApi := router.Group("api")
-	groupApi.GET("/", func(ctx *gin.Context) {
-		ctx.Redirect(http.StatusFound, "/swagger/index.html")
-	})
+
+	if gin.Mode() != gin.ReleaseMode {
+		// register swagger doc router
+		groupApi.GET("swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+
+		groupApi.GET("/", func(ctx *gin.Context) {
+			ctx.Redirect(http.StatusFound, "/swagger/index.html")
+		})
+	}
 
 	apiV1 := groupApi.Group("v1")
 	{
@@ -26,10 +29,10 @@ func registerApi(router *gin.Engine) {
 		// apiV1.Use(middlewares.CasbinEnforce(casbin.GetEnforcer()))
 
 		user := new(system.UserController)
-		apiV1.GET("users/:id", user.GetOne)
-		apiV1.GET("users", user.Get)
-		apiV1.POST("users", user.Post)
-		apiV1.PUT("users/:id", user.Put)
-		apiV1.DELETE("users/:id", user.Delete)
+		apiV1.GET("user/:id", user.GetOne)
+		apiV1.GET("user", user.Get)
+		apiV1.POST("user", user.Post)
+		apiV1.PUT("user/:id", user.Put)
+		apiV1.DELETE("user/:id", user.Delete)
 	}
 }

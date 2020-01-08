@@ -1,4 +1,4 @@
-package admin
+package v1
 
 import (
 	"errors"
