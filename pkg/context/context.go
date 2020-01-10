@@ -5,8 +5,6 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
-
-	"ginserver/pkg/middlewares"
 )
 
 const (
@@ -14,14 +12,7 @@ const (
 )
 
 func New(ctx *gin.Context) *Context {
-	// todo:
-	userId := middlewares.GetSessionUserId(ctx)
-	roleId := middlewares.GetSessionRoleId(ctx)
-
-	return &Context{
-		Context: ctx,
-		UserId:  userId,
-		RoleId:  roleId}
+	return &Context{Context: ctx}
 }
 
 type Context struct {

@@ -53,7 +53,7 @@ func LoginPost(c *gin.Context) {
 		return
 	}
 	// check success
-	if err = middlewares.SessionCreate(c, recordUser.Id, recordRole.Id); err != nil {
+	if err = middlewares.NewSession(c, recordUser.Id, recordRole.Id); err != nil {
 		ctx.AbortResponseInternalServerError(err)
 		return
 	}

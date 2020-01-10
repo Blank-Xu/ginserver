@@ -1,6 +1,7 @@
 package system
 
 import (
+	"ginserver/models/log"
 	"ginserver/pkg/context"
 
 	"github.com/gin-gonic/gin"
@@ -13,8 +14,8 @@ func (*LogController) Get(c *gin.Context) {
 	ctx := context.New(c)
 
 	var (
-		record  = &logdb.Log{UserId: 0}
-		records []*logdb.Log
+		record  = &log.Log{UserId: 0}
+		records []*log.Log
 	)
 	if err := record.SelectAll(record, &records); err != nil {
 		ctx.AbortResponseDatabaseErr(err)

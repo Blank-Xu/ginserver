@@ -10,7 +10,7 @@ import (
 
 var errSessionNil = errors.New("session is nil")
 
-func SessionCreate(ctx *gin.Context, userId, roleId int) error {
+func NewSession(ctx *gin.Context, userId, roleId int) error {
 	session := sessions.Default(ctx)
 	if session == nil {
 		return errSessionNil
@@ -18,6 +18,7 @@ func SessionCreate(ctx *gin.Context, userId, roleId int) error {
 
 	session.Set(KeyUserId, userId)
 	session.Set(KeyRoleId, roleId)
+
 	if err := session.Save(); err != nil {
 		return err
 	}
@@ -65,9 +66,9 @@ func SetSessionUserId(ctx *gin.Context, userId int) {
 }
 
 func GetSessionRoleId(ctx *gin.Context) int {
-	return ctx.GetInt(KeyUserId)
+	return ctx.GetInt(KeyRoleId)
 }
 
 func SetSessionRoleId(ctx *gin.Context, roleId int) {
-	ctx.Set(KeyUserId, roleId)
+	ctx.Set(KeyRoleId, roleId)
 }
